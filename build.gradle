@@ -39,7 +39,7 @@ tasks.named('test') {
 
 /* 스프링부트 빌드시 리액트도 같이 빌드  */
 //$projectDir : 현재 프로젝트명
-def frontendDir = "$projectDir/src/main/frontend/frontend" // 리액트 프로젝트 폴더 경로
+def frontendDir = "$projectDir/src/main/frontend" // 리액트 프로젝트 폴더 경로
 //def frontendDir = "$projectDir/src/main/{리액트 프로젝트명}"
 
 sourceSets { //리액트 빌드후 빌드된 파일을 적재/저장할 경로 설정

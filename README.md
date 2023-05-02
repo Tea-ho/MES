@@ -34,7 +34,7 @@ Spring&React Project: HTML5, JS, Java, MySQL(RDS), AXIOS, RESTful API(JSON), mui
 
 
 #### 8. Front-End Structure [ layout ]
-![image](https://user-images.githubusercontent.com/121651318/235599726-77e54240-c981-4470-873b-345e96678394.png)
+![image](https://user-images.githubusercontent.com/121651318/235610757-ffaad946-f44d-4962-9303-f241dfd41420.png)
 
 #### 9. 페이지명
 MES 

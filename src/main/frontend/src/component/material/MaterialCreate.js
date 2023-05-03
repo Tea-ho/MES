@@ -14,6 +14,11 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 export default function MaterialCreate() {
 
+    let [company , setCompany] = useState([])
+
+
+
+
     const MaterialCreate=()=>{
 
     let info={
@@ -32,6 +37,7 @@ export default function MaterialCreate() {
 
 
      }
+
 
 
 

@@ -43,7 +43,7 @@ public class MaterialEntity extends BaseTime {
                 .MatCode(this.MatCode)
                 .MatUnit(this.MatUnit)
                 .MatPrice(this.MatPrice)
-                .companyEntity(this.getCompanyEntity())
+                .cname(this.getCompanyEntity().getCname())
                 .mdate(this.cdate)
                 .build();
     }

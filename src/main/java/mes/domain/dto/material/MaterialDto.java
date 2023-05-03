@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mes.domain.BaseTime;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.member.CompanyEntity;
 
@@ -27,13 +26,14 @@ public class MaterialDto{
     private int MatPrice;// -- 단가
     private CompanyEntity companyEntity;// -- 제조사
     private LocalDateTime mdate; // 등록날짜
-
+    private String cname;
     public MaterialEntity toEntity() { // 저장용 추후 추가할것있음
         return   MaterialEntity.builder()
                 .MatName(this.MatName)
                 .MatUnit(this.MatUnit)
                 .MatStExp(this.MatStExp)
                 .MatPrice(this.MatPrice)
+                .companyEntity(this.companyEntity)
                 .build();
     }
 

@@ -18,7 +18,7 @@ public class MaterialEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int MatID;// -- 원자재 ID (PK)
-    @Column private Byte MatCode;// -- 자재 구분 문자코드[ 입출고로 넘어갈 때 B로 바꾸기] (식별용)
+    @Column private String MatCode;// -- 자재 구분 문자코드[ 입출고로 넘어갈 때 B로 바꾸기] (식별용)
     @Column private String MatName;// -- 원자재명
     @Column private String MatUnit;// -- 자재 단위
     @Column private String MatStExp;// -- 유통기한
@@ -29,13 +29,8 @@ public class MaterialEntity {
     @ToString.Exclude
     private CompanyEntity companyEntity;// -- 제조사
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "mpno")
+    @ToString.Exclude
     private MaterialProductEntity materialProductEntity;
-
-
-
-
-    
-    // -------------------------------- 관계설정 필요
 }

@@ -17,10 +17,13 @@ public class MemberEntity {
     private int mno; // pk
 
     @Column
+    private String mname; // 이름
+
+    @Column
     private String position; //회사 직급/포지션
 
     @ManyToOne
-    @JoinColumn(name = "cNo")
+    @JoinColumn(name = "cno")
     @ToString.Exclude
     private CompanyEntity companyEntity; // 회사명
 

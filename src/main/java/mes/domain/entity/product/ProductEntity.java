@@ -24,7 +24,7 @@ public class ProductEntity {
     @Column private int prodPrice;// -- 제품 가격
 
     @ManyToOne
-    @JoinColumn(name = "cNo")
+    @JoinColumn(name = "cno")
     @ToString.Exclude
     private CompanyEntity companyEntity; // 회사명
 

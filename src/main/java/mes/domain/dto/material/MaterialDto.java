@@ -19,20 +19,24 @@ public class MaterialDto{
 
     private int MatID;// -- 원자재 ID (PK)
 
-    private String MatCode;// -- 자재 구분 문자코드[ 입출고로 넘어갈 때 B로 바꾸기] (식별용)
-    private String MatName;// -- 원자재명
-    private String MatUnit;// -- 자재 단위
-    private String MatStExp;// -- 유통기한
-    private int MatPrice;// -- 단가
+    private String mat_code;// -- 자재 구분 문자코드[ 입출고로 넘어갈 때 B로 바꾸기] (식별용)
+    private String mat_name;// -- 원자재명
+    private String mat_unit;// -- 자재 단위
+    private String mat_st_exp;// -- 유통기한
+    private int mat_price;// -- 단가
     private CompanyEntity companyEntity;// -- 제조사
-    private LocalDateTime mdate; // 등록날짜
-    private String cname;
+    private String mdate; // 등록날짜
+    private int cno;
+
+
+
     public MaterialEntity toEntity() { // 저장용 추후 추가할것있음
         return   MaterialEntity.builder()
-                .MatName(this.MatName)
-                .MatUnit(this.MatUnit)
-                .MatStExp(this.MatStExp)
-                .MatPrice(this.MatPrice)
+                .mat_name(this.mat_name)
+                .mat_unit(this.mat_unit)
+                .mat_code(this.mat_code)
+                .mat_st_exp(this.mat_st_exp)
+                .mat_price(this.mat_price)
                 .companyEntity(this.companyEntity)
                 .build();
     }

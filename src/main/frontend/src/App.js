@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
-import Ex from "./component/Ex";
+import Material from "./component/material/Material";
 import Link from '@mui/material/Link';
 import Main from "./Main";
 
@@ -40,7 +40,7 @@ export default function Index( props ) {
                                 </Link>
                              </ListItem>
                              <ListItem disablePadding>
-                             <Link href="/component/Ex">
+                             <Link href="/component/material/Material">
                               <ListItemButton>
                               <ListItemIcon>
                               <WarehouseIcon />
@@ -76,7 +76,8 @@ export default function Index( props ) {
                 <div className="main-content">
                     <Routes >
                         <Route path="/" element = { <Main /> } />
-                        <Route path="/component/Ex" element = { <Ex/> } />
+                        <Route path="/component/material/Material" element = { <Material/> } />
+
                     </Routes>
 
                 </div>

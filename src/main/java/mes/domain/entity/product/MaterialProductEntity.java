@@ -19,6 +19,12 @@ public class MaterialProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mpno;
 
+
+    @OneToMany(mappedBy = "materialProductEntity")
+    @Builder.Default
+    private List<MaterialEntity> materialEntityList = new ArrayList<>();
+
+
     @ManyToOne
     @JoinColumn(name = "prodId")
     @ToString.Exclude

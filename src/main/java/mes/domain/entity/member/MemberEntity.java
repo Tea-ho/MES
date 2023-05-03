@@ -17,7 +17,10 @@ public class MemberEntity {
     private int mno; // pk
 
     @Column
-    private String mname; // 이름
+    private String mname; //이름
+
+    @Column
+    private String mpassword;
 
     @Column
     private String position; //회사 직급/포지션

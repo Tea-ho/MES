@@ -31,7 +31,7 @@ public class SalesEntity {
     private AllowApprovalEntity allowApprovalEntity;    //-- 결제 승인 여부 테이블 fk
 
     @ManyToOne
-    @JoinColumn(name = "cNo")
+    @JoinColumn(name = "cno")
     @ToString.Exclude
     private CompanyEntity companyEntity;                // 고객처
 

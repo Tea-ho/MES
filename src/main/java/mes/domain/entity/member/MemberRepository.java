@@ -1,8 +1,10 @@
 package mes.domain.entity.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface MemberRepository extends JpaRepository< MemberEntity, Integer > {
 
-    MemberEntity findByUsernameAndPassword(String username, String password);
+    //MemberEntity findByUsernameAndPassword(String username, String password);
 }

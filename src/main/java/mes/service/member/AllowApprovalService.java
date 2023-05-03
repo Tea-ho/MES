@@ -66,7 +66,7 @@ public class AllowApprovalService {
             throw new PermissionDeniedException("권한이 없습니다.");
         }
 
-        Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(prodPlanNo);
+        Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(MatInOutID);
         if (materialInOutEntity.isPresent()) {
             MaterialInOutEntity inOut = materialInOutEntity.get();
             inOut.getAllowApprovalEntity().setAlAppWhether(true);
@@ -83,7 +83,7 @@ public class AllowApprovalService {
             throw new PermissionDeniedException("권한이 없습니다.");
         }
 
-        Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(prodPlanNo);
+        Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(MatInOutID);
         if (materialInOutEntity.isPresent()) {
             MaterialInOutEntity inOut = materialInOutEntity.get();
             inOut.getAllowApprovalEntity().setAlAppWhether(false);

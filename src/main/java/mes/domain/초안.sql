@@ -1,18 +1,21 @@
 
 
+
+use MES;
+
 -- company
 -- 1번 제조처 2번 판매처 (Company)
 insert into company (cname, ctype) values ("삼성", 1 );
 insert into company (cname, ctype) values ("이젠", 2 );
 
 -- member
-insert into member(position, mname,  cno) value("사원", "가나다", 1);
-insert into member(position, mname, cno) value("대리", "마바사", 1);
-insert into member(position, mname, cno) value("전무", "ABC", 1);
+insert into member(position, mname, mpassword,  cno) value("사원", "가나다",'qwe123' , 1);
+insert into member(position, mname, mpassword, cno) value("대리", "마바사", 'asd123', 1);
+insert into member(position, mname, mpassword, cno) value("전무", "ABC",'abc123', 1);
 
-insert into member(position, mname,  cno) value("사원", "DEF", 2);
-insert into member(position, mname, cno) value("대리", "아자차", 2);
-insert into member(position, mname, cno) value("전무", "카타파", 2);
+insert into member(position, mname, mpassword, cno) value("사원", "DEF",'def123', 2);
+insert into member(position, mname, mpassword, cno) value("대리", "아자차",'cvb123', 2);
+insert into member(position, mname, mpassword,  cno) value("전무", "카타파",'rty123', 2);
 
 --
 

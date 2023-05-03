@@ -18,11 +18,12 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int  prodId;// -- PK
     @Column
-    @ColumnDefault("3")
+    private String prodName;// -- 제품명
+    @Column
     private byte prodCode;// -- 제품 구분 문자코드 (식별용)
     @Column private String prodDate;// -- 생산일자
     @Column private int prodPrice;// -- 제품 가격
-
+    
     @ManyToOne
     @JoinColumn(name = "cno")
     @ToString.Exclude

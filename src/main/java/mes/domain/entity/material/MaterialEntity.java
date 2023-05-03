@@ -31,7 +31,7 @@ public class MaterialEntity extends BaseTime {
     @ToString.Exclude
     private CompanyEntity companyEntity;// -- 제조사
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "mpno")
     private MaterialProductEntity materialProductEntity;
 

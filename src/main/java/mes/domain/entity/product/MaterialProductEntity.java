@@ -20,7 +20,7 @@ public class MaterialProductEntity {
     private int mpno;
 
 
-    @OneToMany(mappedBy = "materialProductEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "materialProductEntity")
     @Builder.Default
     private List<MaterialEntity> materialEntityList = new ArrayList<>();
 

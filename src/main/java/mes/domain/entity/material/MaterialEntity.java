@@ -1,6 +1,8 @@
 package mes.domain.entity.material;
 
 import lombok.*;
+import mes.domain.BaseTime;
+import mes.domain.dto.material.MaterialDto;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.product.MaterialProductEntity;
 
@@ -14,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MaterialEntity {
+public class MaterialEntity extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int MatID;// -- 원자재 ID (PK)
@@ -33,4 +35,20 @@ public class MaterialEntity {
     @JoinColumn(name = "mpno")
     @ToString.Exclude
     private MaterialProductEntity materialProductEntity;
+
+
+    public MaterialDto toDto() { // 반환용
+        return MaterialDto.builder()
+                .MatID(this.MatID)
+                .MatStExp(this.MatStExp)
+                .MatCode(this.MatCode)
+                .MatUnit(this.MatUnit)
+                .MatPrice(this.MatPrice)
+                .companyEntity(this.getCompanyEntity())
+                .mdate(this.cdate)
+                .build();
+    }
+
+
+
 }

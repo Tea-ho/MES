@@ -8,6 +8,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     //WebSecurityConfigurerAdapter : 미리 구성된 스프링 MVC 설정 연결 클래스
 
 
+
     @Override //view 컨트롤러 오버라이딩 [이유 : 리액트 view와 연결하기 위해서]
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/{spring:\\w+}").setViewName("forward:/");

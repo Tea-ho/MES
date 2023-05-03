@@ -20,28 +20,28 @@ public class SalesEntity {
     private int OrderId;// -- 주문 D
 
 
-    @Column private String OrderDate;// -- 주문 일자
-    @Column private int OrderCount;// -- 주문 수량
-    @Column private int OrderStatus;// -- 주문 상태
-    @Column private int salesPrice; // 판매가
+    @Column private String OrderDate;   // -- 주문 일자
+    @Column private int OrderCount;     // -- 주문 수량
+    @Column private int OrderStatus;    // -- 주문 상태
+    @Column private int salesPrice;     // 판매가
 
     @ManyToOne
     @JoinColumn(name = "alAppNo")
     @ToString.Exclude
-    private AllowApprovalEntity allowApprovalEntity;//-- 결제 승인 여부 테이블 fk
+    private AllowApprovalEntity allowApprovalEntity;    //-- 결제 승인 여부 테이블 fk
 
     @ManyToOne
     @JoinColumn(name = "cNo")
     @ToString.Exclude
-    private CompanyEntity companyEntity; // 고객처
+    private CompanyEntity companyEntity;                // 고객처
 
     @ManyToOne
     @JoinColumn(name = "prodId")
     @ToString.Exclude
-    private ProductEntity productEntity;// -- 주문 제품
+    private ProductEntity productEntity;                // -- 주문 제품
 
     @ManyToOne
     @JoinColumn(name = "mno")
     @ToString.Exclude
-    private MemberEntity memberEntity; // -- 판매자(판매원)
+    private MemberEntity memberEntity;                  // -- 판매자(판매원)
 }

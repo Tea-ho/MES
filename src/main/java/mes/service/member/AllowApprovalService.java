@@ -32,7 +32,7 @@ public class AllowApprovalService {
         // 2. productPlanEntity 찾기
         Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
 
-        // 3. 존재하는 경우, productPlanEntity의 AllowApprovalEntity 업데이트 처리
+        // 3. 존재하는 경우, productPlanEntity의 AllowApprovalEntity 업데이트 처리//
         if (productPlanEntity.isPresent()) {
             ProductPlanEntity plan = productPlanEntity.get();
             plan.getAllowApprovalEntity().setAlAppWhether(true);

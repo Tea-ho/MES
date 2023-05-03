@@ -20,7 +20,7 @@ public class MaterialDto{
 
     private int MatID;// -- 원자재 ID (PK)
 
-    private Byte MatCode;// -- 자재 구분 문자코드[ 입출고로 넘어갈 때 B로 바꾸기] (식별용)
+    private String MatCode;// -- 자재 구분 문자코드[ 입출고로 넘어갈 때 B로 바꾸기] (식별용)
     private String MatName;// -- 원자재명
     private String MatUnit;// -- 자재 단위
     private String MatStExp;// -- 유통기한

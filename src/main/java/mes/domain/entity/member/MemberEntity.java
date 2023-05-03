@@ -20,7 +20,7 @@ public class MemberEntity {
     private String position; //회사 직급/포지션
 
     @ManyToOne
-    @JoinColumn(name = "cNo")
+    @JoinColumn(name = "cno")
     @ToString.Exclude
     private CompanyEntity companyEntity; // 회사명
 

@@ -1,7 +1,5 @@
 
 
-use MES;
-
 -- company
 -- 1번 제조처 2번 판매처 (Company)
 insert into company (cname, ctype) values ("삼성", 1 );

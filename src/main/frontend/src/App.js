@@ -15,7 +15,15 @@ import WarehouseIcon from '@mui/icons-material/Warehouse';
 import Material from "./component/material/Material";
 import Link from '@mui/material/Link';
 import Main from "./Main";
+import MaterialInoutList from "./component/material/MaterialInoutList";
 
+/*--------------------------- 제품 부분 ------------------------------*/
+import ProductTab from "./component/product/ProductTab";
+import CreateProduct from "./component/product/CreateProduct";
+import PlanProduct from "./component/product/PlanProduct";
+import ProcessProduct from "./component/product/ProcessProduct";
+import ManageProduct from "./component/product/ManageProduct";
+/*--------------------------- 제품 부분 ------------------------------*/
 
 
 export default function Index( props ) {

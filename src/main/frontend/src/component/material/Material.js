@@ -13,15 +13,22 @@ import Pagination from '@mui/material/Pagination';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MaterialCreate from "./MaterialCreate";
+import MaterialView from "./MaterialView"
 
 export default function Material() {
   return (<>
 
     <div>
-      마테리얼
+      <h2>자재</h2>
+    </div>
+    <div>
+        <h3>자재 현황</h3>
+        <MaterialView />
     </div>
 
+
     <div>
+        <h3>자재 등록</h3>
         <MaterialCreate />
     </div>
 

@@ -58,7 +58,7 @@ export default function Index( props ) {
                               </Link>
                               </ListItem>
                                 <ListItem disablePadding>
-                               <Link href="#">
+                               <Link href="/component/product/productTab">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -85,7 +85,8 @@ export default function Index( props ) {
                     <Routes >
                         <Route path="/" element = { <Main /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
-
+                        <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
+                        <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
                     </Routes>
 
                 </div>

@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class AllowApprovalService {
 
@@ -20,16 +17,17 @@ public class AllowApprovalService {
     @Autowired MeterialInOutRepository meterialRepository;
     @Autowired SalesRepository salesRepository;
 
-    // 0. 제네릭 사용하기 위해 생성함
-    public List<?> getEntityListByType(int type) {
+    // 0. 제네릭 사용하기 위해 생성
+    // 항상 인수를 받기 때문에 optional 필요 없음
+    public Optional<List<?>> getEntityListByType(int type) {
         if (type == 1) {
-            return productPlanRepository.findAll();
+            return Optional.of(productPlanRepository.findAll());
         } else if (type == 2) {
-            return meterialRepository.findAll();
+            return Optional.of(meterialRepository.findAll());
         } else if (type == 3) {
-            return salesRepository.findAll();
+            return Optional.of(salesRepository.findAll());
         } else {
-            throw new IllegalArgumentException("Invalid type parameter");
+            return Optional.empty();
         }
     }
 
@@ -44,7 +42,11 @@ public class AllowApprovalService {
         }
 
         // 2. 승인 리스트 가져오기 [제네릭 사용 시도 - 3가지 타입 한번에 받기 위함]
-        List<?> approvalList = getEntityListByType(type);
+        Optional<List<?>> approvalListOptional = Optional.ofNullable(getEntityListByType(type));
+        // 해석: Null 값 여부 확인
+        List<?> approvalList = approvalListOptional.orElseThrow(
+                () -> new PermissionDeniedException("알 수 없는 요청"));
+        // 해석: approvalListOptional null이 아니면 List를 반환 & null이면 예외처리
         
         // 3. 승인 리스트 저장소 생성
         List<Object> result = new ArrayList<>();

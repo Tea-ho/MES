@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository< MemberEntity, Integer > {
 
-    MemberEntity findByUsernameAndPassword(String mname, String password);
+    MemberEntity findByMnameAndMpassword(String mname, String mpassword);
 }

@@ -13,7 +13,7 @@ public class MemberSerivce {
 
     // 1. 로그인
     public boolean login(String mname, String password) { log.info("login:" + mname);
-        MemberEntity member = memberRepository.findByUsernameAndPassword(mname, password);
+        MemberEntity member = memberRepository.findByMnameAndMpassword(mname, password);
         return true;
     }
 }

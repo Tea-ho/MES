@@ -1,9 +1,12 @@
+/*
 package mes.service.member;
 
 import mes.domain.Repository.product.ProductPlanRepository;
+import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.product.ProductPlanDto;
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.material.MaterialInOutEntity;
+import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.member.MemberEntity;
 import mes.domain.entity.member.PermissionDeniedException;
 import mes.domain.entity.product.ProductPlanEntity;
@@ -22,7 +25,8 @@ public class AllowApprovalService {
 
     @Autowired
     ProductPlanRepository productPlanRepository;
-    @Autowired MeterialInOutRepository meterialRepository;
+    @Autowired
+    MaterialInOutEntityRepository meterialRepository;
     @Autowired
     SalesRepository salesRepository;
 
@@ -68,10 +72,12 @@ public class AllowApprovalService {
         } else if ( type == 2) { // 제품
             for (Object obj : approvalList) {
                 MaterialInOutEntity entity = (MaterialInOutEntity) obj;
-                MaterialInOutDto dto = new MaterialInOutDto(
+               */
+/* MaterialInOutDto dto = new MaterialInOutDto(
                         entity.getMatInOutID(), entity.getMatInType(),
                         entity.getMatStStock(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
-                result.add(dto);
+                result.add(dto);*//*
+
             }
         } else if ( type == 3) { // 판매
             for (Object obj : approvalList) {
@@ -197,3 +203,4 @@ public class AllowApprovalService {
     // 3.
 
 }
+*/

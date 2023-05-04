@@ -1,15 +1,17 @@
-/*
 package mes.service.member;
 
 import mes.domain.Repository.product.ProductPlanRepository;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.product.ProductPlanDto;
+
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.material.MaterialInOutEntity;
 import mes.domain.entity.material.MaterialInOutEntityRepository;
-import mes.domain.entity.member.MemberEntity;
+import mes.domain.entity.member.AllowApprovalEntity;
+import mes.domain.entity.member.AllowApprovalRepository;
 import mes.domain.entity.member.PermissionDeniedException;
 import mes.domain.entity.product.ProductPlanEntity;
+
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,44 +22,32 @@ import java.util.*;
 
 public class AllowApprovalService {
 
-    @Autowired
-    ProductPlanRepository productPlanRepository;
-    @Autowired
-    MaterialInOutEntityRepository meterialRepository;
-    @Autowired
-    SalesRepository salesRepository;
+    @Autowired ProductPlanRepository productPlanRepository;
+    @Autowired MaterialInOutEntityRepository meterialRepository;
+    @Autowired SalesRepository salesRepository;
+    @Autowired AllowApprovalRepository allowApprovalRepository;
 
     // 0. 제네릭 사용하기 위해 생성
     // 항상 인수를 받기 때문에 optional 필요 없음
-    public Optional<List<?>> getEntityListByType(int type) {
+    public List<?> getEntityListByType(int type) {
         if (type == 1) {
-            return Optional.of(productPlanRepository.findAll());
+            return productPlanRepository.findAll();
         } else if (type == 2) {
-            return Optional.of(meterialRepository.findAll());
+            return meterialRepository.findAll();
         } else if (type == 3) {
-            return Optional.of(salesRepository.findAll());
-        } else {
-            return Optional.empty();
+            return salesRepository.findAll();
+        } else{
+            throw new IllegalArgumentException("알 수 없는 요청");
         }
     }
 
     // 1. 승인 요청 데이터 출력 [type: 1 - 자재, 2 - 제품, 3 - 판매 ]
     // *프론트 처리 필요 사항: option: 1 - 미승인, 2 - 승인, 3 - 전체 출력 (Back에서 관리하면 로직 복잡해짐)
-    public List<?> printAllowApproval(HttpSession session, int type){
-
-        // 1. 승인권자 권한 확인 (제어)
-        MemberEntity member = (MemberEntity) session.getAttribute("member");
-        if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
-            throw new PermissionDeniedException("권한이 없습니다.");
-        }
+    public List<?> printAllowApproval( int type){
 
         // 2. 승인 리스트 가져오기 [제네릭 사용 시도 - 3가지 타입 한번에 받기 위함]
-        Optional<List<?>> approvalListOptional = Optional.ofNullable(getEntityListByType(type));
-        // 해석: Null 값 여부 확인
-        List<?> approvalList = approvalListOptional.orElseThrow(
-                () -> new PermissionDeniedException("알 수 없는 요청"));
-        // 해석: approvalListOptional null이 아니면 List를 반환 & null이면 예외처리
-        
+        List<?> approvalList = getEntityListByType(type);
+
         // 3. 승인 리스트 저장소 생성
         List<Object> result = new ArrayList<>();
         // 의견: Object 물음표로 변경해도 문제 없는지 테스트 필요
@@ -74,11 +64,11 @@ public class AllowApprovalService {
         } else if ( type == 2) { // 제품
             for (Object obj : approvalList) {
                 MaterialInOutEntity entity = (MaterialInOutEntity) obj;
-               */
-/* MaterialInOutDto dto = new MaterialInOutDto(
-                        entity.getMatInOutID(), entity.getMatInType(),
-                        entity.getMatStStock(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
-                result.add(dto);*//*
+
+                MaterialInOutDto dto = new MaterialInOutDto(
+                        entity.getMat_in_outid(), entity.getMat_in_type(),
+                        entity.getMat_st_stock(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
+                result.add(dto);
 
             }
         } else if ( type == 3) { // 판매
@@ -96,113 +86,43 @@ public class AllowApprovalService {
         return result;
     }
 
-    // 2. 승인/반려 처리
-    // -------------------------- 제품 --------------------------
-    public void approveProductPlan(HttpSession session, int prodPlanNo) { // --- 제품 생산 승인
-        
-        // 1. 승인권자 권한 확인
-        MemberEntity member = (MemberEntity) session.getAttribute("member");
-        if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
-            throw new PermissionDeniedException("권한이 없습니다.");
-        }
-        // 2. productPlanEntity 찾기
-        Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
+    // 2. 승인/반려 처리 (코드 중복 최소화 - 동일 작동 메소드 생성)
+    private boolean updateAllowApproval(int id, boolean approval) {
 
-        // 3. 존재하는 경우, productPlanEntity의 AllowApprovalEntity 업데이트 처리//
-        if(productPlanEntity.isPresent()){
-            ProductPlanEntity plan = productPlanEntity.get();
-            plan.getAllowApprovalEntity().setAlAppWhether(true);
-            plan.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            productPlanRepository.save(plan);
+        Optional<AllowApprovalEntity> allowApprovalEntity = allowApprovalRepository.findById(id);
+        if (allowApprovalEntity.isPresent()) {
+            AllowApprovalEntity entity = allowApprovalEntity.get();
+            entity.setAl_app_whether(approval);
+            entity.setAl_app_date(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            allowApprovalRepository.save(entity);
+            return approval; // 코드 최소화하는 방법으로 판단되어 사용
         }
+        return false;
+        // 로직 처리가 안되어도 false로 반환되는 문제점이 있음
     }
 
-    public void rejectProductPlan(int prodPlanNo, HttpSession session ) { // --- 제품 생산 반려
-
-        MemberEntity member = (MemberEntity) session.getAttribute("member");
-        if (!member.getPosition().equals("임원")) {
-            throw new PermissionDeniedException("권한이 없습니다.");
-        }
-
-        Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
-        if (productPlanEntity.isPresent()) {
-            ProductPlanEntity plan = productPlanEntity.get();
-            plan.getAllowApprovalEntity().setAlAppWhether(false);
-            plan.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            productPlanRepository.save(plan);
-        }
+    // 3. 자재, 제품, 판매 승인/반려 처리
+    public boolean approveMaterialInOut(int MatInOutID ) {
+        return updateAllowApproval(MatInOutID,  true);
     }
 
-    // -------------------------- 자재 --------------------------
-    public void approveMaterialInOut(int MatInOutID, HttpSession session ) { // --- 자재 생산 승인
-
-        // 1. 승인권자 권한 확인
-        MemberEntity member = (MemberEntity) session.getAttribute("member");
-        if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
-            throw new PermissionDeniedException("권한이 없습니다.");
-        }
-
-        Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(MatInOutID);
-        if (materialInOutEntity.isPresent()) {
-            MaterialInOutEntity inOut = materialInOutEntity.get();
-            inOut.getAllowApprovalEntity().setAlAppWhether(true);
-            inOut.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            meterialRepository.save(inOut);
-        }
+    public boolean rejectMaterialInOut(int MatInOutID) {
+        return updateAllowApproval(MatInOutID, false);
     }
 
-    public void rejectMaterialInOut(int MatInOutID, HttpSession session) { // --- 자재 생산 반려
-
-        // 1. 승인권자 권한 확인
-        MemberEntity member = (MemberEntity) session.getAttribute("member");
-        if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
-            throw new PermissionDeniedException("권한이 없습니다.");
-        }
-
-        Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(MatInOutID);
-        if (materialInOutEntity.isPresent()) {
-            MaterialInOutEntity inOut = materialInOutEntity.get();
-            inOut.getAllowApprovalEntity().setAlAppWhether(false);
-            inOut.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            meterialRepository.save(inOut);
-        }
+    public boolean approveProductInOut(int ProdInOutID) {
+        return updateAllowApproval(ProdInOutID, true);
     }
 
-    // -------------------------- 판매 --------------------------
-    public void approveSales(int OrderId, HttpSession session) { // --- 판매 승인
-
-        // 1. 승인권자 권한 확인
-        MemberEntity member = (MemberEntity) session.getAttribute("member");
-        if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
-            throw new PermissionDeniedException("권한이 없습니다.");
-        }
-
-        Optional<SalesEntity> salesEntity = salesRepository.findById(OrderId);
-        if (salesEntity.isPresent()) {
-            SalesEntity inOut = salesEntity.get();
-            inOut.getAllowApprovalEntity().setAlAppWhether(true);
-            inOut.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            salesRepository.save(inOut);
-        }
+    public boolean rejectProductInOut(int ProdInOutID) {
+        return updateAllowApproval(ProdInOutID, false);
     }
 
-    public void rejectSales(int OrderId, HttpSession session) { // --- 판매 반려
-
-        // 1. 승인권자 권한 확인
-        MemberEntity member = (MemberEntity) session.getAttribute("member");
-        if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
-            throw new PermissionDeniedException("권한이 없습니다.");
-        }
-
-        Optional<SalesEntity> salesEntity = salesRepository.findById(OrderId);
-        if (salesEntity.isPresent()) {
-            SalesEntity inOut = salesEntity.get();
-            inOut.getAllowApprovalEntity().setAlAppWhether(false);
-            inOut.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            salesRepository.save(inOut);
-        }
+    public boolean approveSales(int OrderId) {
+        return updateAllowApproval(OrderId, true);
     }
-    // 3.
 
+    public boolean rejectSales(int OrderId) {
+        return updateAllowApproval(OrderId, false);
+    }
 }
-*/

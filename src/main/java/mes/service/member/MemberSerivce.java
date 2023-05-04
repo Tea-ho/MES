@@ -6,6 +6,8 @@ import mes.domain.entity.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
+
 @Service @Slf4j
 public class MemberSerivce {
 
@@ -14,7 +16,10 @@ public class MemberSerivce {
     // 1. 로그인
     public boolean login(String mname, String password) { log.info("login:" + mname);
         MemberEntity member = memberRepository.findByMnameAndMpassword(mname, password);
-        return true;
+        return member != null;
+    }
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 }
 

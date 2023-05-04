@@ -17,14 +17,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
+import MaterialInoutList from "./MaterialInoutList";
 
 export default function MaterialView(props) {
 
 const [list, setList] = useState([]);
 
      useEffect( ()=>{
-            axios.get('/materials/materialList')
+            axios.get('/materials/materialList',  { params : { matID : 0 } })
               .then( r => {
                     console.log(r)
                     setList(r.data)
@@ -32,16 +32,27 @@ const [list, setList] = useState([]);
 
         }, [] )
 
-
+    // 자제 수정
     const MaterialUpdate=(e)=>{
         console.log(e.target.value)
 
     }
-
+    // 자제 삭제
      const MaterialDelete=(e)=>{
             console.log(e.target.value)
 
         }
+
+     const MaterialInoutList=(e)=>{
+            console.log(e.target.value)
+                const matID = e.target.value;
+                window.location.href = `/component/material/MaterialInoutList/${matID}`;
+
+
+        }
+
+
+
 
  return(<>
 
@@ -50,15 +61,15 @@ const [list, setList] = useState([]);
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center" style={{ width:'10%' }}>등록번호</TableCell>
+                      <TableCell align="center" style={{ width:'5%' }}>등록번호</TableCell>
                       <TableCell align="center" style={{ width:'15%' }}>자재명</TableCell>
                       <TableCell align="center" style={{ width:'10%' }}>원가</TableCell>
                       <TableCell align="center" style={{ width:'10%' }}>단위</TableCell>
                       <TableCell align="center" style={{ width:'10%' }}>유통기한(Day)</TableCell>
                       <TableCell align="center" style={{ width:'10%' }}>생산자</TableCell>
                       <TableCell align="center" style={{ width:'15%' }}>구입일</TableCell>
-                      <TableCell align="center" style={{ width:'10%' }}>코드</TableCell>
-                      <TableCell align="center" style={{ width:'10%' }}>수정/삭제</TableCell>
+                      <TableCell align="center" style={{ width:'5%' }}>코드</TableCell>
+                      <TableCell align="center" style={{ width:'20%' }}>비고</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -74,6 +85,7 @@ const [list, setList] = useState([]);
                        <TableCell align="center" >{e.mat_code}</TableCell>
                        <TableCell align="center" >
                            <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
+                             <Button type="button" value={e.matID} onClick={MaterialInoutList}>상세보기</Button>
                              <Button type="button" value={e.matID} onClick={MaterialUpdate}>수정</Button>
                              <Button type="button" value={e.matID} onClick={MaterialDelete}>삭제</Button>
                            </ButtonGroup>

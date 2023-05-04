@@ -1,4 +1,4 @@
-package mes.service;
+package mes.service.Material;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -47,13 +47,21 @@ public class MaterialService {
 
     // 자재 리스트 출력
     @Transactional
-    public List<MaterialDto> materialList(){
-
+    public List<MaterialDto> materialList(int matID){
         List<MaterialDto> list = new ArrayList<>();
-        List<MaterialEntity> entityOptional = materialEntityRepository.findAll();
-        entityOptional.forEach((e)->{
-           list.add(e.toDto());
-        });
+        if(matID == 0){
+            List<MaterialEntity> entityOptional = materialEntityRepository.findAll();
+            entityOptional.forEach((e)->{
+                list.add(e.toDto());
+            });
+        }
+        else if(matID > 0){
+            MaterialEntity entity = materialEntityRepository.findById(matID).get();
+            list.add(entity.toDto());
+        }
+
+
+
 
         return list;
     }

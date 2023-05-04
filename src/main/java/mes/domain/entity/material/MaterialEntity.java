@@ -33,6 +33,7 @@ public class MaterialEntity extends BaseTime {
 
     @ManyToOne
     @JoinColumn(name = "mpno")
+    @ToString.Exclude
     private MaterialProductEntity materialProductEntity;
 
 
@@ -48,6 +49,6 @@ public class MaterialEntity extends BaseTime {
                 .build();
     }
 
-    
+
 
 }

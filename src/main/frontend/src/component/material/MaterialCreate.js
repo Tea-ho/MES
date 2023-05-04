@@ -67,6 +67,8 @@ export default function MaterialCreate() {
                 alert('등록성공')
                 window.location.href="/component/material/Material"
 
+
+
                 }
 
                 } )

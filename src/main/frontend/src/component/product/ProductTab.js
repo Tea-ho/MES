@@ -8,6 +8,7 @@ import Tab from '@mui/material/Tab';
 import CreateProduct from './CreateProduct';
 import PlanProduct from './PlanProduct';
 import ProcessProduct from './ProcessProduct';
+import ManageProduct from './ManageProduct';
 
 export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭바*/
   const [value, setValue] = useState(0);
@@ -18,9 +19,11 @@ export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭
     //바뀔때마다 아래 화면을 바꿔주는 화면
     if(newValue == 0){ //제품 생산
         setScreen(<CreateProduct/>)
-    }else if(newValue == 1){//제품 지시
+    }else if(newValue == 1){//제품 관리
+        setScreen(<ManageProduct/>)
+    }else if(newValue == 2){ //제품 지시
         setScreen(<PlanProduct/>)
-    }else if(newValue == 2){ //제품 공정
+    }else if(newValue == 3){ //제품 공정
         setScreen(<ProcessProduct/>)
     }
   };
@@ -29,6 +32,7 @@ export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭
         <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
           <Tabs value={value} onChange={handleChange} centered>
             <Tab label="제품 생산" />
+            <Tab label="제품 관리" />
             <Tab label="제품 지시" />
             <Tab label="제품 공정" />
           </Tabs>

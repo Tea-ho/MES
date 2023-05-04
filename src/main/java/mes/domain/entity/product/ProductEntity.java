@@ -1,6 +1,7 @@
 package mes.domain.entity.product;
 
 import lombok.*;
+import mes.domain.dto.product.ProductDto;
 import mes.domain.entity.member.CompanyEntity;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -28,5 +29,16 @@ public class ProductEntity {
     @JoinColumn(name = "cno")
     @ToString.Exclude
     private CompanyEntity companyEntity; // 회사명
+
+    //출력용 entity => Dto(화면 출력용)
+    public ProductDto toDto(){
+       return ProductDto.builder()
+        .prodId(this.prodId)
+        .prodName(this.prodName)
+        .prodCode(this.prodCode)
+        .prodDate(this.prodDate)
+        .prodPrice(this.prodPrice)
+        .build();
+    }
 
 }

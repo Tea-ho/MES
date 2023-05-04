@@ -21,6 +21,7 @@ import ProductTab from "./component/product/ProductTab";
 import CreateProduct from "./component/product/CreateProduct";
 import PlanProduct from "./component/product/PlanProduct";
 import ProcessProduct from "./component/product/ProcessProduct";
+import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 제품 부분 ------------------------------*/
 
 
@@ -84,7 +85,6 @@ export default function Index( props ) {
                         <Route path="/" element = { <Main /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element = { <ProductTab/> } />
-                        <Route path="/component/product/CreateProduct" element = { <CreateProduct/> } />
                     </Routes>
 
                 </div>

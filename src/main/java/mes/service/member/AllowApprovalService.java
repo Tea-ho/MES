@@ -1,10 +1,14 @@
 package mes.service.member;
 
+import mes.domain.Repository.product.ProductPlanRepository;
+import mes.domain.dto.product.ProductPlanDto;
+import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.material.MaterialInOutEntity;
 import mes.domain.entity.member.MemberEntity;
 import mes.domain.entity.member.PermissionDeniedException;
 import mes.domain.entity.product.ProductPlanEntity;
 import mes.domain.entity.sales.SalesEntity;
+import mes.domain.entity.sales.SalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpSession;
@@ -16,9 +20,11 @@ import java.util.Optional;
 
 public class AllowApprovalService {
 
-    @Autowired ProductPlanRepository productPlanRepository;
+    @Autowired
+    ProductPlanRepository productPlanRepository;
     @Autowired MeterialInOutRepository meterialRepository;
-    @Autowired SalesRepository salesRepository;
+    @Autowired
+    SalesRepository salesRepository;
 
     // 0. 제네릭 사용하기 위해 생성함
     public List<?> getEntityListByType(int type) {
@@ -55,8 +61,7 @@ public class AllowApprovalService {
             for (Object obj : approvalList) {
                 ProductPlanEntity entity = (ProductPlanEntity) obj;
                 ProductPlanDto dto = new ProductPlanDto(
-                        entity.getProdPlanNo(), entity.getProdPlanCount(),
-                        entity.getAllowApprovalEntity(), entity.getProductEntity(), entity.getProdPlanDate());
+                        entity.getProdPlanNo(), entity.getProdPlanCount(), entity.getProdPlanDate(), entity.getProductEntity(), entity.getAllowApprovalEntity());
                 result.add(dto);
             }
 
@@ -96,7 +101,7 @@ public class AllowApprovalService {
         Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
 
         // 3. 존재하는 경우, productPlanEntity의 AllowApprovalEntity 업데이트 처리//
-        productPlanEntity.isPresent(){
+        if(productPlanEntity.isPresent()){
             ProductPlanEntity plan = productPlanEntity.get();
             plan.getAllowApprovalEntity().setAlAppWhether(true);
             plan.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));

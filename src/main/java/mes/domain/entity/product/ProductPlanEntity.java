@@ -17,7 +17,7 @@ public class ProductPlanEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int prodPlanNo;// -- PK
     @Column private String prodPlanCount;// -- 제품 생산 수량
-    @Column private int prodPlanDate;// -- 생산 예정 일자
+    @Column private String prodPlanDate;// -- 생산 예정 일자
 
     @ManyToOne
     @JoinColumn(name = "prodId")

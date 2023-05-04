@@ -17,7 +17,7 @@ public class AllowApprovalEntity {
     private int alAppNo; //-- PK
     @Column private boolean alAppWhether;//  -- 결재자 승인 여부
     @Column private String alAppDate; // 승인 일자
-    @Column private int alAppRole; // 승인 처리인지 승인 요청인지
+    @Column private String alAppRole; // 승인 처리인지 승인 요청인지
 
 
     @ManyToOne

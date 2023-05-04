@@ -23,8 +23,9 @@ import CreateProduct from "./component/product/CreateProduct";
 import PlanProduct from "./component/product/PlanProduct";
 import ProcessProduct from "./component/product/ProcessProduct";
 import ManageProduct from "./component/product/ManageProduct";
-/*--------------------------- 제품 부분 ------------------------------*/
-
+/*--------------------------- 멤버 부분 ------------------------------*/
+import Login from "./component/member/Login";
+import AllowApproval from "./component/member/AllowApproval";
 
 export default function Index( props ) {
     return ( <>
@@ -38,7 +39,7 @@ export default function Index( props ) {
                          <nav aria-label="main mailbox folders">
                            <List>
                              <ListItem disablePadding>
-                               <Link href="/">
+                               <Link href="/Login">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -83,7 +84,7 @@ export default function Index( props ) {
                 </div>
                 <div className="main-content">
                     <Routes >
-                        <Route path="/" element = { <Main /> } />
+                        <Route path="/login" element = { <Login /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />

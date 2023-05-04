@@ -1,5 +1,6 @@
 package mes.service.member;
 
+import lombok.extern.slf4j.Slf4j;
 import mes.domain.Repository.product.ProductPlanRepository;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.product.ProductPlanDto;
@@ -15,11 +16,13 @@ import mes.domain.entity.product.ProductPlanEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+@Service
+@Slf4j
 public class AllowApprovalService {
 
     @Autowired ProductPlanRepository productPlanRepository;
@@ -69,7 +72,6 @@ public class AllowApprovalService {
                         entity.getMat_in_outid(), entity.getMat_in_type(),
                         entity.getMat_st_stock(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
                 result.add(dto);
-
             }
         } else if ( type == 3) { // 판매
             for (Object obj : approvalList) {
@@ -85,6 +87,7 @@ public class AllowApprovalService {
         }
         return result;
     }
+    // 예상되는 문제점: repository null이면 에러 발생할 거 같음 (확인 필요)
 
     // 2. 승인/반려 처리 (코드 중복 최소화 - 동일 작동 메소드 생성)
     private boolean updateAllowApproval(int id, boolean approval) {

@@ -20,7 +20,7 @@ public class ProductEntity {
     @Column
     private String prodName;// -- 제품명
     @Column
-    private byte prodCode;// -- 제품 구분 문자코드 (식별용)
+    private String prodCode;// -- 제품 구분 문자코드 (식별용)
     @Column private String prodDate;// -- 생산일자
     @Column private int prodPrice;// -- 제품 가격
     

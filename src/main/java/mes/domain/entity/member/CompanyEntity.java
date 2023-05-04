@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mes.domain.dto.member.CompanyDto;
 
 import javax.persistence.*;
 
@@ -21,4 +22,14 @@ public class CompanyEntity {
     private String cname; // 회사명
     @Column
     private int ctype; // 구매자 or 판매자 식별(0: 구매자, 1: 판매자)
+
+    public CompanyDto toDto() {
+        return CompanyDto.builder()
+                .cno(this.cno)
+                .cname(this.cname)
+                .ctype(this.ctype)
+                .build();
+
+
+    }
 }

@@ -30,6 +30,7 @@ public class MaterialProductEntity {
     @ToString.Exclude
     private ProductEntity productEntity;
 
-
-
+    @OneToMany(mappedBy = "materialProductEntity")
+    @Builder.Default
+    private List<MaterialEntity> materialEntities = new ArrayList<>();
 }

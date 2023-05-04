@@ -9,20 +9,83 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class AllowApprovalService {
 
     @Autowired ProductPlanRepository productPlanRepository;
-    @Autowired MeterialRepository meterialRepository;
+    @Autowired MeterialInOutRepository meterialRepository;
     @Autowired SalesRepository salesRepository;
 
-    // 1. 출력( 뭘 출력? )
+    // 0. 제네릭 사용하기 위해 생성함
+    public List<?> getEntityListByType(int type) {
+        if (type == 1) {
+            return productPlanRepository.findAll();
+        } else if (type == 2) {
+            return meterialRepository.findAll();
+        } else if (type == 3) {
+            return salesRepository.findAll();
+        } else {
+            throw new IllegalArgumentException("Invalid type parameter");
+        }
+    }
+
+    // 1. 승인 요청 데이터 출력 [type: 1 - 자재, 2 - 제품, 3 - 판매 ]
+    // *프론트 처리 필요 사항: option: 1 - 미승인, 2 - 승인, 3 - 전체 출력 (Back에서 관리하면 로직 복잡해짐)
+    public List<?> printAllowApproval(HttpSession session, int type){
+
+        // 1. 승인권자 권한 확인 (제어)
+        MemberEntity member = (MemberEntity) session.getAttribute("member");
+        if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
+            throw new PermissionDeniedException("권한이 없습니다.");
+        }
+
+        // 2. 승인 리스트 가져오기 [제네릭 사용 시도 - 3가지 타입 한번에 받기 위함]
+        List<?> approvalList = getEntityListByType(type);
+        
+        // 3. 승인 리스트 저장소 생성
+        List<Object> result = new ArrayList<>();
+        // 의견: Object 물음표로 변경해도 문제 없는지 테스트 필요
+
+        // 4. 결재권자인 경우, 아래 내용 출력 [type 별로 List 저장 후 출력]
+        if( type == 1) { // 자재
+            for (Object obj : approvalList) {
+                ProductPlanEntity entity = (ProductPlanEntity) obj;
+                ProductPlanDto dto = new ProductPlanDto(
+                        entity.getProdPlanNo(), entity.getProdPlanCount(),
+                        entity.getAllowApprovalEntity(), entity.getProductEntity(), entity.getProdPlanDate());
+                result.add(dto);
+            }
+
+        } else if ( type == 2) { // 제품
+            for (Object obj : approvalList) {
+                MaterialInOutEntity entity = (MaterialInOutEntity) obj;
+                MaterialInOutDto dto = new MaterialInOutDto(
+                        entity.getMatInOutID(), entity.getMatInType(),
+                        entity.getMatStStock(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
+                result.add(dto);
+            }
+        } else if ( type == 3) { // 판매
+            for (Object obj : approvalList) {
+                SalesEntity entity = (SalesEntity) obj;
+                SalesDto dto = new SalesDto(
+                        entity.getOrderId(), entity.getOrderDate(),
+                        entity.getOrderCount(), entity.getOrderStatus(), entity.getSalesPrice(),
+                        entity.getAllowApprovalEntity(), entity.getCompanyEntity(), entity.getProductEntity(), entity.getMemberEntity());
+                result.add(dto);
+            }
+        } else{ // 예외 처리(PermissionDeniedException 클래스 공용 사용)
+            throw new PermissionDeniedException("알 수 없는 요청");
+        }
+        return result;
+    }
 
     // 2. 승인/반려 처리
     // -------------------------- 제품 --------------------------
-    public void approveProductPlan(int prodPlanNo, HttpSession session) { // --- 제품 생산 승인
+    public void approveProductPlan(HttpSession session, int prodPlanNo) { // --- 제품 생산 승인
         
         // 1. 승인권자 권한 확인
         MemberEntity member = (MemberEntity) session.getAttribute("member");
@@ -33,7 +96,7 @@ public class AllowApprovalService {
         Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
 
         // 3. 존재하는 경우, productPlanEntity의 AllowApprovalEntity 업데이트 처리//
-        if (productPlanEntity.isPresent()) {
+        productPlanEntity.isPresent(){
             ProductPlanEntity plan = productPlanEntity.get();
             plan.getAllowApprovalEntity().setAlAppWhether(true);
             plan.getAllowApprovalEntity().setAlAppDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));

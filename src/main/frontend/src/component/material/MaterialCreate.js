@@ -64,7 +64,7 @@ export default function MaterialCreate() {
     axios.post('/materials/materialCreate', info)
                 .then( r => { console.log(r);
                 if(r.data == true){
-                alert('삭제성공')
+                alert('등록성공')
                 window.location.href="/component/material/Material"
 
                 }
@@ -125,7 +125,7 @@ export default function MaterialCreate() {
 
               <TextField style={{padding : '10px', margin : '10px'}} className="MatName" id="MatName" label="자재이름" variant="outlined" />
               <TextField style={{padding : '10px', margin : '10px'}} className="MatUnit" id="MatUnit" label="단위" variant="outlined" />
-              <TextField style={{padding : '10px', margin : '10px'}} className="MatStExp" id="MatStExp" label="유통기한" variant="outlined" />
+              <TextField style={{padding : '10px', margin : '10px'}} className="MatStExp" id="MatStExp" label="유통기한(Day)" variant="outlined" />
               <TextField style={{padding : '10px', margin : '10px'}} className="MatPrice" id="MatPrice" label="단가" variant="outlined" />
 
         <Stack spacing={2} direction="row">

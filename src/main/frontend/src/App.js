@@ -15,6 +15,7 @@ import WarehouseIcon from '@mui/icons-material/Warehouse';
 import Material from "./component/material/Material";
 import Link from '@mui/material/Link';
 import Main from "./Main";
+import MaterialInoutList from "./component/material/MaterialInoutList";
 
 /*--------------------------- 제품 부분 ------------------------------*/
 import ProductTab from "./component/product/ProductTab";
@@ -57,7 +58,7 @@ export default function Index( props ) {
                               </Link>
                               </ListItem>
                                 <ListItem disablePadding>
-                               <Link href="/component/product/ProductTab">
+                               <Link href="#">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -84,7 +85,7 @@ export default function Index( props ) {
                     <Routes >
                         <Route path="/" element = { <Main /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
-                        <Route path="/component/product/ProductTab" element = { <ProductTab/> } />
+
                     </Routes>
 
                 </div>

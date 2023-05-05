@@ -26,25 +26,26 @@ public class ProductController {
 
     
     //전체 제품 출력 => 제품 지시, 제품 관리에서 출력 => 제품쪽에서는 재고 출력
-    @GetMapping("/")
+    @GetMapping("")
     public List<ProductDto> getProductList(){
         return null;
     }
     
     //제품 등록
-    @PostMapping("/")
+    @PostMapping("")
     public boolean postProduct(@RequestBody ProductDto productDto){
-        return false;
+        System.out.println(productDto.toString());
+        return productService.postProduct(productDto);
     }
 
     //재품 수정
-    @PutMapping("/")
+    @PutMapping("")
     public int putProduct(@RequestBody ProductDto productDto){
         return 1;
     }
 
     //제품 삭제
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public boolean deleteProduct(@RequestParam int prodId){
         return false;
     }

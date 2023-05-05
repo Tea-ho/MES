@@ -1,15 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios'
 
+/* -------------- mui -------------- */
 import TextField from '@mui/material/TextField'; //텍스트 필드
 import Container from '@mui/material/Container';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+/* -------------- mui -------------- */
 
 export default function InProduct(props){ //제품 추가 부분
-    let [company , setCompany] = useState([])
+    let[companyList, setCompanyList] = useState([]) //DB에 저장된 회사 정보를 담는
+    let [company , setCompany] = useState(0) //변경된 회사 정보를 담는 useState
     let matIDList = props.material; //매개변수로 받은 선택받은 제품의 리스트
 
     console.log(matIDList);
@@ -19,7 +23,7 @@ export default function InProduct(props){ //제품 추가 부분
         axios.get('/materials/getcompany')
           .then( r => {
                 console.log(r)
-                setCompany(r.data)
+                setCompanyList(r.data)
             } )
      }, [] )
 
@@ -31,13 +35,21 @@ export default function InProduct(props){ //제품 추가 부분
     //제품 등록
     const createProduct = () => {
         let info ={
-            prod_code : 'C',
-            prod_name : document.getElementById('prodName').value,
-            prod_price : document.getElementById('prodPrice').value,
-            cno : company
+            prodCode : 'C',
+            prodName : document.getElementById('prodName').value,
+            prodPrice : document.getElementById('prodPrice').value,
+            companyEntity : companyList.find(e => e.cno === company), //해당 cno가 company의 정보를 가진 객체를 넣음
+            materialList : matIDList
         }
 
-        console.log(info)
+        axios.post('/product', info)
+            .then((r) => {
+                if(r == true){
+                    alert('등록 성공');
+                }else{
+                    alert('등록 실패')
+                }
+            })
     }
 
     //작업 취소
@@ -52,10 +64,10 @@ export default function InProduct(props){ //제품 추가 부분
                 <div>
                   <FormControl style={{ width : '100px' , margin : '20px 0px'}}>
                     <InputLabel id="demo-simple-select-label">회사</InputLabel>
-                    <Select value={ company } label="카테고리" onChange={ handleChange } >
+                    <Select value={ company } label="카테고리" onChange={ companyChangeHandler } >
                         <MenuItem value={0}>회사</MenuItem>
                         {
-                            company.map( (c) => {
+                            companyList.map( (c) => {
                                 return   <MenuItem value={c.cno}>{ c.cname }</MenuItem>
                             })
                         }

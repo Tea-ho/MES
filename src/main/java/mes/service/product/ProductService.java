@@ -1,11 +1,16 @@
 package mes.service.product;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.Repository.product.MaterialProductRepository;
 import mes.domain.Repository.product.ProductRepository;
+import mes.domain.dto.product.MaterialProductDto;
 import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
+import mes.domain.entity.material.MaterialEntity;
+import mes.domain.entity.material.MaterialEntityRepository;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.member.CompanyRepository;
+import mes.domain.entity.product.MaterialProductEntity;
 import mes.domain.entity.product.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +32,12 @@ public class ProductService {
 
     @Autowired
     CompanyRepository companyRepository;
+
+    @Autowired
+    MaterialProductRepository materialProductRepository;
+
+    @Autowired
+    MaterialEntityRepository materialEntityRepository;
 
     //제품 출력 => 제품 지시, 제품 관리 페이지에서 수행할 예정
     public PageDto getProductList(PageDto pageDto){
@@ -52,6 +63,30 @@ public class ProductService {
 
     //제품 등록 => 제품 생산페이지에서 수행 할 예정
     public boolean postProduct(ProductDto productDto){
+
+        List<MaterialEntity> materialEntityList = new ArrayList<>(); //자재 PK번호로 해당
+
+        for(int i = 0; i < productDto.getMaterialList().size(); i++){
+            materialEntityList.add(materialEntityRepository.findById(productDto.getMaterialList().get(i)).get());
+        }
+
+        System.out.println("자재 조회 : " + materialEntityList);
+
+        ProductEntity productEntity = productRepository.save(productDto.toEntity());
+
+        if(productEntity.getProdId() < 1){ //앞부분 등록 실패시
+            return false;
+        }
+
+        System.out.println("제품 등록 후 " + productEntity);
+
+        MaterialProductEntity materialProductEntity = new MaterialProductDto(productDto, materialEntityList).toEntity();
+        MaterialProductEntity resultMaterialProductEntity = materialProductRepository.save(materialProductEntity);
+
+        if(resultMaterialProductEntity.getMpno() >= 1){ //등록 성공시
+            return true;
+        }
+
         return false;
     }
 

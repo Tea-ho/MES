@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios'
 
-/* ---------table mui -------- */
+/* -------------- mui -------------- */
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,6 +17,7 @@ import FormControl from '@mui/material/FormControl';
 
 import {Checkbox} from '@mui/material';
 import InProduct from './InProduct'
+/* -------------- mui -------------- */
 
 
 export default function CreateProduct(props){

@@ -29,10 +29,10 @@ public class MaterialProductDto {
     public MaterialProductDto(ProductDto productDto, List<MaterialEntity> materialEntityList) {
     }
 
+    //저장용
     public MaterialProductEntity toEntity(){
         return MaterialProductEntity.builder()
                 .productEntity(this.productEntity)
-                .materialEntityList(this.materialEntityList)
                 .build();
     }
 }

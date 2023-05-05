@@ -1,11 +1,13 @@
 package mes.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
 import mes.service.product.ProductPlanService;
 import mes.service.product.ProductProcessService;
 import mes.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +29,9 @@ public class ProductController {
     
     //전체 제품 출력 => 제품 지시, 제품 관리에서 출력 => 제품쪽에서는 재고 출력
     @GetMapping("")
-    public List<ProductDto> getProductList(){
-        return null;
+    public PageDto getProductList(PageDto pageDto){
+        System.out.println(pageDto.toString());
+        return productService.getProductList(pageDto);
     }
     
     //제품 등록

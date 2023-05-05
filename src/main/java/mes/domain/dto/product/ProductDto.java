@@ -8,6 +8,7 @@ import mes.domain.BaseTime;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.product.ProductEntity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -29,10 +30,12 @@ public class ProductDto {
 
     private CompanyEntity companyEntity; // 회사명
 
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     public ProductEntity toEntity(){
         return ProductEntity.builder()
                 .prodCode(this.prodCode)
-                .prodDate(new Date().toString())
+                .prodDate(simpleDateFormat.format(new Date()))
                 .prodPrice(this.prodPrice)
                 .prodName(this.prodName)
                 .companyEntity(this.companyEntity)

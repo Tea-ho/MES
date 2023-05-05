@@ -1,6 +1,8 @@
 package mes.domain.entity.product;
 
 import lombok.*;
+import mes.domain.dto.material.MaterialDto;
+import mes.domain.dto.product.MaterialProductDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.member.MemberEntity;
 
@@ -20,15 +22,23 @@ public class MaterialProductEntity {
     private int mpno;
 
 
-    @OneToMany(mappedBy = "materialProductEntity")
+   /* @OneToMany(mappedBy = "materialProductEntity")
     @Builder.Default
-    private List<MaterialEntity> materialEntityList = new ArrayList<>();
+    private List<MaterialEntity> materialEntityList = new ArrayList<>();*/
 
 
     @ManyToOne
-    @JoinColumn(name = "prodId")
+    @JoinColumn(name = "prod_id")
     @ToString.Exclude
     private ProductEntity productEntity;
 
+
+    //출력용
+    public MaterialProductDto toDto(){
+        return MaterialProductDto.builder()
+                .mpno(this.mpno)
+                .productEntity(this.productEntity)
+                .build();
+    }
 
 }

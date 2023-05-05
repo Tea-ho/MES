@@ -10,18 +10,16 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+
 import {Checkbox} from '@mui/material';
+import InProduct from './InProduct'
 
 
-export default function CreateProduct(){
+export default function CreateProduct(props){
     let[pageInfo, setPageInfo] = useState({"page" : 1, "key" : '', "keyword " : ''}) //검색기능과 페이지네이션을 위해
 
     let[list, setList] = useState([]); //자재를 담을 배열 usestate
@@ -81,7 +79,8 @@ export default function CreateProduct(){
                         </TableBody>
                       </Table>
                     </TableContainer>
-                    <div style={{display : 'flex' , justifyContent : 'center' }}>
+                    <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
+                        <InProduct material={checked}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                     </div>
              </div>
     </>);

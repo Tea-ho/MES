@@ -24,8 +24,6 @@ export default function MaterialCreate() {
     let [list , setList] = useState([])
 
 
-
-
      useEffect( ()=>{
         axios.get('/materials/getcompany')
           .then( r => {

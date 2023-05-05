@@ -1,6 +1,6 @@
 import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
-import { Typography, Box } from '@mui/material';
+import { Container, Grid, Typography, TextField, Button, Box } from '@mui/material';
 
 export default function Login(props) {
 
@@ -23,7 +23,7 @@ export default function Login(props) {
     };
 
     const handleLogout = () => {
-        axios.get('/home/logout', { withCredentials: true })
+        axios.get('/home/logout')
             .then(response => {
                 setLoggedIn(false);
                 console.log('로그아웃 성공');
@@ -34,30 +34,60 @@ export default function Login(props) {
         };
 
 
-    return ( <>
-        <div>
-            {loggedIn
-                ?
-                <button onClick={handleLogout}>로그아웃</button>
-                :
-                <div>
-                    <input type="text" value={username} onChange={handleUsernameChange} />
-                    <input type="password" value={password} onChange={handlePasswordChange} />
-                    <button onClick={handleLogin}>로그인</button>
-                </div>
-            }
-        </div>
-        <Box mt={5}>
+    return (
+        <Container component="main" maxWidth="xs" style={{marginTop: "8%"}}>
+        <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <Typography variant="h5" component="h1">
+                  로그인
+                </Typography>
+            </Grid>
+        </Grid>
+        <form noValidate onSubmit={handleLogin}>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="username"
+                        label="아이디"
+                        name="username"
+                        autoComplete="username"
+                        onChange={handleUsernameChange}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="password"
+                        label="패스워드"
+                        name="password"
+                        autoComplete="current-password"
+                        onChange={handlePasswordChange}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Button type="submit" fullWidth variant="contained" color="primary">
+                        로그인
+                    </Button>
+                </Grid>
+            </Grid>
+        </form>
+        <Box mt={5} className="copyright">
             <Copyright />
         </Box>
-    </>);
+    </Container>);
 }
 
+// 하단 회사명
 function Copyright(props) {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            teoenginer, {new Date().getFullYear()}
+            MES, {new Date().getFullYear()}
             {'.'}
         </Typography>
     );

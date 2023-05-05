@@ -1,10 +1,12 @@
 package mes.service.member;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import mes.domain.Repository.product.ProductPlanRepository;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.product.ProductPlanDto;
-
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.material.MaterialInOutEntity;
 import mes.domain.entity.material.MaterialInOutEntityRepository;
@@ -12,17 +14,12 @@ import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.AllowApprovalRepository;
 import mes.domain.entity.member.PermissionDeniedException;
 import mes.domain.entity.product.ProductPlanEntity;
-
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
-@Service
-@Slf4j
+@Service @Slf4j
 public class AllowApprovalService {
 
     @Autowired ProductPlanRepository productPlanRepository;
@@ -31,7 +28,6 @@ public class AllowApprovalService {
     @Autowired AllowApprovalRepository allowApprovalRepository;
 
     // 0. 제네릭 사용하기 위해 생성
-    // 항상 인수를 받기 때문에 optional 필요 없음
     public List<?> getEntityListByType(int type) {
         if (type == 1) {
             return productPlanRepository.findAll();
@@ -108,23 +104,16 @@ public class AllowApprovalService {
     public boolean approveMaterialInOut(int MatInOutID ) {
         return updateAllowApproval(MatInOutID,  true);
     }
-
     public boolean rejectMaterialInOut(int MatInOutID) {
         return updateAllowApproval(MatInOutID, false);
     }
-
-    public boolean approveProductInOut(int ProdInOutID) {
-        return updateAllowApproval(ProdInOutID, true);
-    }
-
+    public boolean approveProductInOut(int ProdInOutID) { return updateAllowApproval(ProdInOutID, true); }
     public boolean rejectProductInOut(int ProdInOutID) {
         return updateAllowApproval(ProdInOutID, false);
     }
-
     public boolean approveSales(int OrderId) {
         return updateAllowApproval(OrderId, true);
     }
-
     public boolean rejectSales(int OrderId) {
         return updateAllowApproval(OrderId, false);
     }

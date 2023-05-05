@@ -26,6 +26,10 @@ import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 멤버 부분 ------------------------------*/
 import Login from "./component/member/Login";
 import AllowApproval from "./component/member/AllowApproval";
+import AllowMaterial from "./component/member/AllowMaterial";
+import AllowProduct from "./component/member/AllowProduct";
+import AllowSales from "./component/member/AllowSales";
+
 
 export default function Index( props ) {
     return ( <>
@@ -74,10 +78,20 @@ export default function Index( props ) {
                                     <ListItemIcon>
                                    <WarehouseIcon />
                                  </ListItemIcon>
-                                 <ListItemText primary="판매/승인" />
+                                 <ListItemText primary="판매" />
                                 </ListItemButton>
                                 </Link>
                              </ListItem>
+                             <ListItem disablePadding>
+                                <Link href="/approval">
+                                <ListItemButton>
+                                     <ListItemIcon>
+                                    <WarehouseIcon />
+                                  </ListItemIcon>
+                                  <ListItemText primary="승인" />
+                                 </ListItemButton>
+                                 </Link>
+                              </ListItem>
                            </List>
                          </nav>
                        </Box>
@@ -88,6 +102,7 @@ export default function Index( props ) {
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
+                        <Route path="/approval" element = { <AllowApproval/> } />
                     </Routes>
 
                 </div>

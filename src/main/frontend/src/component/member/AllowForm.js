@@ -22,7 +22,7 @@ export default function AllowForm() {
                 console.log(r);
                 setList(r.data);
             } )
-    }, [list])
+    }, [])
 
     // 3. 승인 처리 (폼에서 진행)
     const approveHandler = (e) => {

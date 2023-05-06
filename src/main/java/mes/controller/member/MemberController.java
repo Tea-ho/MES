@@ -1,14 +1,12 @@
 package mes.controller.member;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.dto.member.MemberDto;
 import mes.domain.entity.member.MemberEntity;
 import mes.domain.entity.member.MemberRepository;
 import mes.service.member.MemberSerivce;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,16 +17,17 @@ public class MemberController {
     @Autowired MemberSerivce memberService;
     @Autowired MemberRepository memberRepository;
 
-    @GetMapping("/login")
-    public boolean login(@RequestParam String mname, @RequestParam String password, HttpSession session) {
-        boolean result = memberService.login(mname, password);
+    @PostMapping("/login")
+    public boolean login( @RequestBody MemberDto memberDto, HttpSession session) {
+        boolean result = memberService.login(memberDto.getMname(), memberDto.getMpassword());
+            log.info("login result: " + result);
         if (result) {
-            MemberEntity member = memberRepository.findByMnameAndMpassword(mname, password);
+            MemberEntity member = memberRepository.findByMnameAndMpassword(memberDto.getMname(), memberDto.getMpassword());
             session.setAttribute("member", member);
-            return true;
-        } else {
-            return false;
+                log.info(session.getAttribute("member").toString());
+            return result;
         }
+        return result;
     }
     @GetMapping("/logout")
     public void logout(HttpSession session) {

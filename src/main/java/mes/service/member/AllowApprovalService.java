@@ -30,9 +30,9 @@ public class AllowApprovalService {
     // 0. 제네릭 사용하기 위해 생성
     public List<?> getEntityListByType(int type) {
         if (type == 1) {
-            return productPlanRepository.findAll();
-        } else if (type == 2) {
             return meterialRepository.findAll();
+        } else if (type == 2) {
+            return productPlanRepository.findAll();
         } else if (type == 3) {
             return salesRepository.findAll();
         } else{

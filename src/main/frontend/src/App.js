@@ -43,7 +43,7 @@ export default function Index( props ) {
                          <nav aria-label="main mailbox folders">
                            <List>
                              <ListItem disablePadding>
-                               <Link href="/Login">
+                               <Link href="/component/member/Login">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -83,7 +83,7 @@ export default function Index( props ) {
                                 </Link>
                              </ListItem>
                              <ListItem disablePadding>
-                                <Link href="/approval">
+                                <Link href="/component/member/AllowApproval">
                                 <ListItemButton>
                                      <ListItemIcon>
                                     <WarehouseIcon />
@@ -98,11 +98,11 @@ export default function Index( props ) {
                 </div>
                 <div className="main-content">
                     <Routes >
-                        <Route path="/login" element = { <Login /> } />
+                        <Route path="/component/member/Login" element = { <Login /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
-                        <Route path="/approval" element = { <AllowApproval/> } />
+                        <Route path="/component/member/AllowApproval" element = { <AllowApproval/> } />
                     </Routes>
 
                 </div>

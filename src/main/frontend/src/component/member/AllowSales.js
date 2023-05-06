@@ -15,7 +15,7 @@ export default function AllowSales() {
                 console.log(r);
                 setList(r.data);
             } )
-    }, [list])
+    }, [])
 
     // 3. 승인 처리
     const approveHandler = (e) => {

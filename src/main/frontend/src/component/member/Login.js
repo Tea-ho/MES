@@ -4,18 +4,24 @@ import { Container, Grid, Typography, TextField, Button, Box } from '@mui/materi
 
 export default function Login(props) {
 
-    const [ username, setUsername ] = useState('');
+    const [ mname, setMname ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ loggedIn, setLoggedIn ] = useState(false);
 
-    const handleUsernameChange = (event) => setUsername(event.target.value);
+    const handleUsernameChange = (event) => setMname(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
 
     const handleLogin = () => {
-        axios.get('/home/login',{ params: { username: username, password: password }})
-            .then(response => {
-                setLoggedIn(true);
-                console.log('로그인 성공');
+        let data = { mname: mname, mpassword: password };
+        axios.post('/home/login', data)
+            .then( (response) => {
+                   console.log(response.data);
+                if(response.data){
+                    setLoggedIn(true);
+                    window.location.href = '/component/member/AllowApproval';
+                } else{
+                    window.location.href = '/component/member/Login';
+                }
             })
             .catch(error => {
                 console.error('로그인 실패', error);
@@ -52,8 +58,8 @@ export default function Login(props) {
                         fullWidth
                         id="username"
                         label="아이디"
-                        name="username"
-                        autoComplete="username"
+                        name="mname"
+                        autoComplete="mname"
                         onChange={handleUsernameChange}
                     />
                 </Grid>
@@ -62,6 +68,7 @@ export default function Login(props) {
                         variant="outlined"
                         required
                         fullWidth
+                        type="password"
                         id="password"
                         label="패스워드"
                         name="password"

@@ -79,7 +79,7 @@ public class MaterialInoutService {
     public InOutPageDto MaterialInOutList(InOutPageDto dto){
 
        List<MaterialInOutDto> list = new ArrayList<>();
-        Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "matID"));
+        Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "mat_in_outid"));
 
         Page<MaterialInOutEntity> entityPage = materialInOutEntityRepository.findByMatid(dto.getMatID() , pageable);
         entityPage.forEach((e)->{
@@ -89,11 +89,6 @@ public class MaterialInoutService {
         dto.setMaterialInOutDtoList(list);
         dto.setTotalPage(entityPage.getTotalPages());
         dto.setTotalCount(entityPage.getTotalElements());
-
-
-
-
-
 
         return dto;
     }

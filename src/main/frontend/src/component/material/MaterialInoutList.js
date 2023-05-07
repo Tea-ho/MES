@@ -164,11 +164,11 @@ export default function MaterialInoutList(props) {
              <div style={{display : 'flex' , justifyContent : 'center' }}>
                     <Pagination count={totalPage}  color="primary" onChange={selectPage}/>
              </div>
-             <div>결제승인 관계없이 재고+ 하여 출력중</br>
-                  추후 결제승인 되었을시 재고 증감 반영하여 출력예정
-             </div>
-        </div>
 
+        </div>
+        <div>결제승인 관계없이 재고+ 하여 출력중
+        추후 결제승인 되었을시 재고 증감 반영하여 출력예정
+        </div>
 
         <div>
 

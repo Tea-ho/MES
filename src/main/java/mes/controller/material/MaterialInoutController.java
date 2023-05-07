@@ -1,6 +1,7 @@
 package mes.controller.material;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.dto.material.InOutPageDto;
 import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.service.Material.MaterialInoutService;
@@ -26,10 +27,10 @@ public class MaterialInoutController {
     }
 
     @GetMapping("/MaterialInOutList")
-    public List<MaterialInOutDto> MaterialInOutList(@RequestParam int matID){
+    public InOutPageDto MaterialInOutList(InOutPageDto dto){
 
 
-        return materialInoutService.MaterialInOutList(matID);
+        return materialInoutService.MaterialInOutList(dto);
     }
 
 }

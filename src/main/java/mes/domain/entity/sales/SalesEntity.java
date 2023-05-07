@@ -56,6 +56,7 @@ public class SalesEntity {
                 .companyEntity(this.getCompanyEntity())
                 .memberEntity(this.getMemberEntity())
                 .productEntity(this.getProductEntity())
+                .productProcessEntity( this.toDto().getProductProcessEntity())
                 .build();
     }
 

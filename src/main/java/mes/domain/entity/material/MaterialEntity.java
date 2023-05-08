@@ -44,6 +44,7 @@ public class MaterialEntity extends BaseTime {
     private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
 
 
+
     public MaterialDto toDto() { // 반환용
         return MaterialDto.builder()
                 .MatID(this.MatID)

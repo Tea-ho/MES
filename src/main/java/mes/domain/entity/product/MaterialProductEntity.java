@@ -21,11 +21,14 @@ public class MaterialProductEntity {
     private int mpno;
 
 
-   /* @OneToMany(mappedBy = "materialProductEntity")
+    @OneToMany(mappedBy = "materialProductEntity")
     @Builder.Default
-    private List<MaterialEntity> materialEntityList = new ArrayList<>();*/
+    private List<MaterialEntity> materialEntityList = new ArrayList<>();
 
-
+    @ManyToOne
+    @JoinColumn(name = "matid")
+    @ToString.Exclude
+    private  MaterialEntity materialEntity;
     @ManyToOne
     @JoinColumn(name = "prod_id")
     @ToString.Exclude

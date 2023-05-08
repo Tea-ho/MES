@@ -21,16 +21,23 @@ import MaterialInoutList from "./MaterialInoutList";
 
 export default function MaterialView(props) {
 
-const [list, setList] = useState([]);
+    const [list, setList] = useState([]);
+    let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'keyword' : '' , 'matID' : 0 } )
+    let [totalPage , setTotalPage ] = useState(1);
+    let [totalCount , setTotalCount ] = useState(1);
+
 
      useEffect( ()=>{
-            axios.get('/materials/materialList',  { params : { matID : 0 } })
+            axios.get('/materials/materialList',{ params : pageInfo } )
               .then( r => {
                     console.log(r)
-                    setList(r.data)
+                    setList( r.data.materialList );
+                    setTotalPage(r.data.totalPage);
+                    setTotalCount(r.data.totalCount);
+
                 } )
 
-        }, [] )
+        }, [pageInfo] )
 
     // 자제 수정
     const MaterialUpdate=(e)=>{
@@ -51,7 +58,21 @@ const [list, setList] = useState([]);
 
         }
 
+    const selectPage = (event , value) => {
 
+        console.log(value); //
+        pageInfo.page = value;
+        setPageInfo({...pageInfo});
+
+
+    }
+
+    const onSearch =()=>{
+        pageInfo.keyword = document.querySelector(".keyword").value;
+        pageInfo.page = 1
+        document.querySelector(".keyword").value = '';
+        setPageInfo({...pageInfo});
+    }
 
 
  return(<>
@@ -96,8 +117,13 @@ const [list, setList] = useState([]);
                 </Table>
               </TableContainer>
               <div style={{display : 'flex' , justifyContent : 'center' }}>
+                          <Pagination count={totalPage}  color="primary" onChange={selectPage}/>
+                      </div>
+                         <div>
 
-              </div>
+                              <input type="text" className="keyword" />
+                              <button type="button" onClick={onSearch}> 검색 </button>
+                         </div>
 
        </div>
 

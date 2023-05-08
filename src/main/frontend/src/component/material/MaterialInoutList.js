@@ -30,18 +30,21 @@ export default function MaterialInoutList(props) {
 
     const [list, setList] = useState([]);
     const [inOutList , setInOutList] = useState([]);
+    let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'matID' : params.matID } )
+    let [totalPage , setTotalPage ] = useState(1);
+    let [totalCount , setTotalCount ] = useState(1);
 
          useEffect( ()=>{
                 axios.get('/materials/materialList' , { params : {matID : params.matID} })
                   .then( r => {
                         console.log(r)
-                        setList(r.data)
+                        setList(r.data.materialList)
                         MaterialInOut();
                     } )
 
 
 
-            }, [] )
+            }, [pageInfo] )
 
 
     const MaterialIn = () =>{
@@ -56,21 +59,31 @@ export default function MaterialInoutList(props) {
                         alert('등록성공 결제대기합니다.');
                         window.location.href = `/component/material/MaterialInoutList/${params.matID}`;
                         }
-                        } )
+                        })
         }
 
 
     const MaterialInOut = () =>{
-            axios.get('/materialInout/MaterialInOutList' , { params : {matID : params.matID} })
+            axios.get('/materialInout/MaterialInOutList' , { params : pageInfo })
                      .then( r => {
                      console.log(r)
-                     setInOutList(r.data);
+                    setInOutList(r.data.materialInOutDtoList)
+                    setTotalPage(r.data.totalPage);
+                    setTotalCount(r.data.totalCount);
 
             } )
 
 
     }
 
+    const selectPage = (event , value) => {
+
+            console.log(value); //
+            pageInfo.page = value;
+            setPageInfo({...pageInfo});
+
+
+        }
 
 
 
@@ -148,8 +161,14 @@ export default function MaterialInoutList(props) {
                               </TableBody>
                             </Table>
                           </TableContainer>
-        </div>
+             <div style={{display : 'flex' , justifyContent : 'center' }}>
+                    <Pagination count={totalPage}  color="primary" onChange={selectPage}/>
+             </div>
 
+        </div>
+        <div>결제승인 관계없이 재고+ 하여 출력중
+        추후 결제승인 되었을시 재고 증감 반영하여 출력예정
+        </div>
 
         <div>
 

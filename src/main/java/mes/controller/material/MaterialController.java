@@ -3,6 +3,7 @@ package mes.controller.material;
 
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.dto.material.MaterialDto;
+import mes.domain.dto.material.MaterialPageDto;
 import mes.domain.dto.member.CompanyDto;
 import mes.service.Material.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,10 @@ public class MaterialController {
 
     // 자재 리스트
     @GetMapping("/materialList")
-    public List<MaterialDto> materialList(@RequestParam int matID){
+    public MaterialPageDto materialList(MaterialPageDto dto){
 
 
-        return materialService.materialList(matID);
+        return materialService.materialList(dto);
     }
 
     // 회사 불러오기

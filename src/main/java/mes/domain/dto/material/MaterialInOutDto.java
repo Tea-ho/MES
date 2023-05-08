@@ -18,6 +18,14 @@ public class MaterialInOutDto {
     private MaterialEntity materialEntity;// -- 마스터 원자재 테이블 fk
     private int MatID; // 검색용
 
+    public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, AllowApprovalEntity allowApprovalEntity, MaterialEntity materialEntity) {
+        this.mat_in_outid = mat_in_outid;
+        this.mat_in_type = mat_in_type;
+        this.mat_st_stock = mat_st_stock;
+        this.allowApprovalEntity = allowApprovalEntity;
+        this.materialEntity = materialEntity;
+    }
+
     public MaterialInOutEntity toInEntity(){
         return MaterialInOutEntity.builder()
                 .mat_in_outid(this.mat_in_outid)

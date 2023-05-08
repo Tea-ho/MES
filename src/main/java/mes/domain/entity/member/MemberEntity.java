@@ -1,6 +1,7 @@
 package mes.domain.entity.member;
 
 import lombok.*;
+import mes.domain.dto.member.MemberDto;
 
 import javax.persistence.*;
 
@@ -30,4 +31,12 @@ public class MemberEntity {
     @ToString.Exclude
     private CompanyEntity companyEntity; // 회사명
 
+    public MemberDto toDto() {
+        return MemberDto.builder()
+              .mno(mno)
+              .mname(mname)
+              .mpassword(mpassword)
+              .position(position)
+              .build();
+    }
 }

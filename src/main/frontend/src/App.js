@@ -23,10 +23,25 @@ import CreateProduct from "./component/product/CreateProduct";
 import PlanProduct from "./component/product/PlanProduct";
 import ProcessProduct from "./component/product/ProcessProduct";
 import ManageProduct from "./component/product/ManageProduct";
-/*--------------------------- 제품 부분 ------------------------------*/
+/*--------------------------- 멤버 부분 ------------------------------*/
+import Login from "./component/member/Login";
+import Info from "./component/member/Info";
+import AllowApproval from "./component/member/AllowApproval";
+import AllowMaterial from "./component/member/AllowMaterial";
+import AllowProduct from "./component/member/AllowProduct";
+import AllowSales from "./component/member/AllowSales";
+
+
+/* --------------------------- 판매 부분 --------------------------- */
+import SalesHeader from "./component/sales/SalesHeader";
+
+
 
 
 export default function Index( props ) {
+    const member = sessionStorage.getItem('member')
+    const urlHome = member !=null ? "/component/member/Info" : "/component/member/Login";
+
     return ( <>
         <BrowserRouter>
             <div className="header">
@@ -38,7 +53,7 @@ export default function Index( props ) {
                          <nav aria-label="main mailbox folders">
                            <List>
                              <ListItem disablePadding>
-                               <Link href="/">
+                               <Link href={urlHome}>
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -68,22 +83,33 @@ export default function Index( props ) {
                                 </Link>
                                 </ListItem>
                                 <ListItem disablePadding>
-                               <Link href="#">
+                               <Link href="/component/sales/SalesHeader">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
                                  </ListItemIcon>
-                                 <ListItemText primary="판매/승인" />
+                                 <ListItemText primary="판매" />
                                 </ListItemButton>
                                 </Link>
                              </ListItem>
+                             <ListItem disablePadding>
+                                <Link href="/component/member/AllowApproval">
+                                <ListItemButton>
+                                     <ListItemIcon>
+                                    <WarehouseIcon />
+                                  </ListItemIcon>
+                                  <ListItemText primary="승인" />
+                                 </ListItemButton>
+                                 </Link>
+                              </ListItem>
                            </List>
                          </nav>
                        </Box>
                 </div>
                 <div className="main-content">
                     <Routes >
-                        <Route path="/" element = { <Main /> } />
+                        <Route path="/component/member/Login" element = { <Login /> } />
+                        <Route path="/component/member/Info" element = { <Info /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />

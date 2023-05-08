@@ -9,6 +9,7 @@ import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.material.MaterialEntityRepository;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.member.CompanyRepository;
+import mes.domain.entity.product.MaterialProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +44,7 @@ public class MaterialService {
 
         MaterialEntity entity = materialEntityRepository.save(dto.toEntity());
         entity.setCompanyEntity(companyEntity);
+
 
         log.info("Material entity"+ entity);
         if( entity.getMatID() >= 1 ){ return true; }

@@ -20,12 +20,12 @@ public class ProductPlanEntity {
     @Column private String prodPlanDate;// -- 생산 예정 일자
 
     @ManyToOne
-    @JoinColumn(name = "prodId")
+    @JoinColumn(name = "prod_id")
     @ToString.Exclude
     private ProductEntity productEntity;// -- 마스터 제품 테이블 fk
 
     @ManyToOne
-    @JoinColumn(name = "alAppNo")
+    @JoinColumn(name = "al_app_no")
     @ToString.Exclude
     private AllowApprovalEntity allowApprovalEntity;// -- 결제 승인 여부 테이블 fk
 

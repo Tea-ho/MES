@@ -39,6 +39,10 @@ public class MaterialEntity extends BaseTime {
     @ToString.Exclude
     private MaterialProductEntity materialProductEntity;
 
+    @OneToMany(mappedBy = "materialEntity")
+    @Builder.Default
+    private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
+
 
     public MaterialDto toDto() { // 반환용
         return MaterialDto.builder()

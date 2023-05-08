@@ -24,8 +24,6 @@ export default function MaterialCreate() {
     let [list , setList] = useState([])
 
 
-
-
      useEffect( ()=>{
         axios.get('/materials/getcompany')
           .then( r => {
@@ -123,7 +121,7 @@ export default function MaterialCreate() {
                       </FormControl>
                     </Box>
             </div>
-    <div >
+    <div>
 
               <TextField style={{padding : '10px', margin : '10px'}} className="MatName" id="MatName" label="자재이름" variant="outlined" />
               <TextField style={{padding : '10px', margin : '10px'}} className="MatUnit" id="MatUnit" label="단위" variant="outlined" />

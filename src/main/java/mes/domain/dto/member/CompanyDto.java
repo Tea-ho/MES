@@ -24,7 +24,6 @@ public class CompanyDto {
                 .cname(this.cname)
                 .ctype(this.ctype)
                 .build();
-
     }
 
 }

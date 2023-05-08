@@ -1,6 +1,7 @@
 package mes.service.Material;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.dto.material.InOutPageDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.entity.material.MaterialEntity;
@@ -10,6 +11,10 @@ import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.AllowApprovalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -39,7 +44,7 @@ public class MaterialInoutService {
     @Transactional
     public boolean materialIn(MaterialInOutDto dto){
 
-        List<MaterialInOutEntity> inOutEntityList = materialInOutEntityRepository.findAll();
+        List<MaterialInOutEntity> inOutEntityList = materialInOutEntityRepository.findByMid(dto.getMatID());
         int stock=0;
         for( int i = 0; i < inOutEntityList.size(); i++){
             if(i == inOutEntityList.size()-1){
@@ -71,23 +76,21 @@ public class MaterialInoutService {
     }
 
     // 내역 리스트 출력
-    public List<MaterialInOutDto> MaterialInOutList(int matID){
+    public InOutPageDto MaterialInOutList(InOutPageDto dto){
 
        List<MaterialInOutDto> list = new ArrayList<>();
-       // 스톡 저장 추후 결제후 스톡으로 변경
-       List<MaterialInOutEntity> entityOptional = materialInOutEntityRepository.findByMatid(matID);
+        Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "mat_in_outid"));
 
-
-
-       // 리스트 출력
-        entityOptional.forEach((e)->{
+        Page<MaterialInOutEntity> entityPage = materialInOutEntityRepository.findByMatid(dto.getMatID() , pageable);
+        entityPage.forEach((e)->{
             list.add(e.toDto());
-             }
-        );
+        });
 
+        dto.setMaterialInOutDtoList(list);
+        dto.setTotalPage(entityPage.getTotalPages());
+        dto.setTotalCount(entityPage.getTotalElements());
 
-
-        return list;
+        return dto;
     }
 
 }

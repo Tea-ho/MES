@@ -73,7 +73,9 @@ public class ProductService {
 
         List<MaterialEntity> materialEntityList = new ArrayList<>(); //자재 PK번호로 해당
 
-        for(int i = 0; i < productDto.getMaterialList().size(); i++){
+        List<MaterialProductEntity> materialProductEntityList = new ArrayList<>(); //제품-자재 리스트
+
+        for(int i = 0; i < productDto.getMaterialList().size(); i++){ //받은 자재 PK로 자재 찾는 것
             materialEntityList.add(materialEntityRepository.findById(productDto.getMaterialList().get(i)).get());
         }
 
@@ -89,6 +91,7 @@ public class ProductService {
 
         MaterialProductEntity materialProductEntity = new MaterialProductEntity();
         materialProductEntity.setProductEntity(productEntity);
+        materialProductEntity.setMaterialEntity(mater);
 
         MaterialProductEntity resultMaterialProductEntity = materialProductRepository.save(materialProductEntity);
 

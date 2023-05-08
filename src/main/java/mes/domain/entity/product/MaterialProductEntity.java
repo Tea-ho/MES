@@ -29,6 +29,7 @@ public class MaterialProductEntity {
     @JoinColumn(name = "matid")
     @ToString.Exclude
     private  MaterialEntity materialEntity;
+
     @ManyToOne
     @JoinColumn(name = "prod_id")
     @ToString.Exclude

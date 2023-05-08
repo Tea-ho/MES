@@ -16,6 +16,9 @@ export default function EditProduct(props){ //제품 추가 부분
     let [company , setCompany] = useState(0) //변경된 회사 정보를 담는 useState
     let [product, setProduct] = useState({}); //매개변수로 받은 제품 객체 정보 저장
 
+    const[productPrice, setProductPrice] = useState(0) //기존 제품 가격에서 onchange()하기위해 사용
+    const[productName, setProductName] = useState('') //기존 제품 이름에서 onchange()하기 위해 사용
+
     //회사 정보를 가져오는 useEffect
      useEffect( ()=>{
         axios.get('/materials/getcompany')
@@ -27,6 +30,9 @@ export default function EditProduct(props){ //제품 추가 부분
 
      useEffect(() => {
         setProduct(props.product)
+        setProductName(product.prodName)
+        setProductPrice(product.prodPrice)
+        setCompany(product.companyEntity?.cno)
      }, [props.product])
 
     const companyChangeHandler = (e) => { //회사 변경 이벤트 처리(select)
@@ -47,15 +53,18 @@ export default function EditProduct(props){ //제품 추가 부분
 
         //유효성 통과시 전달할 객체 보내기
         let info ={
+            prodId : props.product.prodId,
             prodCode : 'C',
             prodName : document.getElementById('prodName').value,
             prodPrice : document.getElementById('prodPrice').value,
             companyEntity : companyList.find(e => e.cno === company) //해당 cno가 company의 정보를 가진 객체를 넣음
         }
 
+        console.log(info);
+
         axios.put('/product', info)
             .then((r) => {
-                if(r.data == true){
+                if(r.data == 1){
                     alert('수정 성공');
                 }else{
                     alert('수정 실패')
@@ -88,8 +97,8 @@ export default function EditProduct(props){ //제품 추가 부분
 
                <div>
                   <TextField style={{padding : '10px', margin : '10px'}} className="prodCode" id="prodCode" label="제품코드" variant="outlined" value={'C'} inputProps= {{readOnly : true}}/>
-                  <TextField style={{padding : '10px', margin : '10px'}} className="prodName" id="prodName" label="제품명" variant="outlined" value={props.product.prodName}/>
-                  <TextField style={{padding : '10px', margin : '10px'}} className="prodPrice" id="prodPrice" label="제품가격" variant="outlined" value={props.product.prodPrice} />
+                  <TextField style={{padding : '10px', margin : '10px'}} className="prodName" id="prodName" label="제품명" variant="outlined" value={productName} onChange={(e) => setProductName(e.target.value)}/>
+                  <TextField style={{padding : '10px', margin : '10px'}} className="prodPrice" id="prodPrice" label="제품가격" variant="outlined" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
                </div>
 
               <div>

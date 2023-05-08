@@ -71,11 +71,11 @@ public class ProductService {
     //제품 등록 => 제품 생산페이지에서 수행 할 예정
     public boolean postProduct(ProductDto productDto){
 
-        List<MaterialEntity> materialEntityList = new ArrayList<>(); //자재 PK번호로 해당
+        List<MaterialEntity> materialEntityList = new ArrayList<>(); //자재 리스트(제품마다 가지고 있는)
 
         List<MaterialProductEntity> materialProductEntityList = new ArrayList<>(); //제품-자재 리스트
 
-        for(int i = 0; i < productDto.getMaterialList().size(); i++){ //받은 자재 PK로 자재 찾는 것
+        for(int i = 0; i < productDto.getMaterialList().size(); i++){ //받은 자재 PK로 자재 찾아서 제품별 자재 리스트를 만든다
             materialEntityList.add(materialEntityRepository.findById(productDto.getMaterialList().get(i)).get());
         }
 
@@ -83,16 +83,17 @@ public class ProductService {
 
         ProductEntity productEntity = productRepository.save(productDto.toEntity());
 
-        if(productEntity.getProdId() < 1){ //앞부분 등록 실패시
+        if(productEntity.getProdId() < 1){ //앞부분 등록 실패시 (제품 등록 실패시 - 자재 제외하고 온랴 제품테이블만)
             return false;
         }
 
         System.out.println("제품 등록 후 " + productEntity);
 
         MaterialProductEntity materialProductEntity = new MaterialProductEntity();
-        materialProductEntity.setProductEntity(productEntity);
-        materialProductEntity.setMaterialEntity(mater);
+        materialProductEntity.setProductEntity(productEntity); //제품-재고 테이블에 제품 넣기
+        materialProductEntity.setMaterialEntityList(materialEntityList); // 제품-재고 테이블에 재고 리스트 넣기
 
+        //제품-재고 테이블에 필요한 정보를 set으로 다 넣었다면 save
         MaterialProductEntity resultMaterialProductEntity = materialProductRepository.save(materialProductEntity);
 
         System.out.println(resultMaterialProductEntity);
@@ -106,6 +107,7 @@ public class ProductService {
         System.out.println(resultMaterialProductEntity.getMpno());
 
         if(resultMaterialProductEntity.getMpno() >= 1){ //등록 성공시
+            System.out.println(resultMaterialProductEntity.toDto());
             return true;
         }
 

@@ -26,7 +26,7 @@ public class MaterialProductEntity {
     private List<MaterialEntity> materialEntityList = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "matid")
+    @JoinColumn(name = "mat_id")
     @ToString.Exclude
     private  MaterialEntity materialEntity;
 

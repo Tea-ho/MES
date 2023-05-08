@@ -44,6 +44,7 @@ public class ProductController {
     //재품 수정
     @PutMapping("")
     public int putProduct(@RequestBody ProductDto productDto){
+        System.out.println(productDto.toString());
         return 1;
     }
 

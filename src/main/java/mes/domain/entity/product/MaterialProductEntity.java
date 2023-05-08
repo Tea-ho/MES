@@ -1,6 +1,7 @@
 package mes.domain.entity.product;
 
 import lombok.*;
+import mes.domain.dto.product.MaterialProductDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.member.MemberEntity;
 
@@ -33,6 +34,7 @@ public class MaterialProductEntity {
 
     //출력용
     public MaterialProductDto toDto(){
+
         return MaterialProductDto.builder()
                 .mpno(this.mpno)
                 .productEntity(this.productEntity)

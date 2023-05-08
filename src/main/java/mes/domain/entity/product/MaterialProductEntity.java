@@ -19,14 +19,24 @@ public class MaterialProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mpno;
 
+
+   /* @OneToMany(mappedBy = "materialProductEntity")
+    @Builder.Default
+    private List<MaterialEntity> materialEntityList = new ArrayList<>();*/
+
+
     @ManyToOne
-    @JoinColumn(name = "prodId")
+    @JoinColumn(name = "prod_id")
     @ToString.Exclude
     private ProductEntity productEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "MatID")
-    @ToString.Exclude
-    private MaterialEntity materialEntity;
+
+    //출력용
+    public MaterialProductDto toDto(){
+        return MaterialProductDto.builder()
+                .mpno(this.mpno)
+                .productEntity(this.productEntity)
+                .build();
+    }
 
 }

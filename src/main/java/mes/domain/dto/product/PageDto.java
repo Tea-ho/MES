@@ -33,5 +33,4 @@ public class PageDto {
     //6. 검색한 keyword
     private String keyword;
 
-
 }

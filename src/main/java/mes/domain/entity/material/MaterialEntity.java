@@ -54,6 +54,7 @@ public class MaterialEntity extends BaseTime {
                 .mat_unit(this.mat_unit)
                 .mat_price(this.mat_price)
                 .companyEntity(this.companyEntity)
+                .materialProductEntityList(this.materialProductEntityList)
                 .mdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }

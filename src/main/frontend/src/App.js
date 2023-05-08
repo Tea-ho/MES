@@ -26,6 +26,12 @@ import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 제품 부분 ------------------------------*/
 
 
+/* --------------------------- 판매 부분 --------------------------- */
+import SalesHeader from "./component/sales/SalesHeader";
+
+
+
+
 export default function Index( props ) {
     return ( <>
         <BrowserRouter>
@@ -68,7 +74,7 @@ export default function Index( props ) {
                                 </Link>
                                 </ListItem>
                                 <ListItem disablePadding>
-                               <Link href="#">
+                               <Link href="/component/sales/SalesHeader">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -87,6 +93,8 @@ export default function Index( props ) {
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
+
+                        <Route path="/component/sales/SalesHeader" element = { <SalesHeader/> } />
                     </Routes>
 
                 </div>

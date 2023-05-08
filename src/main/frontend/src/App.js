@@ -25,6 +25,7 @@ import ProcessProduct from "./component/product/ProcessProduct";
 import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 멤버 부분 ------------------------------*/
 import Login from "./component/member/Login";
+import Info from "./component/member/Info";
 import AllowApproval from "./component/member/AllowApproval";
 import AllowMaterial from "./component/member/AllowMaterial";
 import AllowProduct from "./component/member/AllowProduct";
@@ -32,6 +33,9 @@ import AllowSales from "./component/member/AllowSales";
 
 
 export default function Index( props ) {
+    const member = sessionStorage.getItem('member')
+    const urlHome = member !=null ? "/component/member/Info" : "/component/member/Login";
+
     return ( <>
         <BrowserRouter>
             <div className="header">
@@ -43,7 +47,7 @@ export default function Index( props ) {
                          <nav aria-label="main mailbox folders">
                            <List>
                              <ListItem disablePadding>
-                               <Link href="/component/member/Login">
+                               <Link href={urlHome}>
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -99,6 +103,7 @@ export default function Index( props ) {
                 <div className="main-content">
                     <Routes >
                         <Route path="/component/member/Login" element = { <Login /> } />
+                        <Route path="/component/member/Info" element = { <Info /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />

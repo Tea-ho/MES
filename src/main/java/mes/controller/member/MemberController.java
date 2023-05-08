@@ -31,6 +31,15 @@ public class MemberController {
     }
     @GetMapping("/logout")
     public void logout(HttpSession session) {
+            log.info("logout");
         memberService.logout(session);
+    }
+
+    // 로그인 정보 출력
+    @GetMapping("/loginInfo")
+    public MemberEntity loginInfo(HttpSession session) {
+        MemberEntity member = memberService.getLoginInfo(session);
+            log.info("loginInfo" + member.toString());;
+        return member;
     }
 }

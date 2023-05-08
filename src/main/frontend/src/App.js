@@ -25,7 +25,6 @@ import ProcessProduct from "./component/product/ProcessProduct";
 import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 멤버 부분 ------------------------------*/
 import Login from "./component/member/Login";
-import Info from "./component/member/Info";
 import AllowApproval from "./component/member/AllowApproval";
 import AllowMaterial from "./component/member/AllowMaterial";
 import AllowProduct from "./component/member/AllowProduct";
@@ -39,8 +38,6 @@ import SalesHeader from "./component/sales/SalesHeader";
 
 
 export default function Index( props ) {
-    const member = sessionStorage.getItem('member')
-    const urlHome = member !=null ? "/component/member/Info" : "/component/member/Login";
 
     return ( <>
         <BrowserRouter>
@@ -53,7 +50,7 @@ export default function Index( props ) {
                          <nav aria-label="main mailbox folders">
                            <List>
                              <ListItem disablePadding>
-                               <Link href={urlHome}>
+                               <Link href="/component/member/Login">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -109,10 +106,10 @@ export default function Index( props ) {
                 <div className="main-content">
                     <Routes >
                         <Route path="/component/member/Login" element = { <Login /> } />
-                        <Route path="/component/member/Info" element = { <Info /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
+                        <Route path="/component/member/AllowApproval" element = { <AllowApproval /> } />
                     </Routes>
 
                 </div>

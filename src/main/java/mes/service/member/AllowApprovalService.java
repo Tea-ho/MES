@@ -30,10 +30,13 @@ public class AllowApprovalService {
     // 0. 제네릭 사용하기 위해 생성
     public List<?> getEntityListByType(int type) {
         if (type == 1) {
+                log.info( "getEntityListByType" + meterialRepository.findAll().toString());
             return meterialRepository.findAll();
         } else if (type == 2) {
+                log.info( "getEntityListByType" + productPlanRepository.findAll().toString());
             return productPlanRepository.findAll();
         } else if (type == 3) {
+                log.info( "getEntityListByType" + salesRepository.findAll().toString());
             return salesRepository.findAll();
         } else{
             throw new IllegalArgumentException("알 수 없는 요청");
@@ -42,7 +45,7 @@ public class AllowApprovalService {
 
     // 1. 승인 요청 데이터 출력 [type: 1 - 자재, 2 - 제품, 3 - 판매 ]
     // *프론트 처리 필요 사항: option: 1 - 미승인, 2 - 승인, 3 - 전체 출력 (Back에서 관리하면 로직 복잡해짐)
-    public List<?> printAllowApproval( int type){
+    public List<?> printAllowApproval( int type ){
 
         // 2. 승인 리스트 가져오기 [제네릭 사용 시도 - 3가지 타입 한번에 받기 위함]
         List<?> approvalList = getEntityListByType(type);
@@ -72,15 +75,16 @@ public class AllowApprovalService {
         } else if ( type == 3) { // 판매
             for (Object obj : approvalList) {
                 SalesEntity entity = (SalesEntity) obj;
-                /*SalesDto dto = new SalesDto(
+                /* SalesDto dto = new SalesDto(
                         entity.getOrderId(), entity.getOrderDate(),
                         entity.getOrderCount(), entity.getOrderStatus(), entity.getSalesPrice(),
                         entity.getAllowApprovalEntity(), entity.getCompanyEntity(), entity.getProductEntity(), entity.getMemberEntity());*/
-                /*result.add(dto);*/
+                // result.add(dto);
             }
         } else{ // 예외 처리(PermissionDeniedException 클래스 공용 사용)
             throw new PermissionDeniedException("알 수 없는 요청");
         }
+            log.info("printAllowApproval: " + result);
         return result;
     }
     // 예상되는 문제점: repository null이면 에러 발생할 거 같음 (확인 필요)

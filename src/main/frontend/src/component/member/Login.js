@@ -53,6 +53,7 @@ export default function Login(props) {
                 setLoggedIn(false);
                 setMember(null);
                 sessionStorage.removeItem('member');
+                window.location.href = '/component/member/Login/';
                 console.log('로그아웃 성공');
             })
             .catch(error => {
@@ -62,8 +63,15 @@ export default function Login(props) {
 
     return (
         <>
-            {loggedIn ? (
-                <Info handleLogout={handleLogout} />
+            {sessionStorage.getItem('member')!=null ? (
+                 <Container component="main" maxWidth="xs" style={{marginTop: "8%"}}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button sx={{ padding: '10px', margin: '10px 20px' }} variant="contained" type="button" onClick={handleLogout}>
+                            로그아웃
+                        </Button>
+                    </Box>
+                    <img src="./img/MESInfo.png" alt="MES Info" />
+                </Container>
             ) : (
             <Container component="main" maxWidth="xs" style={{marginTop: "8%"}}>
             <Grid container spacing={2}>

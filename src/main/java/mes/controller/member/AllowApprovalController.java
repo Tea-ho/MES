@@ -30,16 +30,16 @@ public class AllowApprovalController {
         MemberEntity member = (MemberEntity) session.getAttribute("member");
         if (!member.getPosition().equals("임원")) { // 아니면 던지기 처리 (PermissionDeniedException 예외 클래스 추가 생성)
             throw new PermissionDeniedException("권한이 없습니다.");
-        }
-
-        try {
-            return allowApprovalService.printAllowApproval(type);
-        } catch (PermissionDeniedException e) {
-            // 권한 없음 예외 처리
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage(), e);
-        } catch (Exception e) {
-            // 그 외 예외 처리
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        } else{
+            try { log.info(allowApprovalService.printAllowApproval(type).toString());
+                return allowApprovalService.printAllowApproval(type);
+            } catch (PermissionDeniedException e) {
+                // 권한 없음 예외 처리
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage(), e);
+            } catch (Exception e) {
+                // 그 외 예외 처리
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+            }
         }
     }
 

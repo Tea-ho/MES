@@ -72,11 +72,11 @@ public class AllowApprovalService {
         } else if ( type == 3) { // 판매
             for (Object obj : approvalList) {
                 SalesEntity entity = (SalesEntity) obj;
-                SalesDto dto = new SalesDto(
+                /*SalesDto dto = new SalesDto(
                         entity.getOrderId(), entity.getOrderDate(),
                         entity.getOrderCount(), entity.getOrderStatus(), entity.getSalesPrice(),
-                        entity.getAllowApprovalEntity(), entity.getCompanyEntity(), entity.getProductEntity(), entity.getMemberEntity());
-                result.add(dto);
+                        entity.getAllowApprovalEntity(), entity.getCompanyEntity(), entity.getProductEntity(), entity.getMemberEntity());*/
+                /*result.add(dto);*/
             }
         } else{ // 예외 처리(PermissionDeniedException 클래스 공용 사용)
             throw new PermissionDeniedException("알 수 없는 요청");

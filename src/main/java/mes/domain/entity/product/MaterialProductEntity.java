@@ -34,7 +34,6 @@ public class MaterialProductEntity {
 
     //출력용
     public MaterialProductDto toDto(){
-
         return MaterialProductDto.builder()
                 .mpno(this.mpno)
                 .productEntity(this.productEntity)

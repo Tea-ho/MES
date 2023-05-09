@@ -18,6 +18,7 @@ import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 @Service @Slf4j
 public class AllowApprovalService {
@@ -57,19 +58,19 @@ public class AllowApprovalService {
         // 4. 결재권자인 경우, 아래 내용 출력 [type 별로 List 저장 후 출력]
         if( type == 1) { // 자재
             for (Object obj : approvalList) {
-                ProductPlanEntity entity = (ProductPlanEntity) obj;
-                ProductPlanDto dto = new ProductPlanDto(
-                        entity.getProdPlanNo(), entity.getProdPlanCount(), entity.getProdPlanDate(), entity.getProductEntity(), entity.getAllowApprovalEntity());
+                MaterialInOutEntity entity = (MaterialInOutEntity) obj;
+
+                MaterialInOutDto dto = new MaterialInOutDto(
+                        entity.getMat_in_outid(), entity.getMat_in_type(), entity.getMat_st_stock(),
+                        entity.cdate.toLocalDate(), entity.udate.toLocalDate(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
                 result.add(dto);
             }
 
         } else if ( type == 2) { // 제품
             for (Object obj : approvalList) {
-                MaterialInOutEntity entity = (MaterialInOutEntity) obj;
-
-                MaterialInOutDto dto = new MaterialInOutDto(
-                        entity.getMat_in_outid(), entity.getMat_in_type(),
-                        entity.getMat_st_stock(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
+                ProductPlanEntity entity = (ProductPlanEntity) obj;
+                ProductPlanDto dto = new ProductPlanDto(
+                        entity.getProdPlanNo(), entity.getProdPlanCount(), entity.getProdPlanDate(), entity.getProductEntity(), entity.getAllowApprovalEntity());
                 result.add(dto);
             }
         } else if ( type == 3) { // 판매

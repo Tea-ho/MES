@@ -1,7 +1,6 @@
 import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
 import { Container, Grid, Typography, TextField, Button, Box } from '@mui/material';
-import Info from './Info';
 
 export default function Login(props) {
 

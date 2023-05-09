@@ -26,14 +26,18 @@ export default function ManageProduct(props){
 
     let[putProduct, setPutProduct] = useState({}); //수정할 목록
 
-    useEffect(() => { //컴포넌트 재렌더링시 (시작시) 제품 정보 가져오기
+    const getProduct = () => {
         axios.get("/product", {params : pageInfo})
-        .then(r => {
-            console.log(r.data);
-            setProductList(r.data.productDtoList);
-            setTotalCount(r.data.totalCount);
-            setTotalPage(r.data.totalPage)
-        })
+            .then(r => {
+                console.log(r.data);
+                setProductList(r.data.productDtoList);
+                setTotalCount(r.data.totalCount);
+                setTotalPage(r.data.totalPage)
+            })
+    }
+
+    useEffect(() => { //컴포넌트 재렌더링시 (시작시) 제품 정보 가져오기
+       getProduct();
     }, [pageInfo])
 
     //검색
@@ -110,7 +114,7 @@ export default function ManageProduct(props){
                     <Pagination count={totalPage} page = {pageInfo.page} color="primary" onChange = {selectPage}/>
                 </div>
                 <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
-                    <EditProduct product={putProduct}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
+                    <EditProduct product={putProduct} callback={getProduct}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                 </div>
           </Container>
     </>)

@@ -21,10 +21,11 @@ public class MaterialProductEntity {
     private int mpno;
 
 
-    @OneToMany(mappedBy = "materialProductEntity")
+   /* @OneToMany(mappedBy = "materialProductEntity")
     @Builder.Default
+    @ToString.Exclude
     private List<MaterialEntity> materialEntityList = new ArrayList<>();
-
+*/
     @ManyToOne
     @JoinColumn(name = "mat_id")
     @ToString.Exclude
@@ -36,11 +37,18 @@ public class MaterialProductEntity {
     private ProductEntity productEntity;
 
 
+    public MaterialProductEntity(MaterialEntity materialEntity, ProductEntity productEntity) {
+        this.materialEntity = materialEntity;
+        this.productEntity = productEntity;
+    }
+
+
     //출력용
     public MaterialProductDto toDto(){
         return MaterialProductDto.builder()
                 .mpno(this.mpno)
                 .productEntity(this.productEntity)
+                .materialEntity(this.materialEntity)
                 .build();
     }
 

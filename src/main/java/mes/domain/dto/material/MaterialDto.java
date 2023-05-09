@@ -7,8 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.member.CompanyEntity;
+import mes.domain.entity.product.MaterialProductEntity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -28,6 +31,8 @@ public class MaterialDto{
     private String mdate; // 등록날짜
     private int cno;
 
+    private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
+
 
 
     public MaterialEntity toEntity() { // 저장용 추후 추가할것있음
@@ -38,6 +43,7 @@ public class MaterialDto{
                 .mat_st_exp(this.mat_st_exp)
                 .mat_price(this.mat_price)
                 .companyEntity(this.companyEntity)
+                .materialProductEntityList(this.materialProductEntityList)
                 .build();
     }
 

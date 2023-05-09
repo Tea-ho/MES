@@ -20,13 +20,13 @@ public class MaterialProductDto {
     private int mpno;
 
 
-    private List<MaterialEntity> materialEntityList = new ArrayList<>();
+    private MaterialEntity materialEntity;
 
 
     private ProductEntity productEntity;
 
     //등록용 생성자
-    public MaterialProductDto(ProductDto productDto, List<MaterialEntity> materialEntityList) {
+    public MaterialProductDto(ProductDto productDto, MaterialEntity materialEntity) {
     }
 
     //저장용

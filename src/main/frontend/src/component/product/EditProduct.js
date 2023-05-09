@@ -64,8 +64,9 @@ export default function EditProduct(props){ //제품 추가 부분
 
         axios.put('/product', info)
             .then((r) => {
-                if(r.data == 1){
+                if(r.data == true){
                     alert('수정 성공');
+                    props.callback()
                 }else{
                     alert('수정 실패')
                 }
@@ -102,7 +103,7 @@ export default function EditProduct(props){ //제품 추가 부분
                </div>
 
               <div>
-                    <button type ="button" onClick={updateProduct}>제품 등록</button>
+                    <button type ="button" onClick={updateProduct}>제품 수정</button>
                     <button type ="button" onClick={cancel}>작업 취소</button>
               </div>
         </Container>

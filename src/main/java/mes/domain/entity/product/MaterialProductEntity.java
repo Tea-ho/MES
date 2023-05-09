@@ -18,7 +18,7 @@ import java.util.List;
 public class MaterialProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int mpno;
+    public int mpno;
 
 
    /* @OneToMany(mappedBy = "materialProductEntity")
@@ -29,12 +29,12 @@ public class MaterialProductEntity {
     @ManyToOne
     @JoinColumn(name = "mat_id")
     @ToString.Exclude
-    private  MaterialEntity materialEntity;
+    public  MaterialEntity materialEntity;
 
     @ManyToOne
     @JoinColumn(name = "prod_id")
     @ToString.Exclude
-    private ProductEntity productEntity;
+    public ProductEntity productEntity;
 
 
     public MaterialProductEntity(MaterialEntity materialEntity, ProductEntity productEntity) {

@@ -30,7 +30,10 @@ public class MaterialDto{
     private CompanyEntity companyEntity;// -- 제조사
     private String mdate; // 등록날짜
     private int cno;
-    private List<MaterialProductEntity> materialProductEntityList = new ArrayList<MaterialProductEntity>();
+    private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
+
+
+
 
     public MaterialEntity toEntity() { // 저장용 추후 추가할것있음
         return   MaterialEntity.builder()

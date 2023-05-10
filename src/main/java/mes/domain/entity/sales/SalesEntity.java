@@ -18,12 +18,12 @@ import javax.persistence.*;
 public class SalesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int OrderId;// -- 주문 D
+    private int orderId;// -- 주문 D
 
 
-    @Column private String OrderDate;   // -- 주문 일자
-    @Column private int OrderCount;     // -- 주문 수량
-    @Column private int OrderStatus;    // -- 주문 상태
+    @Column private String orderDate;   // -- 주문 일자
+    @Column private int orderCount;     // -- 주문 수량
+    @Column private int orderStatus;    // -- 주문 상태
     @Column private int salesPrice;     // 판매가
 
     @ManyToOne
@@ -48,9 +48,9 @@ public class SalesEntity {
 
     public SalesDto toDto() { // 출력용
         return SalesDto.builder()
-                .OrderId(this.OrderId)
-                .OrderCount(this.OrderCount)
-                .OrderDate(this.OrderDate)
+                .orderId(this.orderId)
+                .orderCount(this.orderCount)
+                .orderDate(this.orderDate)
                 .salesPrice(this.salesPrice)
                 .allowApprovalEntity(this.getAllowApprovalEntity())
                 .companyEntity(this.getCompanyEntity())

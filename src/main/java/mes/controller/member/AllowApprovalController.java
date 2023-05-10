@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -45,7 +46,10 @@ public class AllowApprovalController {
 
     // 2. 승인 처리
     @PutMapping("") // type 1: 자재, 2: 제품 , 3: 판매 // approve 1: 승인, 2: 반려
-    public boolean updateAllowApproval(@RequestParam int type, @RequestParam int approve, @RequestParam int id ){
+    public boolean updateAllowApproval(@RequestBody Map<String, Object> requestBody ){
+        int type = (int) requestBody.get("type");
+        int approve = (int) requestBody.get("approve");
+        int id = (int) requestBody.get("id");
         if(type == 1){
             if( approve == 1 ){
                 return allowApprovalService.approveMaterialInOut(id);

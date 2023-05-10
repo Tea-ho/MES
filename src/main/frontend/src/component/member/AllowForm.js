@@ -29,7 +29,7 @@ export default function AllowForm(props) {
 
     // 3. 승인 처리 (폼에서 진행)
     const approveHandler = (e) => {
-        axios.put('/allowApproval', { params: { type: type, approve: 1, id: rowSelectionModel.map((row) => row.mat_in_outid)  } })
+        axios.put('/allowApproval', { type: type, approve: 1, id: rowSelectionModel.map((row) => row.mat_in_outid)   })
             .then((response) => {
                 // 승인 요청 후 서버 응답에 따른 처리
                 console.log(response);

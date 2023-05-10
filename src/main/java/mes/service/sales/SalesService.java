@@ -5,6 +5,7 @@ import mes.domain.Repository.product.ProductProcessRepository;
 import mes.domain.Repository.product.ProductRepository;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.member.CompanyDto;
+import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.member.AllowApprovalEntity;
@@ -44,6 +45,7 @@ public class SalesService {
     AllowApprovalRepository allowApprovalRepository;
 
 
+
     // 1. 판매 등록
     @Transactional
     public boolean salesCreate (SalesDto salesDto){
@@ -55,22 +57,17 @@ public class SalesService {
         ProductEntity productEntity = productRepository.findById( salesDto.getProdId()).get();
         System.out.println("productEntity : " + productEntity);
 
-
         // * 등록 시에 재고량 불러와서 감소 기능 필요 *
-        ProductProcessEntity productProcessEntity = productProcessRepository.findById( salesDto.getProductProcessEntity().getProdStock() ).get();
+/*      ProductProcessEntity productProcessEntity = productProcessRepository.findStockByProductId( productEntity.getProdId() );
 
-
-
-        int currentStock = productProcessEntity.getProdStock(); // 현재 있는 제품 개수
-        System.out.println("currentStock : " + currentStock );
+        int currentStock = productProcessEntity.getProdStock();
         int salesStock = salesDto.getOrderCount();              // 판매하려는 제품 개수
-        System.out.println("salesStock : " + salesStock );
         if ( currentStock - salesStock < 0){                    // 개수 유효성 검사( 0보다 작아지지 않게 )
             return false;
         }
-
         int updateStock = currentStock - salesStock;
         productProcessEntity.setProdStock(updateStock);         // 판매 성공 성공 시에 개수 줄어들게하기*/
+
 
         // 승인정보
         AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toInEntity());
@@ -89,18 +86,12 @@ public class SalesService {
 
     // 2. 판매 출력 1( 판매 승인 전 )
     @Transactional
-    public List<SalesDto> salesView(int OrderId){
-        List<SalesDto> list = new ArrayList<>();
-        if ( OrderId == 0 ){
-            List<SalesEntity> salesEntities = salesRepository.findAll();
-            salesEntities.forEach( (e) -> {
-                list.add(e.toDto());
-            });
-        } else if( OrderId > 0 ){
-            SalesEntity salesEntity = salesRepository.findById(OrderId).get();
-            list.add(salesEntity.toDto());
-        }
-        return list;
+    public PageDto salesView(PageDto pageDto){
+
+
+
+        return pageDto;
+
     }
 
     // [등록 조건1] ctype 2인 회사불러오기 ( react 에서 처리 )

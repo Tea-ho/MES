@@ -25,7 +25,6 @@ public class MaterialController {
     public boolean materialCreate(@RequestBody MaterialDto dto){
         System.out.println("dto" + dto);
 
-
         return materialService.materialCreate(dto);
     }
 

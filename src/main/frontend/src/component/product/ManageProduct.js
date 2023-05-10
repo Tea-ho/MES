@@ -31,7 +31,8 @@ export default function ManageProduct(props){
     const getProduct = () => {
         axios.get("/product", {params : pageInfo})
             .then(r => {
-                console.log(r.data);
+                console.log(r)
+               console.log(r.data);
                 setProductList(r.data.productDtoList);
                 setTotalCount(r.data.totalCount);
                 setTotalPage(r.data.totalPage)
@@ -113,7 +114,7 @@ export default function ManageProduct(props){
                           <TableCell component ="th" align="center">{row.prodDate}</TableCell>
                           <TableCell component ="th" align="center">{row.prodName}</TableCell>
                           <TableCell component ="th" align="center">{row.prodPrice}</TableCell>
-                          <TableCell component ="th" align="center">{row.companyEntity.cname}</TableCell>
+                          <TableCell component ="th" align="center">{row.companyDto.cname}</TableCell>
                            <TableCell align="center"><Checkbox onChange={() => checkboxEventHandler(row.prodId)}/></TableCell>
                           </TableRow>
                       ))}

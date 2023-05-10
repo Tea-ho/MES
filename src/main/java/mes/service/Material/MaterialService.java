@@ -42,6 +42,7 @@ public class MaterialService {
 
         CompanyEntity companyEntity = companyRepository.findById(dto.getCno()).get();
 
+        System.out.println(companyEntity);
         MaterialEntity entity = materialEntityRepository.save(dto.toEntity());
         entity.setCompanyEntity(companyEntity);
 

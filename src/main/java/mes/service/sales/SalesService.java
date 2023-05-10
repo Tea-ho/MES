@@ -55,6 +55,7 @@ public class SalesService {
         ProductEntity productEntity = productRepository.findById( salesDto.getProdId()).get();
         System.out.println("productEntity : " + productEntity);
 
+
         // * 등록 시에 재고량 불러와서 감소 기능 필요 *
         ProductProcessEntity productProcessEntity = productProcessRepository.findById( salesDto.getProductProcessEntity().getProdStock() ).get();
 

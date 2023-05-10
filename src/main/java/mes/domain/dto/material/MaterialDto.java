@@ -30,10 +30,10 @@ public class MaterialDto{
     private CompanyEntity companyEntity;// -- 제조사
     private String mdate; // 등록날짜
     private int cno;
-    private List<MaterialProductEntity> materialProductEntityList = new ArrayList<MaterialProductEntity>();
-
-
     private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
+
+
+    private List<MaterialProductEntity> materialProductEntityList2 = new ArrayList<>();
 
 
 
@@ -45,7 +45,7 @@ public class MaterialDto{
                 .mat_st_exp(this.mat_st_exp)
                 .mat_price(this.mat_price)
                 .companyEntity(this.companyEntity)
-                .materialProductEntityList(this.materialProductEntityList)
+                .materialProductEntityList(this.materialProductEntityList2)
                 .build();
     }
 

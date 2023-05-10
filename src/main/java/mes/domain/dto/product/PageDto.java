@@ -1,5 +1,6 @@
 package mes.domain.dto.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +19,14 @@ public class PageDto {
     private int totalPage;
 
     //3. 현재 페이지의 제품 dto들
+
     List<ProductDto> productDtoList;
 
     //3. 현재 페이지의 제품 지시 dto 들
+    @JsonIgnore
     List<ProductPlanDto> productPlanDtoList;
 
+    @JsonIgnore
     //3. 현재 페이지의 제품 공정들어간 dto 들
     List<ProductProcessDto> productProcessDtoList;
 

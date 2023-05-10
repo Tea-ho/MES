@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mes.domain.BaseTime;
+import mes.domain.dto.material.MaterialDto;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.product.ProductEntity;
 
@@ -31,6 +32,8 @@ public class ProductDto {
     private CompanyEntity companyEntity; // 회사명
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private List<MaterialDto> materialDtoList; //출력용 자재 리스트
 
     public ProductEntity toEntity(){
         return ProductEntity.builder()

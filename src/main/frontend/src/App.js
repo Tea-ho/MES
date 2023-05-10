@@ -38,6 +38,8 @@ import SalesHeader from "./component/sales/SalesHeader";
 
 
 export default function Index( props ) {
+    const member = sessionStorage.getItem('member')
+    const urlHome = member !=null ? "/component/member/Info" : "/component/member/Login";
 
     return ( <>
         <BrowserRouter>
@@ -50,7 +52,7 @@ export default function Index( props ) {
                          <nav aria-label="main mailbox folders">
                            <List>
                              <ListItem disablePadding>
-                               <Link href="/component/member/Login">
+                               <Link href={urlHome}>
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -109,7 +111,6 @@ export default function Index( props ) {
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
-                        <Route path="/component/member/AllowApproval" element = { <AllowApproval /> } />
                     </Routes>
 
                 </div>

@@ -3,6 +3,7 @@ package mes.service.product;
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.Repository.product.MaterialProductRepository;
 import mes.domain.Repository.product.ProductRepository;
+import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.product.MaterialProductDto;
 import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -57,63 +59,108 @@ public class ProductService {
         });
 
 
+
         for(int i = 0; i < productDto.size(); i++){ //회사 정보 담아서 내보내기 위해
             productDto.get(i).setCompanyEntity(productRepository.findById(productDto.get(i).getProdId()).get().getCompanyEntity());
-            System.out.println(productDto.get(i));
+            System.out.println("제품 확인!!!!!! : "+productDto);
+
+            System.out.println("자재는 들어왔나... : "+ materialProductRepository.findByMaterial(productDto.get(i).getProdId()));
+
+            //제품 PK로 자재를 찾기 위해 materialProduct를 찾는다
+            List<MaterialProductEntity> materialProductEntity = materialProductRepository.findByMaterial(productDto.get(i).getProdId());
+
+            for(int k = 0; k < materialProductEntity.size(); k++){
+                //materialEntityRepository.findById(materialProductRepository.findById(materialProductEntity.get(k).getMaterialEntity()));
+            }
+            List<MaterialDto> materialDtoList = new ArrayList<>(); //제품에 담을 자재 목록
+
+            System.out.println(materialDtoList);
+            for(int j = 0; j < materialProductEntity.size(); j++){
+                materialDtoList.add(materialProductEntity.get(j).getMaterialEntity().toDto());
+            }
+
+            productDto.get(i).setMaterialDtoList(materialDtoList);
+
+            System.out.println("제품 출력 materialList 장착 : " + productDto.get(i));
         }
-        pageDto.setProductDtoList(productDto);
         pageDto.setTotalPage(pageEntity.getTotalPages());
         pageDto.setTotalCount(pageEntity.getTotalElements());
 
         return pageDto;
     }
 
+    @Transactional
     //제품 등록 => 제품 생산페이지에서 수행 할 예정
     public boolean postProduct(ProductDto productDto){
 
-        List<MaterialEntity> materialEntityList = new ArrayList<>(); //자재 PK번호로 해당
+        List<MaterialEntity> materialEntityList = new ArrayList<>(); //자재 리스트(제품마다 가지고 있는)
 
-        for(int i = 0; i < productDto.getMaterialList().size(); i++){
-            materialEntityList.add(materialEntityRepository.findById(productDto.getMaterialList().get(i)).get());
-        }
+        List<MaterialProductEntity> materialProductEntityList = new ArrayList<>(); //제품-자재 리스트
+        try {
+            for (int i = 0; i < productDto.getMaterialList().size(); i++) { //받은 자재 PK로 자재 찾아서 제품별 자재 리스트를 만든다
+                materialEntityList.add(materialEntityRepository.findById(productDto.getMaterialList().get(i)).get());
+            }
 
-        System.out.println("자재 조회 : " + materialEntityList);
+            System.out.println("자재 조회 : " + materialEntityList);
 
-        ProductEntity productEntity = productRepository.save(productDto.toEntity());
+            ProductEntity productEntity = productRepository.save(productDto.toEntity());
 
-        if(productEntity.getProdId() < 1){ //앞부분 등록 실패시
+            if (productEntity.getProdId() < 1) { //앞부분 등록 실패시 (제품 등록 실패시 - 자재 제외하고 온랴 제품테이블만)
+                return false;
+            }
+
+            System.out.println("제품 등록 후 " + productEntity);
+
+//        materialProductEntity.setProductEntity(productEntity); //제품-재고 테이블에 제품 넣기
+//        materialProductEntity.setMaterialEntityList(materialEntityList); // 제품-재고 테이블에 재고 리스트 넣기
+            List<MaterialProductEntity> resultMaterialProductEntity = new ArrayList<>();
+
+            for (int i = 0; i < materialEntityList.size(); i++) {
+                MaterialProductEntity materialProductEntity = new MaterialProductEntity(materialEntityList.get(i), productEntity);
+                //제품-재고 테이블에 필요한 정보를 set으로 다 넣었다면 save
+                resultMaterialProductEntity.add(materialProductRepository.save(materialProductEntity));
+                System.out.println(resultMaterialProductEntity);
+            }
+
+            for (int j = 0; j < resultMaterialProductEntity.size(); j++) {//새로 추가하는 mpno
+                materialProductEntityList.add(resultMaterialProductEntity.get(j));
+            }
+
+            for (int i = 0; i < materialEntityList.size(); i++) {
+/*
+            for(int j = 0; j < materialEntityList.get(i).getMaterialProductEntityList().size(); j++){//기존 mpno
+                materialProductEntityList.add(materialEntityList.get(i).getMaterialProductEntityList().get(j));
+            }*/
+
+                materialEntityList.get(i).setMaterialProductEntityList(materialProductEntityList);
+            }
+
+            if (resultMaterialProductEntity.get(resultMaterialProductEntity.size() - 1).getMpno() >= 1) { //등록 성공시
+                return true;
+            }
+            return true;
+
+        }catch (Exception e){
+            System.err.println(e.getMessage());
             return false;
         }
 
-        System.out.println("제품 등록 후 " + productEntity);
+    }
 
-        MaterialProductEntity materialProductEntity = new MaterialProductEntity();
-        materialProductEntity.setProductEntity(productEntity);
+    @Transactional
+    //제품 수정 => 제품 관리 페이지에서 수행할 예정
+    public boolean putProduct(ProductDto productDto){
+        Optional<ProductEntity> putProductEntity = productRepository.findById(productDto.getProdId());
 
-        MaterialProductEntity resultMaterialProductEntity = materialProductRepository.save(materialProductEntity);
-
-        System.out.println(resultMaterialProductEntity);
-
-        for(int i = 0; i < materialEntityList.size(); i++){
-            materialEntityList.get(i).setMaterialProductEntity(resultMaterialProductEntity);
-            materialEntityRepository.save(materialEntityList.get(i));
-            System.out.println(materialEntityList.get(i).toDto());
-        }
-
-        System.out.println(resultMaterialProductEntity.getMpno());
-
-        if(resultMaterialProductEntity.getMpno() >= 1){ //등록 성공시
+        if(putProductEntity.isPresent()){
+            ProductEntity productEntity = putProductEntity.get();
+            productEntity.setCompanyEntity(productDto.getCompanyEntity());
+            productEntity.setProdPrice(productDto.getProdPrice());
+            productEntity.setProdName(productDto.getProdName());
             return true;
         }
 
         return false;
-
-
-    }
-
-    //제품 수정 => 제품 관리 페이지에서 수행할 예정
-    public int putProduct(ProductDto productDto){
-        return 1;
     }
 
     //제품 삭제 => 제품 관리 페이지에서 수행할 예정

@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Container from '@mui/material/Container';
 
 import {Checkbox} from '@mui/material';
 import InProduct from './InProduct'
@@ -21,18 +22,22 @@ import InProduct from './InProduct'
 
 
 export default function CreateProduct(props){
-    let[pageInfo, setPageInfo] = useState({"page" : 1, "key" : '', "keyword " : ''}) //검색기능과 페이지네이션을 위해
+    let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'keyword' : '' , 'matID' : 0 } )
 
     let[list, setList] = useState([]); //자재를 담을 배열 usestate
     const [checked, setChecked] = useState([]);
+    let [totalPage , setTotalPage ] = useState(1);
+    let [totalCount , setTotalCount ] = useState(1);
 
      useEffect( ()=>{//컴포넌트 로딩시(열때, 시작시) 해당 쟈재 정보를 모두 가져온다.
-        axios.get('/materials/materialList',  { params : { matID : 0 } })
+        axios.get('/materials/materialList',  { params : pageInfo })
           .then( r => {
                 console.log(r)
-                setList(r.data)//가져온 자재 정보를 list에 담는다.
+                setList(r.data.materialList)//가져온 자재 정보를 list에 담는다.
+                setTotalPage(r.data.totalPage);
+                setTotalCount(r.data.totalCount);
             } )
-    }, [] )
+    }, [pageInfo] )
 
     //체크 박스 업데이트
     const checkboxEventHandler = (num) => {
@@ -42,6 +47,22 @@ export default function CreateProduct(props){
        }else{
             setChecked([...checked, num]); //배열에 해당 클릭한 번호 저장
        }
+    }
+
+    //자재 페이지 변경
+    const selectPage = (event , value) => {
+
+        console.log(value); //
+        pageInfo.page = value;
+        setPageInfo({...pageInfo});
+    }
+
+    //자재 검색
+    const onSearch =()=>{
+        pageInfo.keyword = document.querySelector(".keyword").value;
+        pageInfo.page = 1
+        document.querySelector(".keyword").value = '';
+        setPageInfo({...pageInfo});
     }
 
 
@@ -80,6 +101,15 @@ export default function CreateProduct(props){
                         </TableBody>
                       </Table>
                     </TableContainer>
+                    <Container>
+                        <div style={{display : 'flex' , justifyContent : 'center', margin : '10px 0px 10px 0px'}}>
+                              <Pagination count={totalPage}  color="primary" onChange={selectPage}/>
+                        </div>
+                        <div style={{display : 'flex' , justifyContent : 'center' }}>
+                               <input type="text" className="keyword" />
+                               <button type="button" onClick={onSearch}> 검색 </button>
+                        </div>
+                    </Container>
                     <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
                         <InProduct material={checked}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                     </div>

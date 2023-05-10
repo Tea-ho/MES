@@ -13,6 +13,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 
+import {Checkbox} from '@mui/material';
 import {Container} from '@mui/material'
 /* -------------- mui -------------- */
 
@@ -21,19 +22,24 @@ export default function ManageProduct(props){
     let[pageInfo, setPageInfo] = useState({"page" : 1, "key" : '', "keyword" : ''}) //검색기능과 페이지네이션을 위해
     let[totalPage, setTotalPage] = useState(1); //총 페이지수
     let[totalCount, setTotalCount] = useState(0); //총 몇개의 제품
+    const [checked, setChecked] = useState([]); //삭제할 제품PK를 모두 받아옴
 
     let[productList, setProductList] = useState([]); //모든 제품을 담는
 
     let[putProduct, setPutProduct] = useState({}); //수정할 목록
 
-    useEffect(() => { //컴포넌트 재렌더링시 (시작시) 제품 정보 가져오기
+    const getProduct = () => {
         axios.get("/product", {params : pageInfo})
-        .then(r => {
-            console.log(r.data);
-            setProductList(r.data.productDtoList);
-            setTotalCount(r.data.totalCount);
-            setTotalPage(r.data.totalPage)
-        })
+            .then(r => {
+                console.log(r.data);
+                setProductList(r.data.productDtoList);
+                setTotalCount(r.data.totalCount);
+                setTotalPage(r.data.totalPage)
+            })
+    }
+
+    useEffect(() => { //컴포넌트 재렌더링시 (시작시) 제품 정보 가져오기
+       getProduct();
     }, [pageInfo])
 
     //검색
@@ -64,10 +70,24 @@ export default function ManageProduct(props){
        console.log(uproduct)
     }
 
+    //체크 박스 업데이트[삭제를 위한]
+    const checkboxEventHandler = (num) => {
+       console.log(checked)
+       if (checked.includes(num)) { //배열에 저장되어있는데 체크박스를 누른거면 취소니까 해당 배열에 그 번호를 삭제해준다
+           setChecked(checked.filter((checked) => checked !== num));
+       }else{
+            setChecked([...checked, num]); //배열에 해당 클릭한 번호 저장
+       }
+    }
+
+
 
     return(<>
          <Container>
-            <div>현재페이지 : {pageInfo.page}  게시물 수 : {totalCount}</div>
+            <div>현재페이지 : {pageInfo.page}  게시물 수 : {totalCount}
+            <div style={{width : '100%', display : 'flex', justifyContent : 'flex-end'}}>
+                <button style={{marginLeft : '100px'}}>선택삭제</button></div>
+             </div>
              <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -78,6 +98,7 @@ export default function ManageProduct(props){
                         <TableCell align ="center" style={{width:'35%'}}>제품명</TableCell>
                         <TableCell align ="center" style={{width:'20%'}}>제품가격</TableCell>
                         <TableCell align ="center" style={{width:'25%'}}>회사명</TableCell>
+                        <TableCell align ="center" style={{width:'25%'}}>비고</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -93,6 +114,7 @@ export default function ManageProduct(props){
                           <TableCell component ="th" align="center">{row.prodName}</TableCell>
                           <TableCell component ="th" align="center">{row.prodPrice}</TableCell>
                           <TableCell component ="th" align="center">{row.companyEntity.cname}</TableCell>
+                           <TableCell align="center"><Checkbox onChange={() => checkboxEventHandler(row.prodId)}/></TableCell>
                           </TableRow>
                       ))}
                     </TableBody>
@@ -110,7 +132,7 @@ export default function ManageProduct(props){
                     <Pagination count={totalPage} page = {pageInfo.page} color="primary" onChange = {selectPage}/>
                 </div>
                 <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
-                    <EditProduct product={putProduct}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
+                    <EditProduct product={putProduct} callback={getProduct}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                 </div>
           </Container>
     </>)

@@ -5,6 +5,9 @@ import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.material.MaterialInOutEntity;
 import mes.domain.entity.member.AllowApprovalEntity;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,10 +21,16 @@ public class MaterialInOutDto {
     private MaterialEntity materialEntity;// -- 마스터 원자재 테이블 fk
     private int MatID; // 검색용
 
-    public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, AllowApprovalEntity allowApprovalEntity, MaterialEntity materialEntity) {
+    // 승인 페이지에서 필요한 필드
+    private String cdate;
+    private String udate;
+
+    public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, LocalDate cdate, LocalDate udate, AllowApprovalEntity allowApprovalEntity, MaterialEntity materialEntity) {
         this.mat_in_outid = mat_in_outid;
         this.mat_in_type = mat_in_type;
         this.mat_st_stock = mat_st_stock;
+        this.cdate = cdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.udate = udate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
         this.allowApprovalEntity = allowApprovalEntity;
         this.materialEntity = materialEntity;
     }
@@ -34,11 +43,5 @@ public class MaterialInOutDto {
                 .materialEntity(this.materialEntity)
                 .allowApprovalEntity(this.allowApprovalEntity)
                 .build();
-
-
-
-
-
-
     }
 }

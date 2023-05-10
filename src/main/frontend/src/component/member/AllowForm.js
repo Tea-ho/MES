@@ -9,7 +9,7 @@ export default function AllowForm(props) {
 // 생성이유: 폼 유지보수가 필요한 경우, 1회 수정으로 작업 완료 칠 수 있음
 // (동일 폼 100개 있다고 생각하자)
 
-    // 1-1. 상태변수 선언[ 결재 리스트 관리 Controller get으로 받아서 초기화 예정 ]
+    // 1-1. 상태변수 선언[ 결재 리스트 관리 Controller get으로 받아서 초기화 예정 / DataGrid 적용 ]
     const [ rows, setRows ] = useState([]);
 
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
@@ -29,8 +29,15 @@ export default function AllowForm(props) {
 
     // 3. 승인 처리 (폼에서 진행)
     const approveHandler = (e) => {
-        axios.put('/allowApproval', { params: { type: type, approve: 1,   } })
-        console.log(e.target.value);
+        axios.put('/allowApproval', { params: { type: type, approve: 1, id: rowSelectionModel.map((row) => row.mat_in_outid)  } })
+            .then((response) => {
+                // 승인 요청 후 서버 응답에 따른 처리
+                console.log(response);
+            })
+            .catch((error) => {
+                // 에러 처리
+                console.log(error);
+            });
     }
 
     // 4. 반려 처리 (폼에서 진행)
@@ -39,7 +46,6 @@ export default function AllowForm(props) {
     }
 
     // 5. 결재 출력 양식 [type: 1 자재, 2 제품, 3 판매]
-    // let format;
     let columns;
     if( type === 1 ){
 
@@ -57,21 +63,6 @@ export default function AllowForm(props) {
             },
         ]
 
-        /*format =
-            <TableBody>
-                 {list.map((e,i) => (
-                     <TableRow>
-                         <TableCell align="center" > {i+1} </TableCell>
-                         <TableCell align="center" > { e.materialEntity.mat_name } {e.mat_in_type>0 ? '입고' : '출고' } </TableCell>
-                         <TableCell align="center" > {e.udate} </TableCell>
-                         <TableCell align="center" > {e.allowApprovalEntity.al_app_whether ? '승인 완료': '승인 대기'} </TableCell>
-                         <TableCell align="center" >
-                             <Button variant="contained" color="primary" onClick={approveHandler}>승인</Button>
-                             <Button variant="contained" color="primary" onClick={rejectHandler}>반려</Button>
-                         </TableCell>
-                     </TableRow>
-                 ))}
-             </TableBody>*/
     } else if( type === 2 ){
 
     } else if( type === 3){
@@ -106,7 +97,6 @@ export default function AllowForm(props) {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
                 }}
-
             pageSizeOptions={[5, 10]}
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
@@ -115,27 +105,4 @@ export default function AllowForm(props) {
             />
         </div>
     </>);
-
-    /*
-    return(
-        <div>
-            <h3>자제 승인</h3>
-            <div>
-                <TableContainer>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center" style={{ width:'5%' }}>번호</TableCell>
-                                <TableCell align="center" style={{ width:'35%' }}>요청내용</TableCell>
-                                <TableCell align="center" style={{ width:'20%' }}>요청일자</TableCell>
-                                <TableCell align="center" style={{ width:'20%' }}>승인여부</TableCell>
-                                <TableCell align="center" style={{ width:'20%' }}>비고</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        { format }
-                    </Table>
-                </TableContainer>
-            </div>
-        </div>
-    )*/
 }

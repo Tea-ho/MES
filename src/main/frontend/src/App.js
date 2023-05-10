@@ -108,10 +108,10 @@ export default function Index( props ) {
                 <div className="main-content">
                     <Routes >
                         <Route path="/component/member/Login" element = { <Login /> } />
-                        <Route path="/component/member/Info" element = { <Info /> } />
                         <Route path="/component/material/Material" element = { <Material/> } />
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
+                        <Route path="/component/sales/SalesHeader" element ={<SalesHeader/>}/>
                     </Routes>
 
                 </div>

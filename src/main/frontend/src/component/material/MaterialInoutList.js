@@ -115,7 +115,7 @@ export default function MaterialInoutList(props) {
                                    <TableCell align="center" >{e.mat_price}</TableCell>
                                    <TableCell align="center" >{e.mat_unit}</TableCell>
                                    <TableCell align="center" >{e.mat_st_exp}</TableCell>
-                                   <TableCell align="center" >{e.companyEntity.cname}</TableCell>
+                                   <TableCell align="center" >{e.companyDto.cname}</TableCell>
                                    <TableCell align="center" >{e.mdate}</TableCell>
                                    <TableCell align="center" >{e.mat_code}</TableCell>
                                   </TableRow>

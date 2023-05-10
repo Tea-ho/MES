@@ -38,6 +38,7 @@ public class ProductEntity {
         .prodCode(this.prodCode)
         .prodDate(this.prodDate)
         .prodPrice(this.prodPrice)
+        .companyDto(this.companyEntity.toDto())
         .build();
     }
 

@@ -2,6 +2,7 @@ package mes.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.dto.member.CompanyDto;
+import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
 import mes.domain.dto.sales.SalesDto;
 import mes.service.sales.SalesService;
@@ -28,11 +29,12 @@ public class SalesController {
     }
 
     // 2. 판매 출력 [ 출력창 2개 필요 , 승인 전 = 수정, 삭제 가능 , 승인 후 = 수정 삭제 불가 ]
-/*    @GetMapping("/salesView")
-    public List<SalesDto> salesView(@RequestParam int OrderId){
-        return salesService.salesView(OrderId);
+    @GetMapping("/salesView")
+    public PageDto salesView(PageDto pageDto){
+        log.info( pageDto.toString() );
+        return salesService.salesView(pageDto);
 
-    }*/
+    }
 
     // 3. 판매 수정 ( 판매 수정했을 경우, 제품 재고량이 다시 늘어나야 함 ) / 결제자 승인 허락 전
 

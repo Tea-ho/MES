@@ -16,7 +16,7 @@ public class ProductProcessEntity {
     private int prodProcNo;// -- PK
     @Column private String prodProcDate;// -- 공정 일자
     @Column private int prodProcStatus;// -- 공정 상태
-    @Column private int ProdStock;// -- 완제품 재고 (+, - 아니고 = 으로)
+    @Column private int prodStock;// -- 완제품 재고 (+, - 아니고 = 으로)
 
 
     @ManyToOne

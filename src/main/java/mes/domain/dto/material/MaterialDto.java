@@ -33,6 +33,8 @@ public class MaterialDto{
     private List<MaterialProductEntity> materialProductEntityList = new ArrayList<MaterialProductEntity>();
 
 
+    private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
+
 
 
     public MaterialEntity toEntity() { // 저장용 추후 추가할것있음

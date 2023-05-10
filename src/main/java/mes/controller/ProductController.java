@@ -7,10 +7,8 @@ import mes.service.product.ProductPlanService;
 import mes.service.product.ProductProcessService;
 import mes.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -43,8 +41,8 @@ public class ProductController {
 
     //재품 수정
     @PutMapping("")
-    public int putProduct(@RequestBody ProductDto productDto){
-        return 1;
+    public boolean putProduct(@RequestBody ProductDto productDto){
+        return productService.putProduct(productDto);
     }
 
     //제품 삭제

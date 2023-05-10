@@ -25,7 +25,6 @@ import ProcessProduct from "./component/product/ProcessProduct";
 import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 멤버 부분 ------------------------------*/
 import Login from "./component/member/Login";
-import Info from "./component/member/Info";
 import AllowApproval from "./component/member/AllowApproval";
 import AllowMaterial from "./component/member/AllowMaterial";
 import AllowProduct from "./component/member/AllowProduct";

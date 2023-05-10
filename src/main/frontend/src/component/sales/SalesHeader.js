@@ -15,7 +15,6 @@ import Button from '@mui/material/Button';
 
 import SalesCreate from "./SalesCreate";
 import SalesView from "./SalesView"
-import SalesViewApp from "./SalesViewApp"
 
 export default function SalesHeader() {
   return (
@@ -30,10 +29,6 @@ export default function SalesHeader() {
         <SalesView />
       </div>
 
-      <div>
-        <h3> 판매 현황2 (판매 승인 후) </h3>
-        <SalesViewApp />
-      </div>
     </>
   );
 }

@@ -62,12 +62,16 @@ public class ProductService {
 
         for(int i = 0; i < productDto.size(); i++){ //회사 정보 담아서 내보내기 위해
             productDto.get(i).setCompanyEntity(productRepository.findById(productDto.get(i).getProdId()).get().getCompanyEntity());
+            System.out.println("제품 확인!!!!!! : "+productDto);
 
-            System.out.println("자재는 들어왔나... : "+ materialProductRepository.findByProductEntity(productDto.get(i).toEntity()));
+            System.out.println("자재는 들어왔나... : "+ materialProductRepository.findByMaterial(productDto.get(i).getProdId()));
 
             //제품 PK로 자재를 찾기 위해 materialProduct를 찾는다
-            List<MaterialProductEntity> materialProductEntity = materialProductRepository.findByProductEntity(productDto.get(i).toEntity());
+            List<MaterialProductEntity> materialProductEntity = materialProductRepository.findByMaterial(productDto.get(i).getProdId());
 
+            for(int k = 0; k < materialProductEntity.size(); k++){
+                //materialEntityRepository.findById(materialProductRepository.findById(materialProductEntity.get(k).getMaterialEntity()));
+            }
             List<MaterialDto> materialDtoList = new ArrayList<>(); //제품에 담을 자재 목록
 
             System.out.println(materialDtoList);

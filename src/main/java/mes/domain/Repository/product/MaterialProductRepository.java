@@ -12,7 +12,9 @@ import java.util.List;
 @Repository
 public interface MaterialProductRepository extends JpaRepository<MaterialProductEntity, Integer> {
 
-    List<MaterialProductEntity> findByProductEntity(ProductEntity productEntity);
+    @Query(value="select * from material_product" +
+            " where prod_id = :prod_id", nativeQuery = true)
+    List<MaterialProductEntity> findByMaterial(int prod_id);
 
 
 }

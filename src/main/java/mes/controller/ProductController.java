@@ -27,9 +27,12 @@ public class ProductController {
     
     //전체 제품 출력 => 제품 지시, 제품 관리에서 출력 => 제품쪽에서는 재고 출력
     @GetMapping("")
+    @ExceptionHandler
     public PageDto getProductList(PageDto pageDto){
         System.out.println(pageDto.toString());
-        return productService.getProductList(pageDto);
+        PageDto page = productService.getProductList(pageDto);
+        System.out.println("제품 가져왔다 controller : " + page);
+        return page;
     }
     
     //제품 등록

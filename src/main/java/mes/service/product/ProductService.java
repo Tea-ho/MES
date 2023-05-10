@@ -61,7 +61,7 @@ public class ProductService {
 
 
         for(int i = 0; i < productDto.size(); i++){ //회사 정보 담아서 내보내기 위해
-            productDto.get(i).setCompanyEntity(productRepository.findById(productDto.get(i).getProdId()).get().getCompanyEntity());
+            productDto.get(i).setCompanyDto(productRepository.findById(productDto.get(i).getProdId()).get().getCompanyEntity().toDto());
             System.out.println("제품 확인!!!!!! : "+productDto);
 
             System.out.println("자재는 들어왔나... : "+ materialProductRepository.findByMaterial(productDto.get(i).getProdId()));
@@ -69,9 +69,6 @@ public class ProductService {
             //제품 PK로 자재를 찾기 위해 materialProduct를 찾는다
             List<MaterialProductEntity> materialProductEntity = materialProductRepository.findByMaterial(productDto.get(i).getProdId());
 
-            for(int k = 0; k < materialProductEntity.size(); k++){
-                //materialEntityRepository.findById(materialProductRepository.findById(materialProductEntity.get(k).getMaterialEntity()));
-            }
             List<MaterialDto> materialDtoList = new ArrayList<>(); //제품에 담을 자재 목록
 
             System.out.println(materialDtoList);
@@ -83,9 +80,10 @@ public class ProductService {
 
             System.out.println("제품 출력 materialList 장착 : " + productDto.get(i));
         }
+        pageDto.setProductDtoList(productDto);
         pageDto.setTotalPage(pageEntity.getTotalPages());
         pageDto.setTotalCount(pageEntity.getTotalElements());
-
+        System.out.println("모두 장착 : " + pageDto);
         return pageDto;
     }
 
@@ -103,7 +101,10 @@ public class ProductService {
 
             System.out.println("자재 조회 : " + materialEntityList);
 
-            ProductEntity productEntity = productRepository.save(productDto.toEntity());
+            ProductEntity inproductEntity = productDto.toEntity();
+            inproductEntity.setCompanyEntity(productDto.getCompanyDto().toEntity());
+            ProductEntity productEntity = productRepository.save(inproductEntity);
+            System.out.println(productEntity);
 
             if (productEntity.getProdId() < 1) { //앞부분 등록 실패시 (제품 등록 실패시 - 자재 제외하고 온랴 제품테이블만)
                 return false;
@@ -154,7 +155,7 @@ public class ProductService {
 
         if(putProductEntity.isPresent()){
             ProductEntity productEntity = putProductEntity.get();
-            productEntity.setCompanyEntity(productDto.getCompanyEntity());
+            productEntity.setCompanyEntity(productDto.getCompanyDto().toEntity());
             productEntity.setProdPrice(productDto.getProdPrice());
             productEntity.setProdName(productDto.getProdName());
             return true;

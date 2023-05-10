@@ -37,6 +37,7 @@ public class MaterialProductEntity {
     public ProductEntity productEntity;
 
 
+
     public MaterialProductEntity(MaterialEntity materialEntity, ProductEntity productEntity) {
         this.materialEntity = materialEntity;
         this.productEntity = productEntity;

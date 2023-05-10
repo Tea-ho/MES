@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mes.domain.dto.member.CompanyDto;
+import mes.domain.dto.product.MaterialProductDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.product.MaterialProductEntity;
@@ -27,10 +29,10 @@ public class MaterialDto{
     private String mat_unit;// -- 자재 단위
     private String mat_st_exp;// -- 유통기한
     private int mat_price;// -- 단가
-    private CompanyEntity companyEntity;// -- 제조사
+    private CompanyDto companyDto;// -- 제조사
     private String mdate; // 등록날짜
     private int cno;
-    private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
+    private List<MaterialProductDto> MaterialProductDtoList = new ArrayList<>();
 
 
 
@@ -42,8 +44,6 @@ public class MaterialDto{
                 .mat_code(this.mat_code)
                 .mat_st_exp(this.mat_st_exp)
                 .mat_price(this.mat_price)
-                .companyEntity(this.companyEntity)
-                .materialProductEntityList(this.materialProductEntityList)
                 .build();
     }
 

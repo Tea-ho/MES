@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mes.domain.BaseTime;
 import mes.domain.dto.material.MaterialDto;
+import mes.domain.dto.member.CompanyDto;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.product.ProductEntity;
 
@@ -29,7 +30,7 @@ public class ProductDto {
 
     private List<Integer> materialList; //자재 리스트(PK)
 
-    private CompanyEntity companyEntity; // 회사명
+    private CompanyDto companyDto; // 회사명
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -41,7 +42,6 @@ public class ProductDto {
                 .prodDate(simpleDateFormat.format(new Date()))
                 .prodPrice(this.prodPrice)
                 .prodName(this.prodName)
-                .companyEntity(this.companyEntity)
                 .build();
 
     }

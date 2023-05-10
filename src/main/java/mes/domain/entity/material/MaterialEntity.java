@@ -33,14 +33,18 @@ public class MaterialEntity extends BaseTime {
     @JoinColumn(name = "cno") //pk 이름 정하기
     @ToString.Exclude
     private CompanyEntity companyEntity;// -- 제조사
+/*
 
     @ManyToOne
     @JoinColumn(name = "mpno")
+    @Builder.Default
     @ToString.Exclude
     private MaterialProductEntity materialProductEntity;
+*/
 
     @OneToMany(mappedBy = "materialEntity")
     @Builder.Default
+    @ToString.Exclude
     private List<MaterialProductEntity> materialProductEntityList = new ArrayList<>();
 
 
@@ -56,9 +60,7 @@ public class MaterialEntity extends BaseTime {
                 .companyEntity(this.companyEntity)
                 .materialProductEntityList(this.materialProductEntityList)
                 .mdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .materialProductEntityList(this.materialProductEntityList)
                 .build();
     }
-
-
-
 }

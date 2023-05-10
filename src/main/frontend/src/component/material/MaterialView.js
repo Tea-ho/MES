@@ -63,8 +63,6 @@ export default function MaterialView(props) {
         console.log(value); //
         pageInfo.page = value;
         setPageInfo({...pageInfo});
-
-
     }
 
     const onSearch =()=>{
@@ -118,14 +116,14 @@ export default function MaterialView(props) {
               </TableContainer>
               <div style={{display : 'flex' , justifyContent : 'center' }}>
                           <Pagination count={totalPage}  color="primary" onChange={selectPage}/>
-                      </div>
-                         <div>
+              </div>
+              <div>
 
-                              <input type="text" className="keyword" />
-                              <button type="button" onClick={onSearch}> 검색 </button>
-                         </div>
+                  <input type="text" className="keyword" />
+                  <button type="button" onClick={onSearch}> 검색 </button>
+               </div>
 
-       </div>
+              </div>
 
     </>)
 

@@ -35,7 +35,6 @@ public class SalesDto {
     private ProductEntity productEntity; // 주문 제품 ( 이름 )
     private String prodName;    // 완재품 이름
     private int prodId;         // 완제품 id
-
     private ProductProcessEntity productProcessEntity; // 주문 제품 ( 상태, 개수 )
     private int prodProcStatus; // 완재품 상태
     private int prodStock;      // 완재품 개수

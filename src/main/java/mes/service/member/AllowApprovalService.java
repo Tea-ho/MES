@@ -106,20 +106,42 @@ public class AllowApprovalService {
     }
 
     // 3. 자재, 제품, 판매 승인/반려 처리
-    public boolean approveMaterialInOut(int MatInOutID ) {
-        return updateAllowApproval(MatInOutID,  true);
+    public boolean approveMaterialInOut(List<Integer> MatInOutIDs ) {
+            System.out.println("approveMaterialInOut");
+            System.out.println(MatInOutIDs.toString());
+        for (int id : MatInOutIDs) {
+            updateAllowApproval(id, true);
+        }
+        return true;
     }
-    public boolean rejectMaterialInOut(int MatInOutID) {
-        return updateAllowApproval(MatInOutID, false);
+    public boolean rejectMaterialInOut(List<Integer> MatInOutIDs) {
+        for (int id : MatInOutIDs) {
+            updateAllowApproval(id, false);
+        }
+        return true;
     }
-    public boolean approveProductInOut(int ProdInOutID) { return updateAllowApproval(ProdInOutID, true); }
-    public boolean rejectProductInOut(int ProdInOutID) {
-        return updateAllowApproval(ProdInOutID, false);
+    public boolean approveProductInOut(List<Integer> ProdInOutIDs) {
+        for (int id : ProdInOutIDs) {
+            updateAllowApproval(id, true);
+        }
+        return true;
     }
-    public boolean approveSales(int OrderId) {
-        return updateAllowApproval(OrderId, true);
+    public boolean rejectProductInOut(List<Integer> ProdInOutIDs) {
+        for (int id : ProdInOutIDs) {
+            updateAllowApproval(id, false);
+        }
+        return true;
     }
-    public boolean rejectSales(int OrderId) {
-        return updateAllowApproval(OrderId, false);
+    public boolean approveSales(List<Integer> OrderIds) {
+        for (int id : OrderIds) {
+            updateAllowApproval(id, true);
+        }
+        return true;
+    }
+    public boolean rejectSales(List<Integer> OrderIds) {
+        for (int id : OrderIds) {
+            updateAllowApproval(id, false);
+        }
+        return true;
     }
 }

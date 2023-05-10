@@ -101,45 +101,43 @@ public class ProductService {
 
             System.out.println("자재 조회 : " + materialEntityList);
 
-            ProductEntity inproductEntity = productDto.toEntity();
-            inproductEntity.setCompanyEntity(productDto.getCompanyDto().toEntity());
-            ProductEntity productEntity = productRepository.save(inproductEntity);
-            System.out.println(productEntity);
+            Optional<CompanyEntity> companyEntity = companyRepository.findById(productDto.getCompanyDto().getCno());
+            ProductEntity productEntity;
+            if(companyEntity.isPresent()){
+                productEntity = productRepository.save(productDto.toEntity());
+                productEntity.setCompanyEntity(companyEntity.get());
+                System.out.println(productEntity);
+                if (productEntity.getProdId() < 1) { //앞부분 등록 실패시 (제품 등록 실패시 - 자재 제외하고 온랴 제품테이블만)
+                    return false;
+                }
+                System.out.println("제품 등록 후 " + productEntity);
+                List<MaterialProductEntity> resultMaterialProductEntity = new ArrayList<>();
 
-            if (productEntity.getProdId() < 1) { //앞부분 등록 실패시 (제품 등록 실패시 - 자재 제외하고 온랴 제품테이블만)
-                return false;
-            }
+                for (int i = 0; i < materialEntityList.size(); i++) {
+                    MaterialProductEntity materialProductEntity = new MaterialProductEntity(materialEntityList.get(i), productEntity);
+                    //제품-재고 테이블에 필요한 정보를 set으로 다 넣었다면 save
+                    resultMaterialProductEntity.add(materialProductRepository.save(materialProductEntity));
+                    System.out.println(resultMaterialProductEntity);
+                }
 
-            System.out.println("제품 등록 후 " + productEntity);
+                for (int j = 0; j < resultMaterialProductEntity.size(); j++) {//새로 추가하는 mpno
+                    materialProductEntityList.add(resultMaterialProductEntity.get(j));
+                }
 
-//        materialProductEntity.setProductEntity(productEntity); //제품-재고 테이블에 제품 넣기
-//        materialProductEntity.setMaterialEntityList(materialEntityList); // 제품-재고 테이블에 재고 리스트 넣기
-            List<MaterialProductEntity> resultMaterialProductEntity = new ArrayList<>();
-
-            for (int i = 0; i < materialEntityList.size(); i++) {
-                MaterialProductEntity materialProductEntity = new MaterialProductEntity(materialEntityList.get(i), productEntity);
-                //제품-재고 테이블에 필요한 정보를 set으로 다 넣었다면 save
-                resultMaterialProductEntity.add(materialProductRepository.save(materialProductEntity));
-                System.out.println(resultMaterialProductEntity);
-            }
-
-            for (int j = 0; j < resultMaterialProductEntity.size(); j++) {//새로 추가하는 mpno
-                materialProductEntityList.add(resultMaterialProductEntity.get(j));
-            }
-
-            for (int i = 0; i < materialEntityList.size(); i++) {
+                for (int i = 0; i < materialEntityList.size(); i++) {
 /*
             for(int j = 0; j < materialEntityList.get(i).getMaterialProductEntityList().size(); j++){//기존 mpno
                 materialProductEntityList.add(materialEntityList.get(i).getMaterialProductEntityList().get(j));
             }*/
 
-                materialEntityList.get(i).setMaterialProductEntityList(materialProductEntityList);
-            }
+                    materialEntityList.get(i).setMaterialProductEntityList(materialProductEntityList);
+                }
 
-            if (resultMaterialProductEntity.get(resultMaterialProductEntity.size() - 1).getMpno() >= 1) { //등록 성공시
-                return true;
+                if (resultMaterialProductEntity.get(resultMaterialProductEntity.size() - 1).getMpno() >= 1) { //등록 성공시
+                    return true;
+                }
             }
-            return true;
+            return false;
 
         }catch (Exception e){
             System.err.println(e.getMessage());

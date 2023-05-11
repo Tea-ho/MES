@@ -7,7 +7,6 @@ import Tab from '@mui/material/Tab';
 // 컴포넌트 가져오기
 import CreateProduct from './CreateProduct';
 import PlanProduct from './PlanProduct';
-import ProcessProduct from './ProcessProduct';
 import ManageProduct from './ManageProduct';
 
 export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭바*/
@@ -23,8 +22,6 @@ export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭
         setScreen(<ManageProduct/>)
     }else if(newValue == 2){ //제품 지시
         setScreen(<PlanProduct/>)
-    }else if(newValue == 3){ //제품 공정
-        setScreen(<ProcessProduct/>)
     }
   };
 
@@ -34,7 +31,6 @@ export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭
             <Tab label="제품 생산" />
             <Tab label="제품 관리" />
             <Tab label="제품 지시" />
-            <Tab label="제품 공정" />
           </Tabs>
           {screen}
         </Box>

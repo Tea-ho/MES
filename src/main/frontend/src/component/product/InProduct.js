@@ -67,7 +67,7 @@ export default function InProduct(props){ //제품 추가 부분
 
     //작업 취소
     const cancel = () => {
-        company = 0
+        setCompany(0)
         document.getElementById('prodName').value = ''
         document.getElementById('prodPrice').value = ''
     }

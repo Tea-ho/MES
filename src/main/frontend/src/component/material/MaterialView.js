@@ -59,7 +59,6 @@ export default function MaterialView(props) {
         }
 
     const selectPage = (event , value) => {
-
         console.log(value); //
         pageInfo.page = value;
         setPageInfo({...pageInfo});

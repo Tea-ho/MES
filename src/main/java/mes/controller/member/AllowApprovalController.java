@@ -46,7 +46,7 @@ public class AllowApprovalController {
 
     // 2. 승인/반려 처리
     @PutMapping("")
-    public boolean updateAllowApproval(@RequestBody Map<String, Object> requestBody ){
+    public boolean updateAllowApproval(@RequestBody Map<String, Object> requestBody, HttpSession session ){
         int type = (int) requestBody.get("type"); // type 1: 자재, 2: 제품 , 3: 판매
         int approve = (int) requestBody.get("approve"); // approve 1: 승인, 2: 반려
         List<Integer> ids = (List<Integer>) requestBody.get("id");
@@ -54,16 +54,16 @@ public class AllowApprovalController {
             System.out.println(ids);
         if(type == 1){ // 자재
             if( approve == 1 ){ // 승인 or 반려
-                return allowApprovalService.approveMaterialInOut(ids);
-            } else{ return allowApprovalService.rejectMaterialInOut(ids); }
+                return allowApprovalService.approveMaterialInOut(ids, session);
+            } else{ return allowApprovalService.rejectMaterialInOut(ids, session); }
         } else if(type == 2){ // 제품
             if( approve == 1 ){ // 승인 or 반려
-                return allowApprovalService.approveProductInOut(ids);
-            } else{ return allowApprovalService.rejectProductInOut(ids); }
+                return allowApprovalService.approveProductInOut(ids, session);
+            } else{ return allowApprovalService.rejectProductInOut(ids, session); }
         } else{ // 판매
             if( approve == 1 ){ // 승인 or 반려
-                return allowApprovalService.approveSales(ids);
-            } else{ return allowApprovalService.rejectSales(ids); }
+                return allowApprovalService.approveSales(ids, session);
+            } else{ return allowApprovalService.rejectSales(ids, session); }
         }
     }
 }

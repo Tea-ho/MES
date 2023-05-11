@@ -3,11 +3,13 @@ package mes.service.sales;
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.Repository.product.ProductProcessRepository;
 import mes.domain.Repository.product.ProductRepository;
+import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.member.CompanyDto;
-import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
 import mes.domain.dto.sales.SalesDto;
+import mes.domain.dto.sales.SalesPageDto;
+import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.AllowApprovalRepository;
 import mes.domain.entity.member.CompanyEntity;
@@ -17,6 +19,10 @@ import mes.domain.entity.product.ProductProcessEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -44,6 +50,7 @@ public class SalesService {
     @Autowired
     AllowApprovalRepository allowApprovalRepository;
 
+    // 0. 판매 쪽 product_process 출력
 
 
     // 1. 판매 등록
@@ -73,24 +80,45 @@ public class SalesService {
         AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toInEntity());
 
         SalesEntity salesEntity = salesRepository.save( salesDto.toEntity() );
+        salesEntity.setAllowApprovalEntity(approvalEntity);
         salesEntity.setCompanyEntity(companyEntity);
         salesEntity.setProductEntity( productEntity );
 
 
         log.info("Sales entity : " + salesEntity);
-        if ( salesEntity.getOrderId() >= 1 ) { return true; }
+        if ( salesEntity.getOrder_id() >= 1 ) { return true; }
 
         return false;
 
     }
 
-    // 2. 판매 출력 1( 판매 승인 전 )
+    // 2. 판매 출력
     @Transactional
-    public PageDto salesView(PageDto pageDto){
+    public SalesPageDto salesView(SalesPageDto salesPageDto){
+        List<SalesDto> list = new ArrayList<>();
 
 
+        if(salesPageDto.getOrderStatus() == 0){
+            Pageable pageable = PageRequest.of(salesPageDto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "order_id"));
 
-        return pageDto;
+            Page<SalesEntity> entityPage = salesRepository.findByPage(salesPageDto.getKeyword() , pageable);
+            entityPage.forEach((e)->{
+                list.add(e.toDto());
+            });
+
+            salesPageDto.setSalesDtoList(list);
+            salesPageDto.setTotalPage(entityPage.getTotalPages());
+            salesPageDto.setTotalCount(entityPage.getTotalElements());
+        }
+        else if(salesPageDto.getOrderStatus() > 0){
+            SalesEntity entity = salesRepository.findById(salesPageDto.getOrderStatus()).get();
+            list.add(entity.toDto());
+
+            salesPageDto.setSalesDtoList(list);
+        }
+        System.out.println("Servicedto : " + salesPageDto);
+
+        return salesPageDto;
 
     }
 
@@ -100,9 +128,9 @@ public class SalesService {
         List<CompanyDto> companyDtoList = new ArrayList<>();
         List<CompanyEntity> entityList = companyRepository.findAll();
 
-        entityList.forEach((e) -> {
-            companyDtoList.add(e.toDto());
-        });
+        entityList.stream()
+                .filter(e -> e.getCtype() == 2)
+                .forEach(e -> companyDtoList.add(e.toDto()));
         return companyDtoList;
     }
 

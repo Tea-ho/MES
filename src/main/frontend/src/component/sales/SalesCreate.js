@@ -57,7 +57,7 @@ export default function SalesCreate() {
           orderCount: document.getElementById('orderCount').value,
           orderDate: document.getElementById('orderDate').value,
           salesPrice: document.getElementById('salesPrice').value,
-          orderStatus : 1 ,
+          orderStatus : '1' ,
           cno : company ,
           prodId : prodName
         }
@@ -99,8 +99,8 @@ export default function SalesCreate() {
                                      <Select  value={ company } label="카테고리" onChange={ handleChange } >
                                          <MenuItem value={0}>회사</MenuItem>
                                          {
-                                             list.map( (c) => { console.log(c);
-                                                 return   <MenuItem value={c.cno}> { c.ctype == 2 ? c.cname : '' } </MenuItem>
+                                             list.map( (c) => {
+                                                 return   <MenuItem value={c.cno}> { c.cname } </MenuItem>
                                              })
                                          }
                                      </Select>
@@ -112,7 +112,7 @@ export default function SalesCreate() {
                                      <Select  value={ prodName } label="카테고리" onChange={ handleChange2 } >
                                          <MenuItem value={0}>물품이름</MenuItem>
                                          {
-                                             listProduct.map( (p) => { console.log(p);
+                                             listProduct.map( (p) => {
                                                  return   <MenuItem value={p.prodId}>{ p.prodName }</MenuItem>
                                              })
                                          }

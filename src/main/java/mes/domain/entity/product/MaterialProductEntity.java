@@ -36,6 +36,8 @@ public class MaterialProductEntity {
     @ToString.Exclude
     public ProductEntity productEntity;
 
+    @Column
+    public int referencesValue; //기준량
 
 
     public MaterialProductEntity(MaterialEntity materialEntity, ProductEntity productEntity) {
@@ -48,8 +50,8 @@ public class MaterialProductEntity {
     public MaterialProductDto toDto(){
         return MaterialProductDto.builder()
                 .mpno(this.mpno)
-                .productEntity(this.productEntity)
-                .materialEntity(this.materialEntity)
+                .productDto(this.productEntity.toDto())
+                .materialDto(this.materialEntity.toDto())
                 .build();
     }
 

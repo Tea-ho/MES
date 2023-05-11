@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mes.domain.dto.material.MaterialDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.product.MaterialProductEntity;
 import mes.domain.entity.product.ProductEntity;
@@ -21,10 +22,12 @@ public class MaterialProductDto {
     private int mpno;
 
 
-    private MaterialEntity materialEntity;
+    private MaterialDto materialDto;
 
 
-    private ProductEntity productEntity;
+    private ProductDto productDto;
+
+    private int referencesValue;
 
     //등록용 생성자
     public MaterialProductDto(ProductDto productDto, MaterialEntity materialEntity) {
@@ -33,7 +36,8 @@ public class MaterialProductDto {
     //저장용
     public MaterialProductEntity toEntity(){
         return MaterialProductEntity.builder()
-                .productEntity(this.productEntity)
+                .productEntity(this.productDto.toEntity())
+                .referencesValue(this.referencesValue)
                 .build();
     }
 }

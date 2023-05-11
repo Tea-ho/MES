@@ -95,9 +95,14 @@ public class ProductService {
 
         List<MaterialProductEntity> materialProductEntityList = new ArrayList<>(); //제품-자재 리스트
         try {
-            for (int i = 0; i < productDto.getMaterialList().size(); i++) { //받은 자재 PK로 자재 찾아서 제품별 자재 리스트를 만든다
-                materialEntityList.add(materialEntityRepository.findById(productDto.getMaterialList().get(i)).get());
+
+            List<Integer> keyset = new ArrayList<Integer>(productDto.getReferencesValue().keySet());//받은 자재 PK로 자재 찾아서 제품별 자재 리스트를 만든다
+
+            for(int key : keyset){
+                System.out.println(key + "materials key");
+                materialEntityList.add(materialEntityRepository.findById(key).get());
             }
+
 
             System.out.println("자재 조회 : " + materialEntityList);
 

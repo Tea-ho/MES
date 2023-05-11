@@ -20,9 +20,9 @@ public class ProductProcessEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "prod_plan_no")
+    @JoinColumn(name = "prod_id")
     @ToString.Exclude
-    private ProductPlanEntity productPlanEntity;// -- 마스터 제품 테이블 fk
+    public ProductEntity productEntity;// -- 마스터 제품 테이블 fk
 
 
 }

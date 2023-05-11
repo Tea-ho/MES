@@ -12,6 +12,7 @@ import mes.domain.entity.product.ProductEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -28,7 +29,9 @@ public class ProductDto {
     private String prodDate;// -- 생산일자
     private int prodPrice;// -- 제품 가격
 
-    private List<Integer> materialList; //자재 리스트(PK)
+   // private List<Integer> materialList; //자재 리스트(PK)
+
+    private HashMap<Integer, Integer> referencesValue; // mat_id : material개수
 
     private CompanyDto companyDto; // 회사명
 

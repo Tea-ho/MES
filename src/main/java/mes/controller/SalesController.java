@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import mes.domain.dto.member.CompanyDto;
 import mes.domain.dto.product.ProductDto;
 import mes.domain.dto.product.ProductProcessDto;
+import mes.domain.dto.sales.ProductProcessPageDto;
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.dto.sales.SalesPageDto;
 import mes.service.sales.SalesService;
@@ -21,11 +22,10 @@ public class SalesController {
     private SalesService salesService;
 
     // 0. 판매 쪽 product_process 출력
-/*    @GetMapping("/getproduct_process")
-    public List<ProductProcessDto> getProductProcess(){
-        List<ProductProcessDto> list = salesService.getProductProcess();
-        return  list;
-    }*/
+    @GetMapping("/getproduct_process")
+    public ProductProcessPageDto getProductProcess(ProductProcessPageDto productProcessPageDto){
+        return salesService.getProductProcess(productProcessPageDto);
+    }
 
     // 1. 판매 등록 ( 승인이 되었을 경우, 제품 재고량이 줄어들어야함 )
     @PostMapping("/salesCreate")

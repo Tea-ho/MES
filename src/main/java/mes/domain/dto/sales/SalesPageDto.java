@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mes.domain.dto.product.ProductProcessDto;
 
 import java.util.List;
 
@@ -20,5 +21,9 @@ public class SalesPageDto {
     private String keyword;
 
     List<SalesDto> salesDtoList;
+
+    private int prodStock;
+    List<ProductProcessDto> productProcessDtoList;
+
 
 }

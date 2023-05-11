@@ -7,6 +7,8 @@ import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.member.CompanyDto;
 import mes.domain.dto.product.ProductDto;
+import mes.domain.dto.product.ProductProcessDto;
+import mes.domain.dto.sales.ProductProcessPageDto;
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.dto.sales.SalesPageDto;
 import mes.domain.entity.material.MaterialEntity;
@@ -51,7 +53,27 @@ public class SalesService {
     AllowApprovalRepository allowApprovalRepository;
 
     // 0. 판매 쪽 product_process 출력
+    public ProductProcessPageDto getProductProcess(ProductProcessPageDto productProcessPageDto){
+        List<ProductProcessDto> list = new ArrayList<>();
 
+
+            Pageable pageable = PageRequest.of(productProcessPageDto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "prod_stock"));
+
+            Page<ProductProcessEntity> productProcessEntityPage = productProcessRepository.findByPage(productProcessPageDto.getKeyword() , pageable);
+            productProcessEntityPage.forEach((e)->{
+                list.add(e.toDto());
+            });
+
+            productProcessPageDto.setProductProcessDtoList(list);
+            productProcessPageDto.setTotalPage(productProcessEntityPage.getTotalPages());
+            productProcessPageDto.setTotalCount(productProcessEntityPage.getTotalElements());
+
+
+        System.out.println("productProcessPageDto : " + productProcessPageDto);
+
+        return productProcessPageDto;
+
+    }
 
     // 1. 판매 등록
     @Transactional

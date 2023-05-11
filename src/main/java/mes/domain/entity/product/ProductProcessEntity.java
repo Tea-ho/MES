@@ -1,6 +1,7 @@
 package mes.domain.entity.product;
 
 import lombok.*;
+import mes.domain.dto.product.ProductProcessDto;
 
 import javax.persistence.*;
 
@@ -20,9 +21,19 @@ public class ProductProcessEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "prod_id")
+    @JoinColumn(name = "prodId")
     @ToString.Exclude
     public ProductEntity productEntity;// -- 마스터 제품 테이블 fk
+
+    public ProductProcessDto toDto() { // 판매 쪽 제품공정 출력용
+        return  ProductProcessDto.builder()
+                .prodProcNo(this.prodProcNo)
+                .prodProcDate(this.prodProcDate)
+                .prodStock(this.prodStock)
+                .prodId(this.productEntity.getProdId())
+                .prodName(this.productEntity.getProdName())
+                .build();
+    }
 
 
 }

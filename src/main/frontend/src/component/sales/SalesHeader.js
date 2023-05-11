@@ -13,6 +13,7 @@ import Pagination from '@mui/material/Pagination';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 
+import StockView from "./StockView"
 import SalesCreate from "./SalesCreate";
 import SalesView from "./SalesView"
 
@@ -20,12 +21,17 @@ export default function SalesHeader() {
   return (
     <>
       <div>
+        <h3> 판매가능 제품 현황 </h3>
+        <StockView />
+      </div>
+
+      <div>
         <h3> 판매 등록 </h3>
         <SalesCreate />
       </div>
 
       <div>
-        <h3> 판매 현황1 (판매 승인 전) </h3>
+        <h3> 판매 현황 </h3>
         <SalesView />
       </div>
 

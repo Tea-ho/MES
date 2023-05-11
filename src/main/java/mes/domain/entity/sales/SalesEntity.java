@@ -54,6 +54,8 @@ public class SalesEntity {
                 .orderDate(this.orderDate)
                 .salesPrice(this.salesPrice)
                 .companyDto(this.companyEntity.toDto() )
+                .prodId(this.productEntity.getProdId())
+                .prodName(this.productEntity.getProdName())
                 .build();
     }
 

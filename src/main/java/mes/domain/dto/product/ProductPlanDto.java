@@ -14,6 +14,7 @@ public class ProductPlanDto {
     private int prodPlanNo;// -- PK
 
     private String prodPlanCount;// -- 제품 생산 수량
+
     private String prodPlanDate;// -- 생산 예정 일자
 
     private ProductEntity productEntity;// -- 마스터 제품 테이블 fk

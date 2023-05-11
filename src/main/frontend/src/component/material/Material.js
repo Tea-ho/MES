@@ -28,8 +28,8 @@ export default function Material() {
 
 
     <div>
-        <h3>자재 등록</h3>
         <MaterialCreate />
+
     </div>
 
   </>);

@@ -44,14 +44,7 @@ public class MaterialInoutService {
     @Transactional
     public boolean materialIn(MaterialInOutDto dto){
 
-        List<MaterialInOutEntity> inOutEntityList = materialInOutEntityRepository.findByMid(dto.getMatID());
-        int stock=0;
-        for( int i = 0; i < inOutEntityList.size(); i++){
-            if(i == inOutEntityList.size()-1){
-                stock = inOutEntityList.get(i).getMat_st_stock();
 
-            }
-        }
 
         MaterialInOutEntity entity = dto.toInEntity();
 
@@ -65,7 +58,8 @@ public class MaterialInoutService {
         // 자재와 데이터 넣기
         entity.setMaterialEntity(materialEntity);
         entity.setAllowApprovalEntity(approvalEntity);
-        entity.setMat_st_stock(stock+entity.getMat_in_type());
+        entity.setMat_in_code(0); // 기본값
+
 
         // 세이브
         MaterialInOutEntity result = materialInOutEntityRepository.save(entity);
@@ -76,6 +70,7 @@ public class MaterialInoutService {
     }
 
     // 내역 리스트 출력
+    @Transactional
     public InOutPageDto MaterialInOutList(InOutPageDto dto){
 
        List<MaterialInOutDto> list = new ArrayList<>();
@@ -91,6 +86,32 @@ public class MaterialInoutService {
         dto.setTotalCount(entityPage.getTotalElements());
 
         return dto;
+    }
+
+    @Transactional
+    public boolean MaterialInStock(MaterialInOutDto dto){
+
+        // 전체 리스트 불러오기
+        //List<MaterialInOutEntity> inOutEntityList = materialInOutEntityRepository.findByMid(dto.getMatID());
+
+        // 승인 처리된(가장 마지막에 수정된)인덱스 불러오기
+        MaterialInOutEntity lastInOut = materialInOutEntityRepository.findByUdate();
+
+        MaterialInOutEntity AllowIN = materialInOutEntityRepository.findByAlid(dto.getAllowApprovalEntity().getAl_app_no());
+
+        int stock=0;
+
+        if(lastInOut == null){
+            stock=0;
+        }
+        else { stock = lastInOut.getMat_st_stock();}
+
+
+        AllowIN.setMat_st_stock(stock+AllowIN.getMat_in_type());
+        AllowIN.setMat_in_code(1);
+        materialInOutEntityRepository.save(AllowIN);
+
+        return true;
     }
 
 }

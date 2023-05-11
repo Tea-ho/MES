@@ -33,4 +33,11 @@ public class MaterialInoutController {
         return materialInoutService.MaterialInOutList(dto);
     }
 
+    @PostMapping("/MaterialStock")
+    public boolean MaterialInStock(@RequestBody MaterialInOutDto dto){
+
+
+        return materialInoutService.MaterialInStock(dto);
+    }
+
 }

@@ -20,10 +20,11 @@ public class MaterialInOutDto {
     private AllowApprovalEntity allowApprovalEntity;
     private MaterialEntity materialEntity;// -- 마스터 원자재 테이블 fk
     private int MatID; // 검색용
-
+    private int mat_in_code;
     // 승인 페이지에서 필요한 필드
     private String cdate;
     private String udate;
+
 
     public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, LocalDate cdate, LocalDate udate, AllowApprovalEntity allowApprovalEntity, MaterialEntity materialEntity) {
         this.mat_in_outid = mat_in_outid;
@@ -42,6 +43,7 @@ public class MaterialInOutDto {
                 .mat_in_type(this.mat_in_type)
                 .materialEntity(this.materialEntity)
                 .allowApprovalEntity(this.allowApprovalEntity)
+                .mat_in_code(this.mat_in_code)
                 .build();
     }
 }

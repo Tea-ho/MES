@@ -18,6 +18,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MaterialInoutList from "./MaterialInoutList";
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 
 export default function MaterialView(props) {
 
@@ -44,11 +46,7 @@ export default function MaterialView(props) {
         console.log(e.target.value)
 
     }
-    // 자제 삭제
-     const MaterialDelete=(e)=>{
-            console.log(e.target.value)
 
-        }
 
      const MaterialInoutList=(e)=>{
             console.log(e.target.value)
@@ -106,25 +104,26 @@ export default function MaterialView(props) {
                            <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
                              <Button type="button" value={e.matID} onClick={MaterialInoutList}>상세보기</Button>
                              <Button type="button" value={e.matID} onClick={MaterialUpdate}>수정</Button>
-                             <Button type="button" value={e.matID} onClick={MaterialDelete}>삭제</Button>
+
                            </ButtonGroup>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </TableContainer>
+      </TableContainer>
               <div style={{display : 'flex' , justifyContent : 'center' }}>
                           <Pagination count={totalPage}  color="primary" onChange={selectPage}/>
               </div>
-              <div>
+              <div style={{display : 'flex' , justifyContent : 'center' }}>
 
-                  <input type="text" className="keyword" />
-                  <button type="button" onClick={onSearch}> 검색 </button>
-               </div>
-
+                 <TextField style={{padding : '10px'}} className="keyword" id="keyword" label="자재명" variant="outlined" />
+              <Box sx={{ '& button': { m: 2} }}>
+                 <Button style={{padding : '10px'}} variant="contained" size="medium" type="button" onClick={onSearch}>검색</Button>
+              </Box>
               </div>
 
-    </>)
+        </div>
 
-} //<Pagination count={totalPage}  color="primary" onChange={selectPage}/>
+    </>);
+}

@@ -91,7 +91,8 @@ export default function MaterialCreate() {
 
 
 
-  return (
+  return (<>
+  <h3>자재 등록</h3>
     <div style={{border: "2px solid #1a75ff" , borderRadius : '15px'}}>
     <div style={{display : 'flex' , padding : '10px', margin : '10px'}}>
            <Box sx={{ minWidth: 120 }}>
@@ -133,6 +134,6 @@ export default function MaterialCreate() {
         </Stack>
      </div>
     </div>
-
+</>
   );
 }

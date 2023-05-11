@@ -6,6 +6,7 @@ import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.entity.member.AllowApprovalEntity;
 
 import javax.persistence.*;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "materialInOut")
@@ -21,6 +22,7 @@ public class MaterialInOutEntity extends BaseTime {
 
     @Column private int mat_in_type;// -- + -
     @Column private int mat_st_stock;// -- 남은 재고
+    @Column private int mat_in_code; // 재고증가 최종확인용
 
     @ManyToOne // 다수가 하나에게 [fk ---> pk]
     @JoinColumn(name = "al_app_no") //pk 이름 정하기
@@ -39,6 +41,9 @@ public class MaterialInOutEntity extends BaseTime {
                 .allowApprovalEntity(this.allowApprovalEntity)
                 .mat_in_type(this.mat_in_type)
                 .mat_st_stock(this.mat_st_stock)
+                .cdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .udate(this.udate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .mat_in_code(this.mat_in_code)
                 .build();
 
     }

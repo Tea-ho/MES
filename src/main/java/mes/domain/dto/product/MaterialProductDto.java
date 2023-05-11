@@ -10,6 +10,7 @@ import mes.domain.entity.product.ProductEntity;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -24,7 +25,6 @@ public class MaterialProductDto {
 
 
     private ProductEntity productEntity;
-
 
     //등록용 생성자
     public MaterialProductDto(ProductDto productDto, MaterialEntity materialEntity) {

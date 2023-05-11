@@ -1,13 +1,13 @@
 package mes.service.member;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.entity.member.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mes.domain.Repository.product.ProductPlanRepository;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.product.ProductPlanDto;
-import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.material.MaterialInOutEntity;
 import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.member.AllowApprovalEntity;
@@ -17,8 +17,8 @@ import mes.domain.entity.product.ProductPlanEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
 
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 @Service @Slf4j
 public class AllowApprovalService {
@@ -91,13 +91,15 @@ public class AllowApprovalService {
     // 예상되는 문제점: repository null이면 에러 발생할 거 같음 (확인 필요)
 
     // 2. 승인/반려 처리 (코드 중복 최소화 - 동일 작동 메소드 생성)
-    private boolean updateAllowApproval(int id, boolean approval) {
+    private boolean updateAllowApproval(int id, boolean approval, HttpSession session) {
 
         Optional<AllowApprovalEntity> allowApprovalEntity = allowApprovalRepository.findById(id);
         if (allowApprovalEntity.isPresent()) {
             AllowApprovalEntity entity = allowApprovalEntity.get();
             entity.setAl_app_whether(approval);
             entity.setAl_app_date(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            MemberEntity member = (MemberEntity) session.getAttribute("member");
+            entity.setMemberEntity(member);
             allowApprovalRepository.save(entity);
             return approval; // 코드 최소화하는 방법으로 판단되어 사용
         }
@@ -105,21 +107,43 @@ public class AllowApprovalService {
         // 로직 처리가 안되어도 false로 반환되는 문제점이 있음
     }
 
-    // 3. 자재, 제품, 판매 승인/반려 처리
-    public boolean approveMaterialInOut(int MatInOutID ) {
-        return updateAllowApproval(MatInOutID,  true);
+    // 3. 자재, 제품, 판매 승인/반려 처리 (type에 맞게 updateAllowApproval 메소드에 분배하는 역할)
+    public boolean approveMaterialInOut(List<Integer> MatInOutIDs, HttpSession session ) {
+            System.out.println("approveMaterialInOut");
+            System.out.println(MatInOutIDs.toString());
+        for (int id : MatInOutIDs) {
+            updateAllowApproval(id, true, session);
+        }
+        return true;
     }
-    public boolean rejectMaterialInOut(int MatInOutID) {
-        return updateAllowApproval(MatInOutID, false);
+    public boolean rejectMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
+        for (int id : MatInOutIDs) {
+            updateAllowApproval(id, false, session);
+        }
+        return true;
     }
-    public boolean approveProductInOut(int ProdInOutID) { return updateAllowApproval(ProdInOutID, true); }
-    public boolean rejectProductInOut(int ProdInOutID) {
-        return updateAllowApproval(ProdInOutID, false);
+    public boolean approveProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
+        for (int id : ProdInOutIDs) {
+            updateAllowApproval(id, true, session);
+        }
+        return true;
     }
-    public boolean approveSales(int OrderId) {
-        return updateAllowApproval(OrderId, true);
+    public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
+        for (int id : ProdInOutIDs) {
+            updateAllowApproval(id, false, session);
+        }
+        return true;
     }
-    public boolean rejectSales(int OrderId) {
-        return updateAllowApproval(OrderId, false);
+    public boolean approveSales(List<Integer> OrderIds, HttpSession session) {
+        for (int id : OrderIds) {
+            updateAllowApproval(id, true, session);
+        }
+        return true;
+    }
+    public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
+        for (int id : OrderIds) {
+            updateAllowApproval(id, false, session);
+        }
+        return true;
     }
 }

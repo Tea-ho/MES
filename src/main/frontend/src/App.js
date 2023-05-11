@@ -111,7 +111,6 @@ export default function Index( props ) {
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
                         <Route path="/component/sales/SalesHeader" element ={<SalesHeader/>}/>
-                        <Route path="/component/member/AllowApproval" element ={<AllowApproval/>}/>
                     </Routes>
 
                 </div>

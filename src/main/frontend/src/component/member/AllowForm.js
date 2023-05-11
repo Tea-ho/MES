@@ -11,44 +11,59 @@ export default function AllowForm(props) {
 
     // 1-1. 상태변수 선언[ 결재 리스트 관리 Controller get으로 받아서 초기화 예정 / DataGrid 적용 ]
     const [ rows, setRows ] = useState([]);
-
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
 
     // 1-2. 상태변수 선언[ 타입 관리 : 1-자재, 2-제품, 3-판매 ]
     // 어떻게 사용? props로 받아서 분리 시키자 (초기값 1로 세팅)
     const [ type, setType ] = useState(props.type);
-        console.log(type);
-    // 2. 데이터 가져오기 + 렌더링
-    useEffect(() => {
-        axios.get('/allowApproval', { params:{ type: type} })
-            .then( r => {
-                console.log(r);
-                setRows(r.data);
-            } )
-    }, [type])
+        // console.log(type); // --- 확인 완료
 
-    // 3. 승인 처리 (폼에서 진행)
+    // 2. fetchRows 메소드 생성
+    // 생성 이유: axios.get('/allowApproval') 여러차례 사용되기 때문에 메소드 추가 정의함
+    const fetchRows = (type, setRows) => {
+        axios.get('/allowApproval', { params: { type: type } })
+            .then((r) => {
+                    console.log(r);
+                setRows(r.data);
+            });
+    };
+
+    // 3. type 변경될 때 렌더링 진행
+    useEffect(() => {
+      fetchRows(type, setRows);
+    }, [type]);
+
+    // 4. 승인 처리 (폼에서 진행)
     const approveHandler = (e) => {
-        axios.put('/allowApproval', { params: { type: type, approve: 1, id: rowSelectionModel.map((row) => row.mat_in_outid)  } })
+        const selectedIds = rowSelectionModel.map((id) => id);
+            console.log(selectedIds);
+        axios.put('/allowApproval', { type: type, approve: 1, id: selectedIds })
             .then((response) => {
                 // 승인 요청 후 서버 응답에 따른 처리
-                console.log(response);
+                fetchRows(type, setRows);
             })
-            .catch((error) => {
-                // 에러 처리
+            .catch((error) => { //--- 에러 처리
                 console.log(error);
             });
     }
 
-    // 4. 반려 처리 (폼에서 진행)
+    // 5. 반려 처리 (폼에서 진행)
     const rejectHandler = (e) => {
-        console.log(e.target.value);
+        const selectedIds = rowSelectionModel.map((id) => id);
+            console.log(selectedIds);
+        axios.put('/allowApproval', { type: type, approve: 2, id: selectedIds })
+            .then((response) => {
+                // 승인 요청 후 서버 응답에 따른 처리
+                fetchRows(type, setRows);
+            })
+            .catch((error) => {//--- 에러 처리
+                console.log(error);
+            });
     }
 
-    // 5. 결재 출력 양식 [type: 1 자재, 2 제품, 3 판매]
+    // 6. 결재 출력 양식 [type: 1 자재, 2 제품, 3 판매]
     let columns;
-    if( type === 1 ){
-
+    if( type === 1 ){ // --- 자재
         columns = [
             { field: 'materialEntity.mat_name', headerName: '내용', width: 400,
               valueGetter: (params) => {
@@ -59,16 +74,17 @@ export default function AllowForm(props) {
              },
             { field: 'udate', headerName: '요청일자', width: 300 },
             { field: 'allowApprovalEntity.al_app_whether', headerName: '승인여부', width: 300,
-              valueGetter: (params) => params.row.allowApprovalEntity.al_app_whether ? '승인완료' : '승인 대기'
+              valueGetter: (params) => params.row.allowApprovalEntity.al_app_whether ? '승인완료' : '반려'
             },
         ]
 
-    } else if( type === 2 ){
+    } else if( type === 2 ){ // --- 제품
 
-    } else if( type === 3){
+    } else if( type === 3){ // --- 판매
 
     }
 
+    // --------------------------------- 출력부 ---------------------------------
     return(<>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button sx={{ padding: '10px', margin: '10px 20px' }} variant="contained"

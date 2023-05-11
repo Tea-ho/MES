@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -43,21 +44,26 @@ public class AllowApprovalController {
         }
     }
 
-    // 2. 승인 처리
-    @PutMapping("") // type 1: 자재, 2: 제품 , 3: 판매 // approve 1: 승인, 2: 반려
-    public boolean updateAllowApproval(@RequestParam int type, @RequestParam int approve, @RequestParam int id ){
-        if(type == 1){
-            if( approve == 1 ){
-                return allowApprovalService.approveMaterialInOut(id);
-            } else{ return allowApprovalService.rejectMaterialInOut(id); }
-        } else if(type == 2){
-            if( approve == 1 ){
-                return allowApprovalService.approveProductInOut(id);
-            } else{ return allowApprovalService.rejectProductInOut(id); }
-        } else{
-            if( approve == 1 ){
-                return allowApprovalService.approveSales(id);
-            } else{ return allowApprovalService.rejectSales(id); }
+    // 2. 승인/반려 처리
+    @PutMapping("")
+    public boolean updateAllowApproval(@RequestBody Map<String, Object> requestBody, HttpSession session ){
+        int type = (int) requestBody.get("type"); // type 1: 자재, 2: 제품 , 3: 판매
+        int approve = (int) requestBody.get("approve"); // approve 1: 승인, 2: 반려
+        List<Integer> ids = (List<Integer>) requestBody.get("id");
+        // id List로 받음(선택된 항목 전체 처리 적용하기 위함)
+            System.out.println(ids);
+        if(type == 1){ // 자재
+            if( approve == 1 ){ // 승인 or 반려
+                return allowApprovalService.approveMaterialInOut(ids, session);
+            } else{ return allowApprovalService.rejectMaterialInOut(ids, session); }
+        } else if(type == 2){ // 제품
+            if( approve == 1 ){ // 승인 or 반려
+                return allowApprovalService.approveProductInOut(ids, session);
+            } else{ return allowApprovalService.rejectProductInOut(ids, session); }
+        } else{ // 판매
+            if( approve == 1 ){ // 승인 or 반려
+                return allowApprovalService.approveSales(ids, session);
+            } else{ return allowApprovalService.rejectSales(ids, session); }
         }
     }
 }

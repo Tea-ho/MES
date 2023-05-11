@@ -6,6 +6,5 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
  FormControl, Select, Stack, TextField } from '@mui/material';
 
 export default function AllowSales() {
-
     return <AllowForm type={3} />;
 }

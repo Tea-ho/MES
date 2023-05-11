@@ -52,7 +52,7 @@ export default function InProduct(props){ //제품 추가 부분
             prodName : document.getElementById('prodName').value,
             prodPrice : document.getElementById('prodPrice').value,
             companyDto : companyList.find(e => e.cno === company), //해당 cno가 company의 정보를 가진 객체를 넣음
-            materialList : matIDList
+            referencesValue : matIDList
         }
 
         axios.post('/product', info)
@@ -95,8 +95,8 @@ export default function InProduct(props){ //제품 추가 부분
                </div>
 
               <div>
-                    <button type ="button" onClick={createProduct}>제품 등록</button>
-                    <button type ="button" onClick={cancel}>작업 취소</button>
+                    <Button type ="button" onClick={createProduct}>제품 등록</Button>
+                    <Button type ="button" onClick={cancel}>작업 취소</Button>
               </div>
         </Container>
     </>)

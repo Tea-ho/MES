@@ -1,10 +1,13 @@
 package mes.service.product;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.Repository.product.MaterialProductRepository;
 import mes.domain.Repository.product.ProductRepository;
 import mes.domain.dto.material.MaterialDto;
-import mes.domain.dto.product.MaterialProductDto;
+
 import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
 import mes.domain.entity.material.MaterialEntity;
@@ -21,7 +24,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,25 +94,28 @@ public class ProductService {
 
     @Transactional
     //제품 등록 => 제품 생산페이지에서 수행 할 예정
-    public boolean postProduct(ProductDto productDto){
+    public boolean postProduct(ProductDto productDto) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
 
         List<MaterialEntity> materialEntityList = new ArrayList<>(); //자재 리스트(제품마다 가지고 있는)
 
         List<MaterialProductEntity> materialProductEntityList = new ArrayList<>(); //제품-자재 리스트
+
         try {
 
-            List<Integer> keyset = new ArrayList<Integer>(productDto.getReferencesValue().keySet());//받은 자재 PK로 자재 찾아서 제품별 자재 리스트를 만든다
+            for (HashMap<String, Integer> item : productDto.getReferencesValue()) {
+                int matId = (int) item.get("matId");
+                System.out.println("matID : " + matId);
+                int matRate = (int) item.get("matRate");
 
-            for(int key : keyset){
-                System.out.println(key + "materials key");
-                materialEntityList.add(materialEntityRepository.findById(key).get());
+                materialEntityList.add(materialEntityRepository.findById(matId).get());
             }
-
 
             System.out.println("자재 조회 : " + materialEntityList);
 
             Optional<CompanyEntity> companyEntity = companyRepository.findById(productDto.getCompanyDto().getCno());
             ProductEntity productEntity;
+
             if(companyEntity.isPresent()){
                 productEntity = productRepository.save(productDto.toEntity());
                 productEntity.setCompanyEntity(companyEntity.get());
@@ -121,6 +129,12 @@ public class ProductService {
                 for (int i = 0; i < materialEntityList.size(); i++) {
                     MaterialProductEntity materialProductEntity = new MaterialProductEntity(materialEntityList.get(i), productEntity);
                     //제품-재고 테이블에 필요한 정보를 set으로 다 넣었다면 save
+                    for (HashMap<String, Integer> item : productDto.getReferencesValue()) {
+                        if (materialEntityList.get(i).getMatID() == (int) item.get("matId")){
+                            materialProductEntity.setReferencesValue((int) item.get("matRate"));
+                        }
+                    }
+
                     resultMaterialProductEntity.add(materialProductRepository.save(materialProductEntity));
                     System.out.println(resultMaterialProductEntity);
                 }

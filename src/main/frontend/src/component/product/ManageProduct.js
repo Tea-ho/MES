@@ -178,6 +178,7 @@ export default function ManageProduct(props){
                         aria-labelledby="parent-modal-title"
                         aria-describedby="parent-modal-description"
                       >
+
                         <Box sx={{ ...style, width: '80%' }}>
                           <h2 id="parent-modal-title">{putFindProduct.prodName}의 자재 목록</h2>
                           <MaterialPrint/>

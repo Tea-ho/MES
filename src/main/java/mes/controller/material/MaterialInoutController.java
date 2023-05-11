@@ -33,11 +33,17 @@ public class MaterialInoutController {
         return materialInoutService.MaterialInOutList(dto);
     }
 
-    @PostMapping("/MaterialStock")
+    @PutMapping("/MaterialStock")
     public boolean MaterialInStock(@RequestBody MaterialInOutDto dto){
 
 
         return materialInoutService.MaterialInStock(dto);
+    }
+
+    @DeleteMapping("/MaterialDelete")
+    public boolean MaterialDelete(@RequestParam int mat_in_outid){
+
+        return materialInoutService.MaterialDelete(mat_in_outid);
     }
 
 }

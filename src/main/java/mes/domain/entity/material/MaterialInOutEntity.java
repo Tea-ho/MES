@@ -4,6 +4,7 @@ import lombok.*;
 import mes.domain.BaseTime;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.entity.member.AllowApprovalEntity;
+import mes.domain.entity.member.MemberEntity;
 
 import javax.persistence.*;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +35,11 @@ public class MaterialInOutEntity extends BaseTime {
     @ToString.Exclude
     private MaterialEntity materialEntity;// -- 마스터 원자재 테이블 fk
 
+    @ManyToOne // 다수가 하나에게 [fk ---> pk]
+    @JoinColumn(name = "mno") //pk 이름 정하기
+    @ToString.Exclude
+    private MemberEntity memberEntity;
+
     public MaterialInOutDto toDto(){
         return MaterialInOutDto.builder()
                 .mat_in_outid(this.mat_in_outid)
@@ -44,6 +50,7 @@ public class MaterialInOutEntity extends BaseTime {
                 .cdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .udate(this.udate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .mat_in_code(this.mat_in_code)
+                .memberdto(this.memberEntity.toDto())
                 .build();
 
     }

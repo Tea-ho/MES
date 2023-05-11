@@ -48,9 +48,11 @@ export default function MaterialInoutList(props) {
 
 
     const MaterialIn = () =>{
+        if(sessionStorage.getItem('member') == null){return false}
         let info = {
             mat_in_type : document.getElementById('mat_in_type').value,
-            matID : params.matID
+            matID : params.matID,
+            memberdto :  JSON.parse(sessionStorage.getItem('member'))
         }
 
         axios.post('/materialInout/materialIn', info)
@@ -91,7 +93,7 @@ export default function MaterialInoutList(props) {
                     al_app_no : al_app_no,
                     matID : params.matID
                 }
-        axios.update('/materialInout/MaterialStock', info)
+        axios.put('/materialInout/MaterialStock', info)
                                 .then( r => { console.log(r);
                                 if(r.data == true){
                                 alert('재고증가');
@@ -102,6 +104,20 @@ export default function MaterialInoutList(props) {
 
     }
 
+    const MaterialDelete = (e) => {
+        const mat_in_outid = e.target.value;
+        axios.delete('/materialInout/MaterialDelete' , { params : {mat_in_outid : mat_in_outid} })
+                            .then( r => {
+                            console.log(r)
+                            if(r.data == true){alert('등록취소되었습니다.')
+                            window.location.href = `/component/material/MaterialInoutList/${params.matID}`;
+                            }
+
+
+                    } )
+
+
+    }
 
 
     return (<>
@@ -150,15 +166,16 @@ export default function MaterialInoutList(props) {
                               <TableHead>
                                 <TableRow>
                                   <TableCell align="center" style={{ width:'5%' }}>번호</TableCell>
-                                  <TableCell align="center" style={{ width:'10%' }}>자재명</TableCell>
-                                  <TableCell align="center" style={{ width:'10%' }}>원가</TableCell>
+                                  <TableCell align="center" style={{ width:'8%' }}>자재명</TableCell>
+                                  <TableCell align="center" style={{ width:'8%' }}>원가</TableCell>
                                   <TableCell align="center" style={{ width:'5%' }}>단위</TableCell>
-                                  <TableCell align="center" style={{ width:'9%' }}>수량</TableCell>
-                                  <TableCell align="center" style={{ width:'9%' }}>재고</TableCell>
+                                  <TableCell align="center" style={{ width:'8%' }}>수량</TableCell>
+                                  <TableCell align="center" style={{ width:'8%' }}>재고</TableCell>
                                   <TableCell align="center" style={{ width:'7%' }}>결제요청자</TableCell>
                                   <TableCell align="center" style={{ width:'10%' }}>결제 상태</TableCell>
                                   <TableCell align="center" style={{ width:'10%' }}>결제일</TableCell>
                                   <TableCell align="center" style={{ width:'5%' }}>승인자</TableCell>
+                                  <TableCell align="center" style={{ width:'6%' }}>비고</TableCell>
 
                                 </TableRow>
                               </TableHead>
@@ -171,7 +188,7 @@ export default function MaterialInoutList(props) {
                                    <TableCell align="center" >{e.materialEntity.mat_unit}</TableCell>
                                    <TableCell align="center" >{e.mat_in_type}</TableCell>
                                    <TableCell align="center" >{e.mat_st_stock}</TableCell>
-                                   <TableCell align="center" >결제요청자</TableCell>
+                                   <TableCell align="center" >{e.memberdto.mname}</TableCell>
                                    <TableCell align="center" >{e.allowApprovalEntity.al_app_whether == false
                                                             ? "결제대기중" : e.mat_in_code == 0
                                                             ? <Button variant="contained" type="button" value={e.allowApprovalEntity.al_app_no} onClick={MaterialStock}>결제확인</Button>
@@ -179,6 +196,10 @@ export default function MaterialInoutList(props) {
                                                             </TableCell>
                                    <TableCell align="center" >{e.allowApprovalEntity.al_app_date == null ? "" : e.allowApprovalEntity.al_app_date}</TableCell>
                                    <TableCell align="center" >{e.allowApprovalEntity.memberEntity == null ? "" : "결제승인인원"}</TableCell>
+                                   <TableCell align="center" >{e.allowApprovalEntity.al_app_whether == true
+                                                            && e.mat_in_code == 0
+                                                            ? <Button variant="contained" type="button" value={e.mat_in_outid} onClick={MaterialDelete}>등록취소</Button>
+                                                            : ""}</TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>

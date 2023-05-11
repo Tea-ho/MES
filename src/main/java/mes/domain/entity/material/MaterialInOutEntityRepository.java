@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MaterialInOutEntityRepository extends JpaRepository<MaterialInOutEntity , Integer> {
@@ -17,9 +18,9 @@ public interface MaterialInOutEntityRepository extends JpaRepository<MaterialInO
 
     @Query(value = "select * from material_in_out where matid=:matID" , nativeQuery = true)
     List<MaterialInOutEntity> findByMid(int matID);
-    @Query(value = "select * from material_in_out order by udate DESC limit 1"  , nativeQuery = true)
-    MaterialInOutEntity findByUdate();
+    @Query(value = "select * from material_in_out where matid=:matID and 1=:mat_in_code order by udate DESC limit 1"  , nativeQuery = true)
+    MaterialInOutEntity findByUdate(int matID , int mat_in_code);
 
-    @Query(value = "select * from material_in_out where Al_app_no=:alAppNo"  , nativeQuery = true)
-    MaterialInOutEntity findByAlid(int alAppNo);
+    @Query(value = "select * from material_in_out where al_app_no=:al_app_no"  , nativeQuery = true)
+    MaterialInOutEntity findByAlid(int al_app_no);
 }

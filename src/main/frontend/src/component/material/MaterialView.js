@@ -63,9 +63,9 @@ export default function MaterialView(props) {
     }
 
     const onSearch =()=>{
-        pageInfo.keyword = document.querySelector(".keyword").value;
+        pageInfo.keyword = document.getElementById("keyword").value;
         pageInfo.page = 1
-        document.querySelector(".keyword").value = '';
+        document.getElementById("keyword").value = '';
         setPageInfo({...pageInfo});
     }
 

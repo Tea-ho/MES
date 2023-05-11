@@ -25,6 +25,7 @@ import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 멤버 부분 ------------------------------*/
 import Login from "./component/member/Login";
 import AllowApproval from "./component/member/AllowApproval";
+import AllowForm from "./component/member/AllowForm";
 import AllowMaterial from "./component/member/AllowMaterial";
 import AllowProduct from "./component/member/AllowProduct";
 import AllowSales from "./component/member/AllowSales";
@@ -37,9 +38,6 @@ import SalesHeader from "./component/sales/SalesHeader";
 
 
 export default function Index( props ) {
-    const member = sessionStorage.getItem('member')
-    const urlHome = member !=null ? "/component/member/Info" : "/component/member/Login";
-
     return ( <>
         <BrowserRouter>
             <div className="header">
@@ -51,7 +49,7 @@ export default function Index( props ) {
                          <nav aria-label="main mailbox folders">
                            <List>
                              <ListItem disablePadding>
-                               <Link href={urlHome}>
+                               <Link href="/component/member/Login">
                                <ListItemButton>
                                     <ListItemIcon>
                                    <WarehouseIcon />
@@ -111,7 +109,7 @@ export default function Index( props ) {
                         <Route path="/component/product/ProductTab" element ={<ProductTab/>}/>
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
                         <Route path="/component/sales/SalesHeader" element ={<SalesHeader/>}/>
-                        <Route path="/component/member/AllowApproval" element ={<AllowApproval/>}/>
+                        <Route path="/component/member/AllowApproval" element = { <AllowApproval /> } />
                     </Routes>
 
                 </div>

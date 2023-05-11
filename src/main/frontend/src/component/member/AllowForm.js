@@ -1,5 +1,6 @@
 import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
+
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
  Panel, Pagination, Container, Button, Box, InputLabel, MenuItem,
  FormControl, Select, Stack, TextField } from '@mui/material';
@@ -16,7 +17,7 @@ export default function AllowForm(props) {
     // 1-2. 상태변수 선언[ 타입 관리 : 1-자재, 2-제품, 3-판매 ]
     // 어떻게 사용? props로 받아서 분리 시키자 (초기값 1로 세팅)
     const [ type, setType ] = useState(props.type);
-        // console.log(type); // --- 확인 완료
+        console.log(type); // --- 확인 완료
 
     // 2. fetchRows 메소드 생성
     // 생성 이유: axios.get('/allowApproval') 여러차례 사용되기 때문에 메소드 추가 정의함
@@ -25,6 +26,9 @@ export default function AllowForm(props) {
             .then((r) => {
                     console.log(r);
                 setRows(r.data);
+            })
+            .catch((error) => { //--- 에러 처리
+                console.log(error);
             });
     };
 
@@ -74,14 +78,47 @@ export default function AllowForm(props) {
              },
             { field: 'udate', headerName: '요청일자', width: 300 },
             { field: 'allowApprovalEntity.al_app_whether', headerName: '승인여부', width: 300,
+              valueGetter: (params) => params.row.allowApprovalEntity.al_app_whether ? '승인완료' : '승인대기'
+            },
+            { field: 'memberEntity.mname', headerName: '요청자', width: 100 }
+        ]
+
+    } else if( type === 2 ){ // --- 제품 (columns 없으면 오류 뜸)
+        columns = [
+  {
+    field: 'firstName',
+    headerName: 'First name',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'lastName',
+    headerName: 'Last name',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'age',
+    headerName: 'Age',
+    type: 'number',
+    width: 110,
+    editable: true,
+  }
+        ]
+    } else if( type === 3){ // --- 판매 (columns 없으면 오류 뜸)
+        columns = [
+            { field: 'materialEntity.mat_name', headerName: '내용', width: 400,
+              valueGetter: (params) => {
+                 const { mat_in_type, materialEntity } = params.row;
+                 const prefix = mat_in_type > 0 ? '입고 ' : mat_in_type < 0 ? '출고 ' : '기타';
+                 return `${materialEntity.mat_name} ${prefix}`;
+               }
+             },
+            { field: 'udate', headerName: '요청일자', width: 300 },
+            { field: 'allowApprovalEntity.al_app_whether', headerName: '승인여부', width: 300,
               valueGetter: (params) => params.row.allowApprovalEntity.al_app_whether ? '승인완료' : '반려'
             },
         ]
-
-    } else if( type === 2 ){ // --- 제품
-
-    } else if( type === 3){ // --- 판매
-
     }
 
     // --------------------------------- 출력부 ---------------------------------
@@ -107,13 +144,14 @@ export default function AllowForm(props) {
             <DataGrid
                 rows={rows}
                 columns={columns}
-                getRowId={(row) => row.mat_in_outid}
+                getRowId={type === 1 ? ((row) => row.mat_in_outid) : ((row) => null)}
                 initialState={{
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
                 }}
             pageSizeOptions={[5, 10]}
+            isRowSelectable={(params)=>params.row.allowApprovalEntity.al_app_whether==false}
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
                 setRowSelectionModel(newRowSelectionModel);

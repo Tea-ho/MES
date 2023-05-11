@@ -21,9 +21,9 @@ export default function Login(props) {
                 if(response.data){
                     setLoggedIn(true);
                     handleUserInfo(); // 로그인 정보 업로드
-                    window.location.href = '/component/member/AllowApproval/';
+                    window.location.href = '/component/member/AllowApproval';
                 } else{
-                    window.location.href = '/component/member/Login/';
+                    window.location.href = '/component/member/Login';
                 }
             })
             .catch(error => {
@@ -52,7 +52,7 @@ export default function Login(props) {
                 setLoggedIn(false);
                 setMember(null);
                 sessionStorage.removeItem('member');
-                window.location.href = '/component/member/Login/';
+                window.location.href = '/component/member/Login';
                 console.log('로그아웃 성공');
             })
             .catch(error => {
@@ -61,65 +61,77 @@ export default function Login(props) {
         };
 
     return (
-        <>
-            {sessionStorage.getItem('member')!=null ? (
-                 <Container component="main" maxWidth="xs" style={{marginTop: "8%"}}>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button sx={{ padding: '10px', margin: '10px 20px' }} variant="contained" type="button" onClick={handleLogout}>
-                            로그아웃
-                        </Button>
-                    </Box>
-                    <img src="./img/notion_profile.jpg" alt="MES Info" />
-                </Container>
-            ) : (
-            <Container component="main" maxWidth="xs" style={{marginTop: "8%"}}>
+      <>
+        {sessionStorage.getItem('member') != null ? (
+          <Container component="main" maxWidth="xs" style={{ marginTop: '8%' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                sx={{ padding: '10px', margin: '10px 20px' }}
+                variant="contained"
+                type="button"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </Button>
+            </Box>
+            <img src="./img/notion_profile.jpg" alt="MES Info" />
+          </Container>
+        ) : (
+          <Container component="main" maxWidth="xs" style={{ marginTop: '8%' }}>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant="h5" component="h1">
-                      로그인
-                    </Typography>
-                </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h5" component="h1">
+                  로그인
+                </Typography>
+              </Grid>
             </Grid>
-            <form noValidate onSubmit={handleLogin}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="username"
-                            label="아이디"
-                            name="mname"
-                            autoComplete="mname"
-                            onChange={handleUsernameChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            type="password"
-                            id="password"
-                            label="패스워드"
-                            name="password"
-                            autoComplete="current-password"
-                            onChange={handlePasswordChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button type="submit" fullWidth variant="contained" color="primary">
-                            로그인
-                        </Button>
-                    </Grid>
+            <form noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="username"
+                    label="아이디"
+                    name="mname"
+                    autoComplete="mname"
+                    onChange={handleUsernameChange}
+                  />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    type="password"
+                    id="password"
+                    label="패스워드"
+                    name="password"
+                    autoComplete="current-password"
+                    onChange={handlePasswordChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    type="button"
+                    onClick={handleLogin}
+                  >
+                    로그인
+                  </Button>
+                </Grid>
+              </Grid>
             </form>
             <Box mt={5} className="copyright">
-                <Copyright />
+              <Copyright />
             </Box>
-        </Container>
-    )}
-    </>)
+          </Container>
+        )}
+      </>
+    );
 }
 
 // 하단 회사명

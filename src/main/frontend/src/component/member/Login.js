@@ -69,7 +69,7 @@ export default function Login(props) {
                             로그아웃
                         </Button>
                     </Box>
-                    <img src="./img/MESInfo.png" alt="MES Info" />
+                    <img src="./img/notion_profile.jpg" alt="MES Info" />
                 </Container>
             ) : (
             <Container component="main" maxWidth="xs" style={{marginTop: "8%"}}>

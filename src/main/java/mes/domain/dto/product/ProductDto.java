@@ -31,7 +31,8 @@ public class ProductDto {
 
    // private List<Integer> materialList; //자재 리스트(PK)
 
-    private HashMap<Integer, Integer> referencesValue; // mat_id : material개수
+    //등록용 자재 리스트
+    private List<HashMap<String, Integer>> referencesValue; // mat_id : material개수
 
     private CompanyDto companyDto; // 회사명
 

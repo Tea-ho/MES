@@ -15,6 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField'; //텍스트 필드
 
 import {Checkbox} from '@mui/material';
 import InProduct from './InProduct'
@@ -29,6 +30,7 @@ export default function CreateProduct(props){
     let [totalPage , setTotalPage ] = useState(1);
     let [totalCount , setTotalCount ] = useState(1);
 
+
      useEffect( ()=>{//컴포넌트 로딩시(열때, 시작시) 해당 쟈재 정보를 모두 가져온다.
         axios.get('/materials/materialList',  { params : pageInfo })
           .then( r => {
@@ -39,19 +41,27 @@ export default function CreateProduct(props){
             } )
     }, [pageInfo] )
 
-    //체크 박스 업데이트
+    //체크 박스 업데이트 (수량을 입력하고 넣어야하는 문제점이 존재함...ㅠ)
     const checkboxEventHandler = (num) => {
-       console.log(checked)
-       if (checked.includes(num)) { //배열에 저장되어있는데 체크박스를 누른거면 취소니까 해당 배열에 그 번호를 삭제해준다
-           setChecked(checked.filter((checked) => checked !== num));
-       }else{
-            setChecked([...checked, num]); //배열에 해당 클릭한 번호 저장
+        let domValue = '.matRate'+num;
+        let rate = document.querySelector(domValue)
+
+        let referencesValue = {
+            matId : num,
+            matRate : rate ? Number(rate.value)  : 0
+        }
+
+       console.log(referencesValue)
+       //배열의 요소중 matId가 같은게 하나라도 있으면 삭제한다.
+       if (checked.some((item) => item.matId === referencesValue.matId)) {
+         setChecked(checked.filter((item) => item.matId !== referencesValue.matId));
+       } else {
+         setChecked([...checked, referencesValue]);
        }
     }
 
     //자재 페이지 변경
     const selectPage = (event , value) => {
-
         console.log(value); //
         pageInfo.page = value;
         setPageInfo({...pageInfo});
@@ -73,15 +83,16 @@ export default function CreateProduct(props){
                       <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                           <TableRow>
-                            <TableCell align="center" style={{ width:'5%' }}>등록번호</TableCell>
-                            <TableCell align="center" style={{ width:'15%' }}>자재명</TableCell>
+                            <TableCell align="center" style={{ width:'3%' }}>등록번호</TableCell>
+                            <TableCell align="center" style={{ width:'10%' }}>자재명</TableCell>
                             <TableCell align="center" style={{ width:'10%' }}>원가</TableCell>
                             <TableCell align="center" style={{ width:'10%' }}>단위</TableCell>
-                            <TableCell align="center" style={{ width:'10%' }}>유통기한(Day)</TableCell>
+                            <TableCell align="center" style={{ width:'15%' }}>유통기한(Day)</TableCell>
                             <TableCell align="center" style={{ width:'10%' }}>생산자</TableCell>
-                            <TableCell align="center" style={{ width:'15%' }}>구입일</TableCell>
-                            <TableCell align="center" style={{ width:'5%' }}>코드</TableCell>
+                            <TableCell align="center" style={{ width:'10%' }}>구입일</TableCell>
+                            <TableCell align="center" style={{ width:'3%' }}>코드</TableCell>
                             <TableCell align="center" style={{ width:'20%' }}>선택</TableCell>
+                            <TableCell align="center" style={{ width:'20%' }}>비율설정</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -96,6 +107,7 @@ export default function CreateProduct(props){
                              <TableCell align="center" >{e.mdate}</TableCell>
                              <TableCell align="center" >{e.mat_code}</TableCell>
                              <TableCell align="center"><Checkbox onChange={() => checkboxEventHandler(e.matID)}/></TableCell>
+                             <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율"/></TableCell>
                             </TableRow>
                           ))}
                         </TableBody>

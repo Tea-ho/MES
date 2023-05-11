@@ -116,6 +116,11 @@ export default function ManageProduct(props){
      setOpen(false);
    };
 
+   //자재 목록 수정
+   const editMaterialHandler = (newChecked) => {
+        console.log(newChecked)
+   }
+
 
     return(<>
          <Container>
@@ -181,8 +186,9 @@ export default function ManageProduct(props){
 
                         <Box sx={{ ...style, width: '80%' }}>
                           <h2 id="parent-modal-title">{putFindProduct.prodName}의 자재 목록</h2>
-                          <MaterialPrint/>
+                          <MaterialPrint existsM={putFindProduct.materialDtoList} editM = {editMaterialHandler}/>
                           <Button onClick={handleClose}>닫기</Button>
+                          <Button onClick={editMaterialHandler}>자재목록 수정</Button>
                         </Box>
                       </Modal>
                  </div>

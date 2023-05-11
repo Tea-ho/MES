@@ -9,6 +9,8 @@ import mes.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @Slf4j
@@ -37,7 +39,7 @@ public class ProductController {
     
     //제품 등록
     @PostMapping("")
-    public boolean postProduct(@RequestBody ProductDto productDto){
+    public boolean postProduct(@RequestBody ProductDto productDto) throws IOException {
         System.out.println(productDto.toString());
         return productService.postProduct(productDto);
     }

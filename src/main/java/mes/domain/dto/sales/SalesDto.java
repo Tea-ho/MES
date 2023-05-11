@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mes.domain.dto.member.CompanyDto;
 import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.member.MemberEntity;
@@ -20,16 +21,16 @@ import javax.persistence.Column;
 @Builder
 public class SalesDto {
 
-    private int orderId;// -- 주문 ID
+    private int order_id;// -- 주문 ID
 
     private String orderDate;   // 주문 일자
     private int orderCount;     // 주문 수량
-    private int orderStatus;    // 주문 상태
+    private int order_status;    // 주문 상태
     private int salesPrice;     // 판매가
     private AllowApprovalEntity allowApprovalEntity; // 결제 승인여부
 
 
-    private CompanyEntity companyEntity; // 판매회사
+    private CompanyDto companyDto; // 판매회사
     private int cno;
 
     private ProductEntity productEntity; // 주문 제품 ( 이름 )
@@ -48,9 +49,8 @@ public class SalesDto {
         return SalesEntity.builder()
                 .orderDate(this.orderDate)
                 .orderCount(this.orderCount)
-                .orderStatus(this.orderStatus)
+                .order_status(this.order_status)
                 .salesPrice(this.salesPrice)
-                .companyEntity(this.companyEntity)
                 .productEntity(this.productEntity)
                 .memberEntity(this.memberEntity)
                 .build();

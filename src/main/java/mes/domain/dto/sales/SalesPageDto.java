@@ -16,7 +16,7 @@ public class SalesPageDto {
     private int totalPage;
 
     private int page;
-    private String key;
+    private int orderStatus;
     private String keyword;
 
     List<SalesDto> salesDtoList;

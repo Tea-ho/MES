@@ -2,11 +2,11 @@ package mes.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.dto.member.CompanyDto;
-import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
+import mes.domain.dto.product.ProductProcessDto;
 import mes.domain.dto.sales.SalesDto;
+import mes.domain.dto.sales.SalesPageDto;
 import mes.service.sales.SalesService;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +20,13 @@ public class SalesController {
     @Autowired
     private SalesService salesService;
 
+    // 0. 판매 쪽 product_process 출력
+/*    @GetMapping("/getproduct_process")
+    public List<ProductProcessDto> getProductProcess(){
+        List<ProductProcessDto> list = salesService.getProductProcess();
+        return  list;
+    }*/
+
     // 1. 판매 등록 ( 승인이 되었을 경우, 제품 재고량이 줄어들어야함 )
     @PostMapping("/salesCreate")
     public boolean salesCreate( @RequestBody SalesDto salesDto ){
@@ -30,9 +37,9 @@ public class SalesController {
 
     // 2. 판매 출력 [ 출력창 2개 필요 , 승인 전 = 수정, 삭제 가능 , 승인 후 = 수정 삭제 불가 ]
     @GetMapping("/salesView")
-    public PageDto salesView(PageDto pageDto){
-        log.info( pageDto.toString() );
-        return salesService.salesView(pageDto);
+    public SalesPageDto salesView(SalesPageDto salesPageDto){
+        log.info( salesPageDto.toString() );
+        return salesService.salesView(salesPageDto);
 
     }
 
@@ -59,4 +66,6 @@ public class SalesController {
         return list;
     }
 
+
+    
 }

@@ -121,7 +121,6 @@ export default function ManageProduct(props){
         console.log(newChecked)
    }
 
-
     return(<>
          <Container>
             <div>현재페이지 : {pageInfo.page}  게시물 수 : {totalCount}

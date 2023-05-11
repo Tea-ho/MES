@@ -21,7 +21,6 @@ import MaterialInoutList from "./component/material/MaterialInoutList";
 import ProductTab from "./component/product/ProductTab";
 import CreateProduct from "./component/product/CreateProduct";
 import PlanProduct from "./component/product/PlanProduct";
-import ProcessProduct from "./component/product/ProcessProduct";
 import ManageProduct from "./component/product/ManageProduct";
 /*--------------------------- 멤버 부분 ------------------------------*/
 import Login from "./component/member/Login";

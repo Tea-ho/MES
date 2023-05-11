@@ -32,7 +32,7 @@ export default function EditProduct(props){ //제품 추가 부분
         setProduct(props.product)
         setProductName(product.prodName)
         setProductPrice(product.prodPrice)
-        setCompany(product.companyEntity?.cno)
+        setCompany(product.companyDto?.cno)
      }, [props.product])
 
     const companyChangeHandler = (e) => { //회사 변경 이벤트 처리(select)
@@ -57,7 +57,7 @@ export default function EditProduct(props){ //제품 추가 부분
             prodCode : 'C',
             prodName : document.getElementById('prodName').value,
             prodPrice : document.getElementById('prodPrice').value,
-            companyEntity : companyList.find(e => e.cno === company) //해당 cno가 company의 정보를 가진 객체를 넣음
+            companyDto : companyList.find(e => e.cno === company) //해당 cno가 company의 정보를 가진 객체를 넣음
         }
 
         console.log(info);
@@ -75,9 +75,9 @@ export default function EditProduct(props){ //제품 추가 부분
 
     //작업 취소
     const cancel = () => {
-        company = 0
-        document.getElementById('prodName').value = ''
-        document.getElementById('prodPrice').value = ''
+        setCompany(0)
+        setProductName('')
+        setProductPrice(0)
     }
 
     return(<>
@@ -103,8 +103,8 @@ export default function EditProduct(props){ //제품 추가 부분
                </div>
 
               <div>
-                    <button type ="button" onClick={updateProduct}>제품 수정</button>
-                    <button type ="button" onClick={cancel}>작업 취소</button>
+                    <Button type ="button" onClick={updateProduct}>제품 수정</Button>
+                    <Button type ="button" onClick={cancel}>작업 취소</Button>
               </div>
         </Container>
     </>)

@@ -15,9 +15,29 @@ import Pagination from '@mui/material/Pagination';
 
 import {Checkbox} from '@mui/material';
 import {Container} from '@mui/material'
+
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 /* -------------- mui -------------- */
 
 import EditProduct from './EditProduct'
+import MaterialPrint from './MaterialPrint';
+
+//모달 CSS
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '90%',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
+
 export default function ManageProduct(props){
     let[pageInfo, setPageInfo] = useState({"page" : 1, "key" : '', "keyword" : ''}) //검색기능과 페이지네이션을 위해
     let[totalPage, setTotalPage] = useState(1); //총 페이지수
@@ -28,11 +48,16 @@ export default function ManageProduct(props){
 
     let[putProduct, setPutProduct] = useState({}); //수정할 목록
 
+    const [open, setOpen] = useState(false); //모달 띄우는 상태
+
+    const[putFindProduct, setPutFindProduct] = useState({prodName:''}); //수정할 제품
+
+
     const getProduct = () => {
         axios.get("/product", {params : pageInfo})
             .then(r => {
                 console.log(r)
-               console.log(r.data);
+                console.log(r.data);
                 setProductList(r.data.productDtoList);
                 setTotalCount(r.data.totalCount);
                 setTotalPage(r.data.totalPage)
@@ -81,6 +106,15 @@ export default function ManageProduct(props){
        }
     }
 
+   const handleOpen = (event, findProd) => { //모달 열기
+     setPutFindProduct(productList.find(f => f.prodId === findProd))
+     console.log(findProd)
+     setOpen(true)
+   };
+
+   const handleClose = () => { //모달 닫기
+     setOpen(false);
+   };
 
 
     return(<>
@@ -99,6 +133,7 @@ export default function ManageProduct(props){
                         <TableCell align ="center" style={{width:'35%'}}>제품명</TableCell>
                         <TableCell align ="center" style={{width:'20%'}}>제품가격</TableCell>
                         <TableCell align ="center" style={{width:'25%'}}>회사명</TableCell>
+                        <TableCell align = "center" style={{width:'20%'}}>자재목록</TableCell>
                         <TableCell align ="center" style={{width:'25%'}}>비고</TableCell>
                       </TableRow>
                     </TableHead>
@@ -107,16 +142,17 @@ export default function ManageProduct(props){
                           <TableRow
                               key={row.name}
                               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                              onClick ={onUpdateHandler}
+                              onClick ={(e) => onUpdateHandler(e)}
                           >
-                          <TableCell component ="th" align="center" scope="row">{row.prodId}</TableCell>
-                          <TableCell component ="th" align="left">{row.prodCode}</TableCell>
-                          <TableCell component ="th" align="center">{row.prodDate}</TableCell>
-                          <TableCell component ="th" align="center">{row.prodName}</TableCell>
-                          <TableCell component ="th" align="center">{row.prodPrice}</TableCell>
-                          <TableCell component ="th" align="center">{row.companyDto.cname}</TableCell>
-                           <TableCell align="center"><Checkbox onChange={() => checkboxEventHandler(row.prodId)}/></TableCell>
-                          </TableRow>
+                            <TableCell component ="th" align="center" scope="row">{row.prodId}</TableCell>
+                            <TableCell component ="th" align="left">{row.prodCode}</TableCell>
+                            <TableCell component ="th" align="center">{row.prodDate}</TableCell>
+                            <TableCell component ="th" align="center">{row.prodName}</TableCell>
+                            <TableCell component ="th" align="center">{row.prodPrice}</TableCell>
+                            <TableCell component ="th" align="center">{row.companyDto.cname}</TableCell>
+                            <TableCell component ="th" align="center"><Button onClick={(event) => handleOpen(event, row.prodId)}>자재 수정</Button></TableCell>
+                            <TableCell align="center"><Checkbox onChange={() => checkboxEventHandler(row.prodId)}/></TableCell>
+                      </TableRow>
                       ))}
                     </TableBody>
                   </Table>
@@ -135,6 +171,21 @@ export default function ManageProduct(props){
                 <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
                     <EditProduct product={putProduct} callback={getProduct}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                 </div>
+                <div>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="parent-modal-title"
+                        aria-describedby="parent-modal-description"
+                      >
+                        <Box sx={{ ...style, width: '80%' }}>
+                          <h2 id="parent-modal-title">{putFindProduct.prodName}의 자재 목록</h2>
+                          <MaterialPrint/>
+                          <Button onClick={handleClose}>닫기</Button>
+                        </Box>
+                      </Modal>
+                 </div>
+
           </Container>
     </>)
 }

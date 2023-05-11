@@ -149,6 +149,7 @@ public class ProductService {
     @Transactional
     //제품 수정 => 제품 관리 페이지에서 수행할 예정
     public boolean putProduct(ProductDto productDto){
+        System.out.println(productDto);
         Optional<ProductEntity> putProductEntity = productRepository.findById(productDto.getProdId());
 
         if(putProductEntity.isPresent()){

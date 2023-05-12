@@ -20,7 +20,7 @@ import MaterialUpdate from "./MaterialUpdate";
 
 export default function Material(props) {
 
-    let [count , setCount] = useState(props.info);
+    let [count , setCount] = useState(0);
 
 
     useEffect(() => {
@@ -52,7 +52,7 @@ export default function Material(props) {
 
 
     <div>
-asdad
+        <MaterialCreate />
     </div>
 
   </>);

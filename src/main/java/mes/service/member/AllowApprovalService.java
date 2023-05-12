@@ -61,10 +61,10 @@ public class AllowApprovalService {
             for (Object obj : approvalList) {
                 MaterialInOutEntity entity = (MaterialInOutEntity) obj;
 
-                MaterialInOutDto dto = new MaterialInOutDto(
-                        entity.getMat_in_outid(), entity.getMat_in_type(), entity.getMat_st_stock(),
+                MaterialInOutDto dto = new MaterialInOutDto(entity.getMat_in_outid(), entity.getMat_in_type(), entity.getMat_st_stock(),
                         entity.cdate.toLocalDate(), entity.udate.toLocalDate(), entity.getAllowApprovalEntity().toInDto(),
-                        entity.getMaterialEntity().toDto(), entity.getMemberEntity().toDto());
+                        entity.getMaterialEntity().toDto(), entity.getMemberEntity().toDto()
+                );
                 result.add(dto);
             }
 
@@ -81,7 +81,7 @@ public class AllowApprovalService {
                 SalesDto dto = new SalesDto(
                         entity.getOrder_id(), entity.getOrderDate(),
                         entity.getOrderCount(), entity.getOrder_status(), entity.getSalesPrice(),
-                        entity.getAllowApprovalEntity(), entity.getCompanyEntity().toDto(), entity.getProductEntity(), entity.getMemberEntity());
+                        entity.getAllowApprovalEntity().toInDto(), entity.getCompanyEntity().toDto(), entity.getProductEntity().toDto(), entity.getMemberEntity().toDto());
                 result.add(dto);
             }
         } else{ // 예외 처리(PermissionDeniedException 클래스 공용 사용)

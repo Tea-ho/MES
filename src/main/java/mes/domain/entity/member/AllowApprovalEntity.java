@@ -31,6 +31,7 @@ public class AllowApprovalEntity {
                 .al_app_no(this.al_app_no)
                 .al_app_whether(this.al_app_whether)
                 .al_app_date(this.al_app_date)
+
                 .build();
     }
 }

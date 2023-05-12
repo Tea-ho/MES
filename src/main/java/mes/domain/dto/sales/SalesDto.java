@@ -60,4 +60,16 @@ public class SalesDto {
                 .build();
     }
 
+    public SalesDto(int order_id, String orderDate, int orderCount, int order_status, int salesPrice, AllowApprovalDto allowApprovalDto, CompanyDto companyDto, ProductDto productDto, MemberDto memberDto) {
+        this.order_id = order_id;
+        this.orderDate = orderDate;
+        this.orderCount = orderCount;
+        this.order_status = order_status;
+        this.salesPrice = salesPrice;
+        this.allowApprovalDto = allowApprovalDto;
+        this.companyDto = companyDto;
+        this.productDto = productDto;
+        this.memberDto = memberDto;
+    }
+
 }

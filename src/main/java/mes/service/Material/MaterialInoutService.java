@@ -53,7 +53,13 @@ public class MaterialInoutService {
         if(dto.getMemberdto()==null){return false;}
         MemberEntity member = memberRepository.findByMnameAndMpassword(dto.getMemberdto().getMname() , dto.getMemberdto().getMpassword());
 
-        MaterialInOutEntity entity = dto.toInEntity();
+        MaterialInOutEntity entity = new MaterialInOutEntity();
+        entity.setMemberEntity(dto.getMemberdto().toEntity());
+        entity.setMat_in_type(dto.getMat_in_type());
+
+
+
+
 
 
         // 선택된 자재
@@ -131,7 +137,9 @@ public class MaterialInoutService {
 
         Optional<MaterialInOutEntity> entity = materialInOutEntityRepository.findById(mat_in_outid);
         if(entity.isPresent()) {
-            materialInOutEntityRepository.delete(entity.get());
+            MaterialInOutEntity materialInOutEntity = entity.get();
+            allowApprovalRepository.delete(materialInOutEntity.getAllowApprovalEntity());
+            materialInOutEntityRepository.delete(materialInOutEntity);
             return true;
         }
 

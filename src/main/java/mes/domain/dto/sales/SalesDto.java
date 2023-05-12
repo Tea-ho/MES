@@ -57,6 +57,7 @@ public class SalesDto {
                 .orderDate(this.orderDate )
                 .order_status(this.order_status)
                 .salesPrice(this.salesPrice)
+                .memberEntity(this.memberDto.toEntity())
                 .build();
     }
 

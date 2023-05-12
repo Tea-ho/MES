@@ -12,10 +12,7 @@ import mes.domain.dto.sales.ProductProcessPageDto;
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.dto.sales.SalesPageDto;
 import mes.domain.entity.material.MaterialEntity;
-import mes.domain.entity.member.AllowApprovalEntity;
-import mes.domain.entity.member.AllowApprovalRepository;
-import mes.domain.entity.member.CompanyEntity;
-import mes.domain.entity.member.CompanyRepository;
+import mes.domain.entity.member.*;
 import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductProcessEntity;
 import mes.domain.entity.sales.SalesEntity;
@@ -55,6 +52,9 @@ public class SalesService {
     // prod_Id or prod_name 빼오기 위함
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     AllowApprovalRepository allowApprovalRepository;
 
     // 0. 판매 공정 product_process 출력
@@ -91,6 +91,26 @@ public class SalesService {
         ProductEntity productEntity = productRepository.findById( salesDto.getProdId()).get();
         System.out.println("productEntity : " + productEntity);
 
+        MemberEntity member = memberRepository.findByMnameAndMpassword(salesDto.getMemberDto().getMname() , salesDto.getMemberDto().getMpassword() );
+
+        // 승인정보
+        AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toInEntity());
+
+        SalesEntity salesEntity = salesRepository.save( salesDto.toEntity() );
+        salesEntity.setAllowApprovalEntity(approvalEntity);         // 승인 정보 저장
+        salesEntity.setCompanyEntity(companyEntity);                // 회사 저장
+        salesEntity.setProductEntity( productEntity );              // 물품 저장
+        salesEntity.setOrder_status(approvalEntity.isAl_app_whether() ? 1 : 0 );// 기본 등록 order_status --> 고쳐야할듯!
+
+        salesEntity.setMemberEntity(member);                        // 멤버 저장
+
+        log.info("salesEntity : " + salesEntity);
+        if ( salesEntity.getOrder_id() >= 1 ) { return true; }
+
+        return false;
+
+    }
+
         // * 등록 시에 재고량 불러와서 감소 기능 필요 *
 /*      ProductProcessEntity productProcessEntity = productProcessRepository.findStockByProductId( productEntity.getProdId() );
 
@@ -103,21 +123,8 @@ public class SalesService {
         productProcessEntity.setProdStock(updateStock);         // 판매 성공 성공 시에 개수 줄어들게하기*/
 
 
-        // 승인정보
-        AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toInEntity());
 
-        SalesEntity salesEntity = salesRepository.save( salesDto.toEntity() );
-        salesEntity.setAllowApprovalEntity(approvalEntity);
-        salesEntity.setCompanyEntity(companyEntity);
-        salesEntity.setProductEntity( productEntity );
-        salesEntity.setOrder_status(0);     // 기본 등록 order_status
 
-        log.info("salesEntity : " + salesEntity);
-        if ( salesEntity.getOrder_id() >= 1 ) { return true; }
-
-        return false;
-
-    }
 
     // [등록 조건1] ctype 2인 회사불러오기 ( react 에서 처리 )
     @Transactional
@@ -149,7 +156,6 @@ public class SalesService {
     public SalesPageDto salesView(SalesPageDto salesPageDto){
         List<SalesDto> list = new ArrayList<>();
 
-
         if(salesPageDto.getOrderStatus() == 0){
             Pageable pageable = PageRequest.of(salesPageDto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "order_id"));
 
@@ -174,10 +180,12 @@ public class SalesService {
 
     }
 
+    // 4. 판매 삭제
     @Transactional
     public boolean SalesDelete(int order_id){
         Optional<SalesEntity> salesEntity = salesRepository.findById(order_id);
         if ( salesEntity.isPresent() ){
+            allowApprovalRepository.delete(salesEntity.get().getAllowApprovalEntity());
             salesRepository.delete(salesEntity.get());
             return true;
         }

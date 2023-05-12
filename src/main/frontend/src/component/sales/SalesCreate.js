@@ -21,6 +21,7 @@ import TextField from '@mui/material/TextField';
 
 export default function SalesCreate() {
 
+
     const [ list , setList ] = useState([])     // 회사
     const [ listProduct , setListProduct ] = useState([])   // 물품
 
@@ -53,12 +54,18 @@ export default function SalesCreate() {
             return false;
         }
 
+        // 아이디 로그인 해야함 [ 조건 ]
+        if(sessionStorage.getItem('member') == null){return false}
+
         let info = { // mno , order_status 추가적으로 필요
+
+          memberDto : JSON.parse(sessionStorage.getItem('member')) ,
           orderCount: document.getElementById('orderCount').value,
           orderDate : document.getElementById('orderDate').value,
           salesPrice: document.getElementById('salesPrice').value,
           cno : company ,
           prodId : prodName
+
         }
 
         console.log(info)

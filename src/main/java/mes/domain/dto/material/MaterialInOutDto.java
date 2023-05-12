@@ -19,7 +19,7 @@ public class MaterialInOutDto {
     private int mat_in_type;// -- + -
     private int mat_st_stock;// -- 남은 재고
     private AllowApprovalEntity allowApprovalEntity;
-    private MaterialEntity materialEntity;// -- 마스터 원자재 테이블 fk
+    private MaterialDto materialDto;// -- 마스터 원자재 테이블 fk
     private int MatID; // 검색용
     private int mat_in_code;
     private int al_app_no;
@@ -38,7 +38,7 @@ public class MaterialInOutDto {
         this.cdate = cdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.udate = udate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
         this.allowApprovalEntity = allowApprovalEntity;
-        this.materialEntity = materialEntity;
+        this.materialDto = materialDto;
     }
 
     public MaterialInOutEntity toInEntity(){
@@ -46,7 +46,7 @@ public class MaterialInOutDto {
                 .mat_in_outid(this.mat_in_outid)
                 .mat_st_stock(this.mat_st_stock)
                 .mat_in_type(this.mat_in_type)
-                .materialEntity(this.materialEntity)
+                .materialEntity(this.materialDto.toEntity())
                 .allowApprovalEntity(this.allowApprovalEntity)
                 .mat_in_code(this.mat_in_code)
                 .memberEntity(this.memberdto.toEntity())

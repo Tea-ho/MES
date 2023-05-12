@@ -183,9 +183,9 @@ export default function MaterialInoutList(props) {
                                 {inOutList.map((e) => (
                                   <TableRow>
                                    <TableCell align="center" >{e.mat_in_outid}</TableCell>
-                                   <TableCell align="center" >{e.materialEntity.mat_name}</TableCell>
-                                   <TableCell align="center" >{e.materialEntity.mat_price}</TableCell>
-                                   <TableCell align="center" >{e.materialEntity.mat_unit}</TableCell>
+                                   <TableCell align="center" >{e.materialDto.mat_name}</TableCell>
+                                   <TableCell align="center" >{e.materialDto.mat_price}</TableCell>
+                                   <TableCell align="center" >{e.materialDto.mat_unit}</TableCell>
                                    <TableCell align="center" >{e.mat_in_type}</TableCell>
                                    <TableCell align="center" >{e.mat_st_stock}</TableCell>
                                    <TableCell align="center" >{e.memberdto.mname}</TableCell>
@@ -210,19 +210,14 @@ export default function MaterialInoutList(props) {
              </div>
 
         </div>
-        <div>결제승인 관계없이 재고+ 하여 출력중
-        추후 결제승인 되었을시 재고 증감 반영하여 출력예정
-        </div>
+
 
         <div>
-
-
-        <h3> 자재 입고 </h3>
-        <TextField style={{padding : '10px', margin : '10px'}} className="mat_in_type" id="mat_in_type" label="수량" variant="outlined" />
-        <Stack spacing={2} direction="row">
-            <Button style={{padding : '10px', margin : '10px 20px'}}variant="contained" type="button" onClick={MaterialIn}>입고</Button>
-        </Stack>
-
+            <h3> 자재 입고 </h3>
+            <TextField style={{padding : '10px', margin : '10px'}} className="mat_in_type" id="mat_in_type" label="수량" variant="outlined" />
+            <Stack spacing={2} direction="row">
+                <Button style={{padding : '10px', margin : '10px 20px'}}variant="contained" type="button" onClick={MaterialIn}>입고</Button>
+            </Stack>
         </div>
 
 

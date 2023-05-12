@@ -16,44 +16,19 @@ import Button from '@mui/material/Button';
 import MaterialCreate from "./MaterialCreate";
 import MaterialView from "./MaterialView"
 import Stack from '@mui/material/Stack';
-import MaterialUpdate from "./MaterialUpdate";
 
-export default function Material(props) {
-
-    let [count , setCount] = useState(props.info);
+export default function MaterialUpdate(props) {
 
 
-    useEffect(() => {
-        console.log(props.info)
 
 
-    } , [props] )
-
-    const MC = () =>{
-        if(count != 0){
-        return (<MaterialCreate />)
-        }
-        if(count == 1){
-        return (<MaterialUpdate />)
-        }
 
 
-    }
-
-  return (<>
-
-    <div>
-      <h2>자재</h2>
-    </div>
-    <div>
-        <h3>자재 현황</h3>
-        <MaterialView />
-    </div>
 
 
-    <div>
 
-    </div>
 
-  </>);
+    return (<>
+        <div>업데이트</div>
+    </>)
 }

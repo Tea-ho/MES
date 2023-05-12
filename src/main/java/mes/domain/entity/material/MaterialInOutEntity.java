@@ -43,7 +43,7 @@ public class MaterialInOutEntity extends BaseTime {
     public MaterialInOutDto toDto(){
         return MaterialInOutDto.builder()
                 .mat_in_outid(this.mat_in_outid)
-                .materialEntity(this.materialEntity)
+                .materialDto(this.materialEntity.toDto())
                 .allowApprovalEntity(this.allowApprovalEntity)
                 .mat_in_type(this.mat_in_type)
                 .mat_st_stock(this.mat_st_stock)

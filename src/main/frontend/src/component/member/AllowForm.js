@@ -69,11 +69,11 @@ export default function AllowForm(props) {
     let columns;
     if( type === 1 ){ // --- 자재
         columns = [
-            { field: 'materialEntity.mat_name', headerName: '내용', width: 400,
+            { field: 'materialDto.mat_name', headerName: '내용', width: 400,
               valueGetter: (params) => {
-                 const { mat_in_type, materialEntity } = params.row;
+                 const { mat_in_type, materialDto } = params.row;
                  const prefix = mat_in_type > 0 ? '입고 ' : mat_in_type < 0 ? '출고 ' : '기타';
-                 return `${materialEntity.mat_name} ${prefix}`;
+                 return `${materialDto.mat_name} ${prefix}`;
                }
              },
             { field: 'udate', headerName: '요청일자', width: 300 },

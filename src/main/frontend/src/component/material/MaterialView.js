@@ -20,6 +20,7 @@ import Select from '@mui/material/Select';
 import MaterialInoutList from "./MaterialInoutList";
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import Material from './Material';
 
 export default function MaterialView(props) {
 
@@ -44,6 +45,13 @@ export default function MaterialView(props) {
     // 자제 수정
     const MaterialUpdate=(e)=>{
         console.log(e.target.value)
+        const matid = e.target.value;
+        let info = {
+            matID : matid ,
+            count : 1
+        }
+
+       return ( <Material info={info}/>)
 
     }
 

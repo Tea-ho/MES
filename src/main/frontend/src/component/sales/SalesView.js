@@ -17,6 +17,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
 import SalesHeader from './SalesHeader'
 
@@ -53,6 +55,42 @@ export default function SalesView( props ){
         setPageInfo2({...pageInfo2});
     }
 
+    // 판매 삭제
+    const SalesDelete = (e) => {
+        const order_id = e.target.value
+        axios.delete('/sales/delete' , {params : { order_id : order_id}})
+            .then ( r => {
+                console.log(r);
+                if( r.data == true ) {
+                    alert('판매등록이 취소되었습니다.')
+                    window.location.href = "/component/sales/SalesHeader"
+                    }
+            })
+    }
+
+    // 판매 수정 모달
+        const style = {
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 1000,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        };
+
+      const [open, setOpen] = React.useState(false);
+      const handleOpen = () => setOpen(true);
+      const handleClose = () => setOpen(false);
+
+    // 판매 수정
+    const SalesUpdate = (e) => {
+        console.log(e.target.value)
+    }
+
+
     return (
 
         <div>
@@ -66,10 +104,10 @@ export default function SalesView( props ){
                                 <TableCell align="center" style={{ width:'15%' }}>판매물품명</TableCell>
                                 <TableCell align="center" style={{ width:'15%' }}>판매개수</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>판매가격</TableCell>
-
                                 <TableCell align="center" style={{ width:'10%' }}>판매한 회사명</TableCell>
+                                <TableCell align="center" style={{ width:'10%' }}>판매상태</TableCell>
+                                <TableCell align="center" style={{ width:'10%' }}>비고</TableCell>
 
-                                <TableCell align="center" style={{ width:'10%' }}>판매상태(0:판매대기 , 1:판매완료)</TableCell>
                               </TableRow>
                             </TableHead>
 
@@ -83,10 +121,73 @@ export default function SalesView( props ){
                                     <TableCell align="center">{e.prodName}</TableCell>
                                     <TableCell align="center">{e.orderCount}</TableCell>
                                     <TableCell align="center">{e.salesPrice}</TableCell>
-
                                     <TableCell align="center">{e.companyDto.cname}</TableCell>
-
                                     <TableCell align="center">{e.order_status == 0 ? '판매대기' : '판매완료' }</TableCell>
+
+                                    <TableCell align="center">
+                                      <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
+                                        {e.order_status === 0 ?
+                                          <>
+
+                                                                                  <Button onClick={handleOpen}>수정</Button>
+                                                                                  <Modal
+                                                                                    open={open}
+                                                                                    onClose={handleClose}
+                                                                                    aria-labelledby="modal-modal-title"
+                                                                                    aria-describedby="modal-modal-description"
+                                                                                  >
+                                                                                    <Box sx={style}>
+                                                                                      <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                                                        판매 현황
+                                                                                      </Typography>
+                                                                                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                                                        <TableContainer component={Paper}>
+                                                                                                                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                                                                                                    <TableHead>
+                                                                                                                      <TableRow>
+                                                                                                                        <TableCell align="center" style={{ width:'5%' }}>판매번호</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매날짜</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'15%' }}>물품번호</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'15%' }}>판매물품명</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'15%' }}>판매개수</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매가격</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매한 회사명</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매상태</TableCell>
+                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>비고</TableCell>
+
+                                                                                                                      </TableRow>
+                                                                                                                    </TableHead>
+
+
+                                                                                                                    <TableBody>
+                                                                                                                        {list.map((e) => (
+                                                                                                                          <TableRow>
+                                                                                                                            <TableCell align="center">{e.order_id}</TableCell>
+                                                                                                                            <TableCell align="center">{e.orderDate}</TableCell>
+                                                                                                                            <TableCell align="center">{e.prodId}</TableCell>
+                                                                                                                            <TableCell align="center">{e.prodName}</TableCell>
+                                                                                                                            <TableCell align="center">{e.orderCount}</TableCell>
+                                                                                                                            <TableCell align="center">{e.salesPrice}</TableCell>
+                                                                                                                            <TableCell align="center">{e.companyDto.cname}</TableCell>
+                                                                                                                            <TableCell align="center">{e.order_status}</TableCell>
+                                                                                                                            <Button type="button" value={e.order_id} onClick={SalesUpdate}>수정완료</Button>
+                                                                                                                          </TableRow>
+                                                                                                                        ))}
+                                                                                                                    </TableBody>
+
+                                                                                                                  </Table>
+                                                                                                                </TableContainer>
+                                                                                      </Typography>
+                                                                                    </Box>
+                                                                                  </Modal>
+
+                                            <Button type="button" value={e.order_id} onClick={SalesDelete}>삭제</Button>
+                                          </>
+                                          : null
+                                        }
+                                      </ButtonGroup>
+                                    </TableCell>
+
                                   </TableRow>
                                 ))}
                             </TableBody>

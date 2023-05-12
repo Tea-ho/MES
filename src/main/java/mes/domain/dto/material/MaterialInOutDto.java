@@ -25,13 +25,14 @@ public class MaterialInOutDto {
     private int mat_in_code;
     private int al_app_no;
     private MemberDto memberdto;
+
     // 승인 페이지에서 필요한 필드
     private String cdate;
     private String udate;
 
 
 
-    // 승인페이지에서 사용하는 생성자
+
     public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, LocalDate cdate, LocalDate udate, AllowApprovalDto allowApprovalDto, MaterialDto materialDto, MemberDto memberdto) {
         this.mat_in_outid = mat_in_outid;
         this.mat_in_type = mat_in_type;
@@ -52,6 +53,7 @@ public class MaterialInOutDto {
                 .allowApprovalEntity(this.allowApprovalDto.toInEntity())
                 .mat_in_code(this.mat_in_code)
                 .memberEntity(this.memberdto.toEntity())
+
                 .build();
     }
 }

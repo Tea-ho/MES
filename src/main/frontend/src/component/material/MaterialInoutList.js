@@ -54,7 +54,7 @@ export default function MaterialInoutList(props) {
             matID : params.matID,
             memberdto :  JSON.parse(sessionStorage.getItem('member'))
         }
-
+        console.log(info)
         axios.post('/materialInout/materialIn', info)
                         .then( r => { console.log(r);
                         if(r.data == true){
@@ -189,14 +189,14 @@ export default function MaterialInoutList(props) {
                                    <TableCell align="center" >{e.mat_in_type}</TableCell>
                                    <TableCell align="center" >{e.mat_st_stock}</TableCell>
                                    <TableCell align="center" >{e.memberdto.mname}</TableCell>
-                                   <TableCell align="center" >{e.allowApprovalEntity.al_app_whether == false
+                                   <TableCell align="center" >{e.allowApprovalDto.al_app_whether == false
                                                             ? "결제대기중" : e.mat_in_code == 0
-                                                            ? <Button variant="contained" type="button" value={e.allowApprovalEntity.al_app_no} onClick={MaterialStock}>결제확인</Button>
+                                                            ? <Button variant="contained" type="button" value={e.allowApprovalDto.al_app_no} onClick={MaterialStock}>결제확인</Button>
                                                             : "결제완료"}
                                                             </TableCell>
-                                   <TableCell align="center" >{e.allowApprovalEntity.al_app_date == null ? "" : e.allowApprovalEntity.al_app_date}</TableCell>
-                                   <TableCell align="center" >{e.allowApprovalEntity.memberEntity == null ? "" : "결제승인인원"}</TableCell>
-                                   <TableCell align="center" >{e.allowApprovalEntity.al_app_whether == true
+                                   <TableCell align="center" >{e.allowApprovalDto.al_app_date == null ? "" : e.allowApprovalDto.al_app_date}</TableCell>
+                                   <TableCell align="center" >{e.allowApprovalDto.memberdto == null ? "" : "결제승인인원"}</TableCell>
+                                   <TableCell align="center" >{e.allowApprovalDto.al_app_whether == true
                                                             && e.mat_in_code == 0
                                                             ? <Button variant="contained" type="button" value={e.mat_in_outid} onClick={MaterialDelete}>등록취소</Button>
                                                             : ""}</TableCell>
@@ -210,19 +210,14 @@ export default function MaterialInoutList(props) {
              </div>
 
         </div>
-        <div>결제승인 관계없이 재고+ 하여 출력중
-        추후 결제승인 되었을시 재고 증감 반영하여 출력예정
-        </div>
+
 
         <div>
-
-
-        <h3> 자재 입고 </h3>
-        <TextField style={{padding : '10px', margin : '10px'}} className="mat_in_type" id="mat_in_type" label="수량" variant="outlined" />
-        <Stack spacing={2} direction="row">
-            <Button style={{padding : '10px', margin : '10px 20px'}}variant="contained" type="button" onClick={MaterialIn}>입고</Button>
-        </Stack>
-
+            <h3> 자재 입고 </h3>
+            <TextField style={{padding : '10px', margin : '10px'}} className="mat_in_type" id="mat_in_type" label="수량" variant="outlined" />
+            <Stack spacing={2} direction="row">
+                <Button style={{padding : '10px', margin : '10px 20px'}}variant="contained" type="button" onClick={MaterialIn}>입고</Button>
+            </Stack>
         </div>
 
 

@@ -49,9 +49,7 @@ public class SalesDto {
     private int mname;
 
 
-    // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    public SalesEntity toEntity(){ // 저장용 MemberEntity , ProductEntity Dto로 변경 후 삭제 시킴
+    public SalesEntity toEntity(){ // 저장용
         return SalesEntity.builder()
                 .orderCount(this.orderCount)
                 .orderDate(this.orderDate )

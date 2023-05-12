@@ -20,16 +20,21 @@ import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductProcessEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -52,7 +57,7 @@ public class SalesService {
     @Autowired
     AllowApprovalRepository allowApprovalRepository;
 
-    // 0. 판매 쪽 product_process 출력
+    // 0. 판매 공정 product_process 출력
     public ProductProcessPageDto getProductProcess(ProductProcessPageDto productProcessPageDto){
         List<ProductProcessDto> list = new ArrayList<>();
 
@@ -105,14 +110,39 @@ public class SalesService {
         salesEntity.setAllowApprovalEntity(approvalEntity);
         salesEntity.setCompanyEntity(companyEntity);
         salesEntity.setProductEntity( productEntity );
+        salesEntity.setOrder_status(0);     // 기본 등록 order_status
 
-
-        log.info("Sales entity : " + salesEntity);
+        log.info("salesEntity : " + salesEntity);
         if ( salesEntity.getOrder_id() >= 1 ) { return true; }
 
         return false;
 
     }
+
+    // [등록 조건1] ctype 2인 회사불러오기 ( react 에서 처리 )
+    @Transactional
+    public List<CompanyDto> getCompany( ) {
+        List<CompanyDto> companyDtoList = new ArrayList<>();
+        List<CompanyEntity> entityList = companyRepository.findAll();
+
+        entityList.stream()
+                .filter(e -> e.getCtype() == 2)
+                .forEach(e -> companyDtoList.add(e.toDto()));
+        return companyDtoList;
+    }
+
+    // [등록 조건2 ] 물품 불러오기
+    @Transactional
+    public List<ProductDto> getProduct(){
+        List<ProductDto> productDtoList = new ArrayList<>();
+        List<ProductEntity> entityList = productRepository.findAll();
+
+        entityList.forEach((e) -> {
+            productDtoList.add(e.toDto());
+        });
+        return productDtoList;
+    }
+
 
     // 2. 판매 출력
     @Transactional
@@ -144,28 +174,15 @@ public class SalesService {
 
     }
 
-    // [등록 조건1] ctype 2인 회사불러오기 ( react 에서 처리 )
     @Transactional
-    public List<CompanyDto> getCompany( ) {
-        List<CompanyDto> companyDtoList = new ArrayList<>();
-        List<CompanyEntity> entityList = companyRepository.findAll();
-
-        entityList.stream()
-                .filter(e -> e.getCtype() == 2)
-                .forEach(e -> companyDtoList.add(e.toDto()));
-        return companyDtoList;
+    public boolean SalesDelete(int order_id){
+        Optional<SalesEntity> salesEntity = salesRepository.findById(order_id);
+        if ( salesEntity.isPresent() ){
+            salesRepository.delete(salesEntity.get());
+            return true;
+        }
+        return false;
     }
 
-    // [등록 조건2 ] 물품 불러오기
-    @Transactional
-    public List<ProductDto> getProduct(){
-        List<ProductDto> productDtoList = new ArrayList<>();
-        List<ProductEntity> entityList = productRepository.findAll();
-
-        entityList.forEach((e) -> {
-            productDtoList.add(e.toDto());
-        });
-        return productDtoList;
-    }
 
 }

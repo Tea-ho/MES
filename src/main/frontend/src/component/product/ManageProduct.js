@@ -23,6 +23,19 @@ import Modal from '@mui/material/Modal';
 import EditProduct from './EditProduct'
 import MaterialPrint from './MaterialPrint';
 
+
+/* --------- Dialog -----------*/
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 //모달 CSS
 const style = {
   position: 'absolute',
@@ -51,7 +64,9 @@ export default function ManageProduct(props){
     const [open, setOpen] = useState(false); //모달 띄우는 상태
 
     const[putFindProduct, setPutFindProduct] = useState({prodName:''}); //수정할 제품
+    const[deleteNotice, setDeleteNotice] = useState([]); //삭제 결과 확인
 
+    const [openDialog, setOpenDialog] = useState(false); //dialog 닫기/열기
 
     const getProduct = () => {
         axios.get("/product", {params : pageInfo})
@@ -87,13 +102,8 @@ export default function ManageProduct(props){
 
     //제품 수정 [제품 번호를 눌러야함...]
     const onUpdateHandler = (e) => {
-       console.log(e)
-       console.log(e.target.innerHTML)
-
        let uproduct = productList.find(f => f.prodId == e.target.innerHTML)
        setPutProduct({...uproduct})
-
-       console.log(uproduct)
     }
 
     //체크 박스 업데이트[삭제를 위한]
@@ -116,16 +126,40 @@ export default function ManageProduct(props){
      setOpen(false);
    };
 
-   //자재 목록 수정
-   const editMaterialHandler = (newChecked) => {
-        console.log(newChecked)
+   //선택 삭제
+   const selectDelete = (event) => {
+        console.log(checked)
+        setDeleteNotice([]); //삭제 처리할 때 한번 초기화해주고.
+
+        checked.forEach((item) => {
+            console.log(item + "삭제처리")
+            axios.delete('/product', { params : {prodId : item}})
+              .then((r) => {
+                if (r.data === 'true') {
+                  // 삭제 성공 시 처리
+                } else {
+                  setDeleteNotice([...deleteNotice, r.data])
+                }
+              })
+          });
+
+          openDialogHandler();
    }
+
+    const openDialogHandler = () => {
+        setOpen(true);
+    };
+
+     const closeDialog = () => {
+       setOpenDialog(false);
+       getProduct();
+     };
 
     return(<>
          <Container>
             <div>현재페이지 : {pageInfo.page}  게시물 수 : {totalCount}
             <div style={{width : '100%', display : 'flex', justifyContent : 'flex-end'}}>
-                <button style={{marginLeft : '100px'}}>선택삭제</button></div>
+                <Button style={{marginLeft : '100px'}} onClick={(event) => selectDelete(event)}>선택삭제</Button></div>
              </div>
              <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -185,11 +219,34 @@ export default function ManageProduct(props){
 
                         <Box sx={{ ...style, width: '80%' }}>
                           <h2 id="parent-modal-title">{putFindProduct.prodName}의 자재 목록</h2>
-                          <MaterialPrint existsM={putFindProduct.materialDtoList} editM = {editMaterialHandler}/>
+                          <MaterialPrint putProdId={putFindProduct.prodId}/>
                           <Button onClick={handleClose}>닫기</Button>
-                          <Button onClick={editMaterialHandler}>자재목록 수정</Button>
                         </Box>
                       </Modal>
+                 </div>
+
+                 <div>
+                       <Dialog
+                         open={open}
+                         TransitionComponent={Transition}
+                         keepMounted
+                         onClose={handleClose}
+                         aria-describedby="alert-dialog-slide-description"
+                       >
+                         <DialogTitle>{"삭제 처리 결과입니다."}</DialogTitle>
+                         <DialogContent>
+                           <DialogContentText id="alert-dialog-slide-description">
+                             {
+                                deleteNotice.map((notice) => {
+                                    return <div>{notice}</div>
+                                })
+                             }
+                           </DialogContentText>
+                         </DialogContent>
+                         <DialogActions>
+                           <Button onClick={closeDialog}>닫기</Button>
+                         </DialogActions>
+                       </Dialog>
                  </div>
 
           </Container>

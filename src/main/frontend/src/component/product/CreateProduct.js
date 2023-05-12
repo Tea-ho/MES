@@ -42,7 +42,7 @@ export default function CreateProduct(props){
     }, [pageInfo] )
 
     //체크 박스 업데이트 (수량을 입력하고 넣어야하는 문제점이 존재함...ㅠ)
-    const checkboxEventHandler = (num) => {
+    const checkboxEventHandler = (event, num) => {
         let domValue = '.matRate'+num;
         let rate = document.querySelector(domValue)
 
@@ -106,7 +106,7 @@ export default function CreateProduct(props){
                              <TableCell align="center" >{e.companyDto.cname}</TableCell>
                              <TableCell align="center" >{e.mdate}</TableCell>
                              <TableCell align="center" >{e.mat_code}</TableCell>
-                             <TableCell align="center"><Checkbox onChange={() => checkboxEventHandler(e.matID)}/></TableCell>
+                             <TableCell align="center"><Checkbox onChange={(event) => checkboxEventHandler(event, e.matID)}/></TableCell>
                              <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율"/></TableCell>
                             </TableRow>
                           ))}

@@ -16,6 +16,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Container from '@mui/material/Container';
 
+import Button from '@mui/material/Button';
+
 import {Checkbox} from '@mui/material';
 
 
@@ -23,14 +25,11 @@ export default function MaterialPrint(props){
     let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'keyword' : '' , 'matID' : 0 } )
 
     let[list, setList] = useState([]); //자재를 담을 배열 usestate
+
     const [checked, setChecked] = useState([]);
     let [totalPage , setTotalPage ] = useState(1);
     let [totalCount , setTotalCount ] = useState(1);
 
-    let[existsMaterials, setExistMaterials] = useState([]);//이미 등록된 자재 리스트
-
-    console.log(Array.isArray(props.existsM))
-    console.log(existsMaterials)
      useEffect( ()=>{//컴포넌트 로딩시(열때, 시작시) 해당 쟈재 정보를 모두 가져온다.
         axios.get('/materials/materialList',  { params : pageInfo })
           .then( r => {
@@ -38,25 +37,80 @@ export default function MaterialPrint(props){
                 setList(r.data.materialList)//가져온 자재 정보를 list에 담는다.
                 setTotalPage(r.data.totalPage);
                 setTotalCount(r.data.totalCount);
-                setExistMaterials(props.existsM)
             } )
     }, [pageInfo] )
 
-    //체크 박스 업데이트(기존 값을 가져와야해서 두가지의 경우를 체크해줘야함... 그리고 기존 값이 들어가는 걸로 갱신...)
-    const checkboxEventHandler = (matID, existsMaterials) => {
-      if (existsMaterials.some((item) => item.matID === matID)) {
-        // 이미 존재하는 경우 삭제
-        const updatedMaterials = existsMaterials.filter((item) => item.matID !== matID);
-        setExistMaterials(updatedMaterials);
+    const existMat = () => {
+         axios.get('/product/existMaterials', {params : {prodId : props.putProdId}})
+            .then( r => {
+                console.log(r.data);
+                setChecked(r.data.referencesValue)
+            })
+    }
+    // 해당 제품이 가지고 있는 materialList를 모두 가져오기.
+    useEffect(() => {
+        existMat();
+    },[])
 
-        setChecked(checked.filter((checking) => checking.matID !== setExistMaterials.matID));
-      } else {
-        // 존재하지 않는 경우 추가
-        const updatedMaterials = [...existsMaterials, { matID }];
-        setExistMaterials(updatedMaterials);
-        setChecked([...checked, updatedMaterials.matID]);
-      }
-    };
+    //체크 박스 업데이트 (수량을 입력하고 넣어야하는 문제점이 존재함...ㅠ) => 비율 수정도 같이
+    //type [1 : 체크박스 수정] [2 : 비율 수정]
+    const checkboxEventHandler = (event, num, type) => {
+        let domValue = '.matRate'+num;
+        let rate = document.querySelector(domValue)
+
+        let referencesValue = {
+            matId : num,
+            matRate : rate ? Number(rate.value)  : 0
+        }
+
+        if(type == 1){ //체크박스 업데이트
+           //배열의 요소중 matId가 같은게 하나라도 있으면 삭제한다.
+           if (checked.some((item) => item.matId === referencesValue.matId)) {
+             setChecked(checked.filter((item) => item.matId !== referencesValue.matId));
+           } else {
+             setChecked([...checked, referencesValue]);
+           }
+
+        }else if(type == 2){
+             // 배열의 요소 중 matId가 같은게 하나라도 있으면 해당 요소의 matRate만 업데이트
+             console.log(referencesValue);
+
+            // 배열의 요소 중 matId가 같은게 하나라도 있으면 해당 요소의 matRate만 업데이트
+            if (checked.some((item) => item.matId === referencesValue.matId)) {
+              setChecked((prevState) => {
+                return prevState.map((item) => {
+                  if (item.matId === referencesValue.matId) {
+                    return { ...item, matRate: referencesValue.matRate };
+                  }
+                  return item;
+                });
+              });
+            }
+        }
+
+       console.log("자재 체크 리스트 : ", checked)
+    }
+
+
+    //자재 수정
+    const putMaterialList = () => {
+         //유효성 통과시 전달할 객체 보내기
+        let info ={
+            prodId : props.putProdId,
+            referencesValue : checked,
+            type : 2
+        }
+
+        axios.put('/product', info)
+               .then((r) => {
+               if(r.data == true){
+                   alert('수정 성공');
+                   existMat()
+               }else{
+                   alert('수정 실패')
+               }
+           })
+    }
 
     //자재 페이지 변경
     const selectPage = (event , value) => {
@@ -73,14 +127,10 @@ export default function MaterialPrint(props){
         setPageInfo({...pageInfo});
     }
 
-    //수정된 자재목록 전송(부모에게)
-    props.editM(checked);
-
-
 return( <>
        <div>
             <TableContainer component={Paper}>
-                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <Table sx={{ minWidth: 700 }} aria-label="simple table">
                         <TableHead>
                           <TableRow>
                             <TableCell align="center" style={{ width:'5%' }}>등록번호</TableCell>
@@ -92,6 +142,7 @@ return( <>
                             <TableCell align="center" style={{ width:'15%' }}>구입일</TableCell>
                             <TableCell align="center" style={{ width:'5%' }}>코드</TableCell>
                             <TableCell align="center" style={{ width:'20%' }}>선택</TableCell>
+                            <TableCell align="center" style={{ width:'20%' }}>비율</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -106,13 +157,28 @@ return( <>
                              <TableCell align="center" >{e.mdate}</TableCell>
                              <TableCell align="center" >{e.mat_code}</TableCell>
                              <TableCell align="center"><Checkbox
-                                onChange={() => checkboxEventHandler(e.matID, existsMaterials)}
-                                checked={existsMaterials.some((item) => item.matID === e.matID)}/></TableCell>
+                                onChange={(event1) => checkboxEventHandler(event1, e.matID, 1)}
+                                checked={checked.some((item) => item.matId === e.matID)}/></TableCell>
+                             <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율"
+                                    value={checked.filter((item) => item.matId === e.matID)[0]?.matRate || ''}
+                                    onChange={(event2) => checkboxEventHandler(event2, e.matID, 2)}/></TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
                       </Table>
                     </TableContainer>
+                     <Container>
+                        <div style={{display : 'flex' , justifyContent : 'center', margin : '10px 0px 10px 0px'}}>
+                              <Pagination count={totalPage}  color="primary" onChange={selectPage}/>
+                        </div>
+                        <div style={{display : 'flex' , justifyContent : 'center', marginBottom: '20px'}}>
+                               <input type="text" className="keyword" />
+                               <button type="button" onClick={onSearch}> 검색 </button>
+                        </div>
+                        <div style={{display : 'flex' , justifyContent : 'center', marginBottom: '20px'}}>
+                             <Button variant="contained" disableElevation onClick={putMaterialList}>자재목록 수정</Button>
+                        </div>
+                    </Container>
             </div>
        </>);
 }

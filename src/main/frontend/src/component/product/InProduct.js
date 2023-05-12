@@ -16,6 +16,8 @@ export default function InProduct(props){ //제품 추가 부분
     let [company , setCompany] = useState(0) //변경된 회사 정보를 담는 useState
     let matIDList = props.material; //매개변수로 받은 선택받은 제품의 리스트
 
+    //let[price, setPrice] = useState(0); //자재 선택한 목록의 총 가격
+
     console.log(matIDList);
 
     //회사 정보를 가져오는 useEffect
@@ -27,6 +29,20 @@ export default function InProduct(props){ //제품 추가 부분
             } )
      }, [] )
 
+/*    //선택한 제품의 가격을 가져오기
+     useEffect (() => {
+        console.log(matIDList)
+
+        let info = {
+            referencesValue : matIDList
+        }
+        axios.get('/product/totalPrice', matIDList)
+            .then(r => {
+                setPrice(r.data)
+            })
+     }, [props.material])*/
+
+
     const companyChangeHandler = (e) => { //회사 변경 이벤트 처리(select)
         console.log(e.target.value)
         setCompany(e.target.value);
@@ -34,7 +50,6 @@ export default function InProduct(props){ //제품 추가 부분
 
     //제품 등록
     const createProduct = () => {
-
         // 유효성검사
         if(company == 0){
             alert('회사를 선택해주세요.');
@@ -91,7 +106,7 @@ export default function InProduct(props){ //제품 추가 부분
                <div>
                   <TextField style={{padding : '10px', margin : '10px'}} className="prodCode" id="prodCode" label="제품코드" variant="outlined" value={'C'} inputProps= {{readOnly : true}}/>
                   <TextField style={{padding : '10px', margin : '10px'}} className="prodName" id="prodName" label="제품명" variant="outlined" />
-                  <TextField style={{padding : '10px', margin : '10px'}} className="prodPrice" id="prodPrice" label="제품가격" variant="outlined" />
+                  <TextField style={{padding : '10px', margin : '10px'}} className="prodPrice" id="prodPrice" label="제품가격" variant="outlined"/>
                </div>
 
               <div>

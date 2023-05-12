@@ -57,7 +57,8 @@ export default function EditProduct(props){ //제품 추가 부분
             prodCode : 'C',
             prodName : document.getElementById('prodName').value,
             prodPrice : document.getElementById('prodPrice').value,
-            companyDto : companyList.find(e => e.cno === company) //해당 cno가 company의 정보를 가진 객체를 넣음
+            companyDto : companyList.find(e => e.cno === company), //해당 cno가 company의 정보를 가진 객체를 넣음
+            type : 1
         }
 
         console.log(info);

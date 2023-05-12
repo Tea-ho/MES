@@ -1,6 +1,7 @@
 package mes.domain.entity.sales;
 
 import lombok.*;
+import mes.domain.BaseTime;
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.CompanyEntity;
@@ -8,6 +9,7 @@ import mes.domain.entity.member.MemberEntity;
 import mes.domain.entity.product.ProductEntity;
 
 import javax.persistence.*;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "sales")
@@ -15,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SalesEntity {
+public class SalesEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int order_id;// -- 주문 D

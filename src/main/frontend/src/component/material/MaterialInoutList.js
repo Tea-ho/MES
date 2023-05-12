@@ -183,9 +183,9 @@ export default function MaterialInoutList(props) {
                                 {inOutList.map((e) => (
                                   <TableRow>
                                    <TableCell align="center" >{e.mat_in_outid}</TableCell>
-                                   <TableCell align="center" >{e.materialEntity.mat_name}</TableCell>
-                                   <TableCell align="center" >{e.materialEntity.mat_price}</TableCell>
-                                   <TableCell align="center" >{e.materialEntity.mat_unit}</TableCell>
+                                   <TableCell align="center" >{e.materialDto.mat_name}</TableCell>
+                                   <TableCell align="center" >{e.materialDto.mat_price}</TableCell>
+                                   <TableCell align="center" >{e.materialDto.mat_unit}</TableCell>
                                    <TableCell align="center" >{e.mat_in_type}</TableCell>
                                    <TableCell align="center" >{e.mat_st_stock}</TableCell>
                                    <TableCell align="center" >{e.memberdto.mname}</TableCell>

@@ -53,6 +53,7 @@ public class MaterialInoutService {
         if(dto.getMemberdto()==null){return false;}
         MemberEntity member = memberRepository.findByMnameAndMpassword(dto.getMemberdto().getMname() , dto.getMemberdto().getMpassword());
 
+        System.out.println(dto.toInEntity());
         MaterialInOutEntity entity = dto.toInEntity();
 
 

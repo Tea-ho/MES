@@ -45,6 +45,19 @@ public class SalesDto {
 
     private ProductPlanEntity productPlanEntity;
 
+    // 승인페이지에서 사용하는 생성자
+    public SalesDto(int order_id, String orderDate, int orderCount, int order_status, int salesPrice, AllowApprovalEntity allowApprovalEntity, CompanyDto companyDto, ProductEntity productEntity, MemberEntity memberEntity) {
+        this.order_id = order_id;
+        this.orderDate = orderDate;
+        this.orderCount = orderCount;
+        this.order_status = order_status;
+        this.salesPrice = salesPrice;
+        this.allowApprovalEntity = allowApprovalEntity;
+        this.companyDto = companyDto;
+        this.productEntity = productEntity;
+        this.memberEntity = memberEntity;
+    }
+
     public SalesEntity toEntity(){ // 저장용
         return SalesEntity.builder()
                 .orderDate(this.orderDate)

@@ -1,6 +1,7 @@
 package mes.domain.dto.material;
 
 import lombok.*;
+import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.member.MemberDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.material.MaterialInOutEntity;
@@ -18,8 +19,8 @@ public class MaterialInOutDto {
     private int mat_in_outid;// -- 원자재 입출고 PK
     private int mat_in_type;// -- + -
     private int mat_st_stock;// -- 남은 재고
-    private AllowApprovalEntity allowApprovalEntity;
-    private MaterialEntity materialEntity;// -- 마스터 원자재 테이블 fk
+    private AllowApprovalDto allowApprovalDto;
+    private MaterialDto materialDto;// -- 마스터 원자재 테이블 fk
     private int MatID; // 검색용
     private int mat_in_code;
     private int al_app_no;
@@ -30,15 +31,16 @@ public class MaterialInOutDto {
 
 
 
-
-    public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, LocalDate cdate, LocalDate udate, AllowApprovalEntity allowApprovalEntity, MaterialEntity materialEntity) {
+    // 승인페이지에서 사용하는 생성자
+    public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, LocalDate cdate, LocalDate udate, AllowApprovalDto allowApprovalDto, MaterialDto materialDto, MemberDto memberdto) {
         this.mat_in_outid = mat_in_outid;
         this.mat_in_type = mat_in_type;
         this.mat_st_stock = mat_st_stock;
         this.cdate = cdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.udate = udate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));;
-        this.allowApprovalEntity = allowApprovalEntity;
-        this.materialEntity = materialEntity;
+        this.allowApprovalDto = allowApprovalDto;
+        this.materialDto = materialDto;
+        this.memberdto = memberdto;
     }
 
     public MaterialInOutEntity toInEntity(){
@@ -46,8 +48,8 @@ public class MaterialInOutDto {
                 .mat_in_outid(this.mat_in_outid)
                 .mat_st_stock(this.mat_st_stock)
                 .mat_in_type(this.mat_in_type)
-                .materialEntity(this.materialEntity)
-                .allowApprovalEntity(this.allowApprovalEntity)
+                .materialEntity(this.materialDto.toEntity())
+                .allowApprovalEntity(this.allowApprovalDto.toInEntity())
                 .mat_in_code(this.mat_in_code)
                 .memberEntity(this.memberdto.toEntity())
                 .build();

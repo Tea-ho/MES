@@ -96,4 +96,23 @@ public class MaterialService {
         });
         return dto;
     }
+
+    // 자재수정
+    @Transactional
+    public boolean materialUpdate(MaterialDto dto){
+
+        MaterialEntity entity = materialEntityRepository.findById(dto.getMatID()).get();
+
+        entity.setMat_name(dto.getMat_name());
+        entity.setMat_price(dto.getMat_price());
+        entity.setMat_st_exp(dto.getMat_st_exp());
+        entity.setMat_unit(dto.getMat_unit());
+
+        CompanyEntity companyEntity = companyRepository.findById(dto.getCno()).get();
+        entity.setCompanyEntity(companyEntity);
+
+        materialEntityRepository.save(entity);
+
+        return true;
+    }
 }

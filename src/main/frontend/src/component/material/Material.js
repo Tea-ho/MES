@@ -21,24 +21,29 @@ import MaterialUpdate from "./MaterialUpdate";
 export default function Material(props) {
 
     let [count , setCount] = useState(0);
-
+    const [info , setInfo] = useState({});
 
     useEffect(() => {
-        console.log(props.info)
+               console.log('count : '+count);
+    } , [count] )
 
+    const countHandler =(e)=>{
+        console.log(e);
+        setCount(e.count);
+        setInfo(e);
+    }
 
-    } , [props] )
-
-    const MC = () =>{
-        if(count != 0){
-        return (<MaterialCreate />)
-        }
-        if(count == 1){
-        return (<MaterialUpdate />)
-        }
-
+    const returnHandler =(e)=>{
+            console.log(e);
+            setCount(e);
 
     }
+
+
+
+
+
+
 
   return (<>
 
@@ -47,12 +52,12 @@ export default function Material(props) {
     </div>
     <div>
         <h3>자재 현황</h3>
-        <MaterialView />
+        <MaterialView countHandler={countHandler}/>
     </div>
 
 
     <div>
-        <MaterialCreate />
+       {count === 0 ? <MaterialCreate /> : <MaterialUpdate returnHandler={returnHandler} getInfo={info}/>}
     </div>
 
   </>);

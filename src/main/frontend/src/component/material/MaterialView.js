@@ -24,6 +24,7 @@ import Material from './Material';
 
 export default function MaterialView(props) {
 
+    console.log(props.countHandler)
     const [list, setList] = useState([]);
     let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'keyword' : '' , 'matID' : 0 } )
     let [totalPage , setTotalPage ] = useState(1);
@@ -42,18 +43,7 @@ export default function MaterialView(props) {
 
         }, [pageInfo] )
 
-    // 자제 수정
-    const MaterialUpdate=(e)=>{
-        console.log(e.target.value)
-        const matid = e.target.value;
-        let info = {
-            matID : matid ,
-            count : 1
-        }
 
-       return ( <Material info={info}/>)
-
-    }
 
 
      const MaterialInoutList=(e)=>{
@@ -75,6 +65,14 @@ export default function MaterialView(props) {
         pageInfo.page = 1
         document.getElementById("keyword").value = '';
         setPageInfo({...pageInfo});
+    }
+
+    const onChangecountHandler=(e)=>{
+        let info ={
+            matid : e.target.value,
+            count : 1
+        }
+        props.countHandler(info)
     }
 
 
@@ -110,7 +108,7 @@ export default function MaterialView(props) {
                        <TableCell align="center" >
                            <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
                              <Button type="button" value={e.matID} onClick={MaterialInoutList}>상세보기</Button>
-                             <Button type="button" value={e.matID} onClick={MaterialUpdate}>수정</Button>
+                             <Button onClick={onChangecountHandler} value={e.matID} >수정</Button>
 
                            </ButtonGroup>
                         </TableCell>

@@ -45,4 +45,9 @@ public class MaterialController {
         return list;
     }
 
+    @PutMapping("/materialUpdate")
+    public boolean materialUpdate(@RequestBody MaterialDto dto){
+        return materialService.materialUpdate(dto);
+    }
+
 }

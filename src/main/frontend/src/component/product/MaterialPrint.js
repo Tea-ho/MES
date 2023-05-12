@@ -47,6 +47,7 @@ export default function MaterialPrint(props){
                 setChecked(r.data.referencesValue)
             })
     }
+
     // 해당 제품이 가지고 있는 materialList를 모두 가져오기.
     useEffect(() => {
         existMat();
@@ -58,12 +59,13 @@ export default function MaterialPrint(props){
         let domValue = '.matRate'+num;
         let rate = document.querySelector(domValue)
 
-        let referencesValue = {
-            matId : num,
-            matRate : rate ? Number(rate.value)  : 0
-        }
-
+        console.log("type " + type)
         if(type == 1){ //체크박스 업데이트
+            let referencesValue = {
+                matId : num,
+                matRate : rate ? Number(rate.value)  : 0
+            }
+
            //배열의 요소중 matId가 같은게 하나라도 있으면 삭제한다.
            if (checked.some((item) => item.matId === referencesValue.matId)) {
              setChecked(checked.filter((item) => item.matId !== referencesValue.matId));
@@ -72,15 +74,14 @@ export default function MaterialPrint(props){
            }
 
         }else if(type == 2){
-             // 배열의 요소 중 matId가 같은게 하나라도 있으면 해당 요소의 matRate만 업데이트
-             console.log(referencesValue);
+            let newValue = event.target.value;
 
             // 배열의 요소 중 matId가 같은게 하나라도 있으면 해당 요소의 matRate만 업데이트
-            if (checked.some((item) => item.matId === referencesValue.matId)) {
+            if (checked.some((item) => item.matId === num)) {
               setChecked((prevState) => {
                 return prevState.map((item) => {
-                  if (item.matId === referencesValue.matId) {
-                    return { ...item, matRate: referencesValue.matRate };
+                  if (item.matId === num) {
+                    return { ...item, matRate: newValue};
                   }
                   return item;
                 });
@@ -157,11 +158,11 @@ return( <>
                              <TableCell align="center" >{e.mdate}</TableCell>
                              <TableCell align="center" >{e.mat_code}</TableCell>
                              <TableCell align="center"><Checkbox
-                                onChange={(event1) => checkboxEventHandler(event1, e.matID, 1)}
+                                onChange={(event) => checkboxEventHandler(event, e.matID, 1)}
                                 checked={checked.some((item) => item.matId === e.matID)}/></TableCell>
                              <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율"
-                                    value={checked.filter((item) => item.matId === e.matID)[0]?.matRate || ''}
-                                    onChange={(event2) => checkboxEventHandler(event2, e.matID, 2)}/></TableCell>
+                                    onChange={(event) => checkboxEventHandler(event, e.matID, 2)}
+                                    value={checked.filter((item) => item.matId === e.matID)[0]?.matRate || ''}/></TableCell>
                             </TableRow>
                           ))}
                         </TableBody>

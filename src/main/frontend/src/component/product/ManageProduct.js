@@ -51,6 +51,14 @@ const style = {
   pb: 3,
 };
 
+const stylesDialog = {
+  dialogContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};
+
 export default function ManageProduct(props){
     let[pageInfo, setPageInfo] = useState({"page" : 1, "key" : '', "keyword" : ''}) //검색기능과 페이지네이션을 위해
     let[totalPage, setTotalPage] = useState(1); //총 페이지수
@@ -128,18 +136,14 @@ export default function ManageProduct(props){
 
    //선택 삭제
    const selectDelete = (event) => {
-        console.log(checked)
         setDeleteNotice([]); //삭제 처리할 때 한번 초기화해주고.
 
         checked.forEach((item) => {
-            console.log(item + "삭제처리")
+
             axios.delete('/product', { params : {prodId : item}})
               .then((r) => {
-                if (r.data === 'true') {
-                  // 삭제 성공 시 처리
-                } else {
-                  setDeleteNotice([...deleteNotice, r.data])
-                }
+                  let note = r.data;
+                  setDeleteNotice((prevDeleteNotice) => [...prevDeleteNotice, note]);
               })
           });
 
@@ -147,7 +151,7 @@ export default function ManageProduct(props){
    }
 
     const openDialogHandler = () => {
-        setOpen(true);
+        setOpenDialog(true);
     };
 
      const closeDialog = () => {
@@ -217,7 +221,7 @@ export default function ManageProduct(props){
                         aria-describedby="parent-modal-description"
                       >
 
-                        <Box sx={{ ...style, width: '80%' }}>
+                        <Box sx={{...style, width: '80%' }}>
                           <h2 id="parent-modal-title">{putFindProduct.prodName}의 자재 목록</h2>
                           <MaterialPrint putProdId={putFindProduct.prodId}/>
                           <Button onClick={handleClose}>닫기</Button>
@@ -225,12 +229,12 @@ export default function ManageProduct(props){
                       </Modal>
                  </div>
 
-                 <div>
+                 <div style={stylesDialog.dialogContainer}>
                        <Dialog
-                         open={open}
+                         open={openDialog}
                          TransitionComponent={Transition}
                          keepMounted
-                         onClose={handleClose}
+                         onClose={closeDialog}
                          aria-describedby="alert-dialog-slide-description"
                        >
                          <DialogTitle>{"삭제 처리 결과입니다."}</DialogTitle>

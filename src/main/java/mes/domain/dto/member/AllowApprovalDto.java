@@ -19,7 +19,7 @@ public class AllowApprovalDto {
 
     public AllowApprovalEntity toInEntity(){
         return AllowApprovalEntity.builder()
-                .al_app_whether(false)
+                .al_app_whether(this.al_app_whether)
                 .build();
     }
 

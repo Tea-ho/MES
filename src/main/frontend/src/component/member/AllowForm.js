@@ -8,7 +8,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 export default function AllowForm(props) {
 // 생성이유: 폼 유지보수가 필요한 경우, 1회 수정으로 작업 완료 칠 수 있음
-// (동일 폼 100개 있다고 생각하자)
+// (동일 폼 100개 있다고 생각하자) // data checking
 
     // 1-1. 상태변수 선언[ 결재 리스트 관리 Controller get으로 받아서 초기화 예정 / DataGrid 적용 ]
     const [ rows, setRows ] = useState([]);
@@ -77,10 +77,10 @@ export default function AllowForm(props) {
                }
              },
             { field: 'udate', headerName: '요청일자', width: 300 },
-            { field: 'allowApprovalEntity.al_app_whether', headerName: '승인여부', width: 300,
-              valueGetter: (params) => params.row.allowApprovalEntity.al_app_whether ? '승인완료' : '승인대기'
+            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 300,
+              valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
             },
-            { field: 'memberEntity.mname', headerName: '요청자', width: 100 }
+            { field: 'memberdto.mname', headerName: '요청자', width: 100 }
         ]
 
     } else if( type === 2 ){ // --- 제품 (columns 없으면 오류 뜸)
@@ -107,16 +107,16 @@ export default function AllowForm(props) {
         ]
     } else if( type === 3){ // --- 판매 (columns 없으면 오류 뜸)
         columns = [
-            { field: 'materialEntity.mat_name', headerName: '내용', width: 400,
+            { field: 'materialDto.mat_name', headerName: '내용', width: 400,
               valueGetter: (params) => {
-                 const { mat_in_type, materialEntity } = params.row;
+                 const { mat_in_type, materialDto } = params.row;
                  const prefix = mat_in_type > 0 ? '입고 ' : mat_in_type < 0 ? '출고 ' : '기타';
-                 return `${materialEntity.mat_name} ${prefix}`;
+                 return `${materialDto.mat_name} ${prefix}`;
                }
              },
             { field: 'udate', headerName: '요청일자', width: 300 },
-            { field: 'allowApprovalEntity.al_app_whether', headerName: '승인여부', width: 300,
-              valueGetter: (params) => params.row.allowApprovalEntity.al_app_whether ? '승인완료' : '반려'
+            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 300,
+              valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '반려'
             },
         ]
     }
@@ -151,7 +151,7 @@ export default function AllowForm(props) {
                     },
                 }}
             pageSizeOptions={[5, 10]}
-            isRowSelectable={(params)=>params.row.allowApprovalEntity.al_app_whether==false}
+            isRowSelectable={(params)=>params.row.allowApprovalDto.al_app_whether==false}
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
                 setRowSelectionModel(newRowSelectionModel);

@@ -80,7 +80,11 @@ export default function AllowForm(props) {
             { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 300,
               valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
             },
-            { field: 'memberdto.mname', headerName: '요청자', width: 100 }
+            { field: 'memberdto.mname', headerName: '요청자', width: 100,
+              valueGetter: (params) => {
+                const { mname, memberdto } = params.row;
+                return `${memberdto.mname}`; }
+             },
         ]
 
     } else if( type === 2 ){ // --- 제품 (columns 없으면 오류 뜸)
@@ -107,17 +111,23 @@ export default function AllowForm(props) {
         ]
     } else if( type === 3){ // --- 판매 (columns 없으면 오류 뜸)
         columns = [
-            { field: 'materialDto.mat_name', headerName: '내용', width: 400,
+            { field: 'productDto.prodName', headerName: '내용', width: 400,
               valueGetter: (params) => {
-                 const { mat_in_type, materialDto } = params.row;
-                 const prefix = mat_in_type > 0 ? '입고 ' : mat_in_type < 0 ? '출고 ' : '기타';
-                 return `${materialDto.mat_name} ${prefix}`;
-               }
-             },
-            { field: 'udate', headerName: '요청일자', width: 300 },
+                 const { orderCount, productDto } = params.row;
+                 const prefix = orderCount > 0 ? '판매' : '반품';
+                 return `${productDto.prodName} ${prefix}`;
+               } },
+            { field: 'orderCount', headerName: '판매수량', width: 150 },
+            { field: 'salesPrice', headerName: '판매금액', width: 150 },
+            { field: 'orderDate', headerName: '요청일자', width: 150 },
             { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 300,
               valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '반려'
             },
+            { field: 'memberDto.mname', headerName: '요청자', width: 100,
+              valueGetter: (params) => {
+                const { mname, memberDto } = params.row;
+                return `${memberDto.mname}`; }
+             },
         ]
     }
 
@@ -144,7 +154,7 @@ export default function AllowForm(props) {
             <DataGrid
                 rows={rows}
                 columns={columns}
-                getRowId={type === 1 ? ((row) => row.mat_in_outid) : ((row) => null)}
+                getRowId={type === 1 ? ((row) => row.mat_in_outid) : type === 3 ? ((row) => row.order_id) : ((row) => null)}
                 initialState={{
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },

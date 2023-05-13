@@ -32,20 +32,20 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
     @Query(value = "SELECT new com.example.dto.SalesByCompanyDto(s.salesPrice, c.toDto()) " +
             "FROM SalesEntity s " +
             "JOIN s.companyEntity c " +
-            "WHERE c.companyId = :companyId", nativeQuery = true)
-    List<SalesByCompanyDto> findSalesByCompany(@Param("companyId") int companyId);
+            "WHERE c.companyId = :id", nativeQuery = true)
+    List<SalesByCompanyDto> findSalesByCompany(@Param("id") int companyId);
 
     // 판매원별 판매실적 쿼리
     @Query(value = "SELECT new com.example.dto.SalesByMemberDto(s.salesPrice, m.toDto()) " +
             "FROM SalesEntity s " +
             "JOIN s.memberEntity m " +
-            "WHERE m.memberId = :memberId", nativeQuery = true)
-    List<SalesByMemberDto> findSalesByMember(@Param("memberId") int memberId);
+            "WHERE m.memberId = :id", nativeQuery = true)
+    List<SalesByMemberDto> findSalesByMember(@Param("id") int memberId);
 
     // 제품별 판매실적 쿼리
     @Query(value = "SELECT new com.example.dto.SalesByProductDto(s.salesPrice, p.prodName) " +
             "FROM SalesEntity s " +
             "JOIN s.productEntity p " +
-            "WHERE p.prodId = :productId", nativeQuery = true)
-    List<SalesByProductDto> findSalesByProduct(@Param("productId") int productId);
+            "WHERE p.prodId = :id", nativeQuery = true)
+    List<SalesByProductDto> findSalesByProduct(@Param("id") int productId);
 }

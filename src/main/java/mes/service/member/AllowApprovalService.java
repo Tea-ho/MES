@@ -53,11 +53,12 @@ public class AllowApprovalService {
         List<?> approvalList = getEntityListByType(type);
 
         // 3. 승인 리스트 저장소 생성
-        List<Object> result = new ArrayList<>();
+        List<Object> result;
         // 의견: Object 물음표로 변경해도 문제 없는지 테스트 필요
 
         // 4. 결재권자인 경우, 아래 내용 출력 [type 별로 List 저장 후 출력]
         if( type == 1) { // 자재
+            result = new ArrayList<>();
             for (Object obj : approvalList) {
                 MaterialInOutEntity entity = (MaterialInOutEntity) obj;
 
@@ -69,6 +70,7 @@ public class AllowApprovalService {
             }
 
         } else if ( type == 2) { // 제품
+            result = new ArrayList<>();
             for (Object obj : approvalList) {
                 ProductPlanEntity entity = (ProductPlanEntity) obj;
                 ProductPlanDto dto = new ProductPlanDto(
@@ -76,8 +78,10 @@ public class AllowApprovalService {
                 result.add(dto);
             }
         } else if ( type == 3) { // 판매
+            result = new ArrayList<>();
             for (Object obj : approvalList) {
                 SalesEntity entity = (SalesEntity) obj;
+                System.out.println(entity);
                 SalesDto dto = new SalesDto(
                         entity.getOrder_id(), entity.getOrderDate(),
                         entity.getOrderCount(), entity.getOrder_status(), entity.getSalesPrice(),

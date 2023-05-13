@@ -83,11 +83,12 @@ export default function MaterialCreate() {
         };
 
     const [code, setCode] = useState(0);
-            const handleChange2 = (event) => {
-                console.log(event.target.value)
-                setCode(event.target.value);
 
-            };
+    const handleChange2 = (event) => {
+        console.log(event.target.value)
+        setCode(event.target.value);
+
+    };
 
 
 

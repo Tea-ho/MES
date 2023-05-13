@@ -70,7 +70,7 @@ public class AllowApprovalService {
             for (Object obj : approvalList) {
                 ProductPlanEntity entity = (ProductPlanEntity) obj;
                 ProductPlanDto dto = new ProductPlanDto(
-                        entity.getProdPlanNo(), entity.getProdPlanCount(), entity.getProdPlanDate(), entity.getProductEntity(), entity.getAllowApprovalEntity());
+                        entity.getProdPlanNo(), entity.getProdPlanCount(), entity.getProdPlanDate(), entity.getProductEntity().toDto(), entity.getAllowApprovalEntity());
                 result.add(dto);
             }
         } else if ( type == 3) { // 판매

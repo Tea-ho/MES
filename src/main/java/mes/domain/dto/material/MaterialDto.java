@@ -34,8 +34,7 @@ public class MaterialDto{
     private int cno;
     private List<MaterialProductDto> MaterialProductDtoList = new ArrayList<>();
 
-
-
+    private int ratio; //비율 값(plan에서 사용할)
 
     public MaterialEntity toEntity() { // 저장용 추후 추가할것있음
         return   MaterialEntity.builder()

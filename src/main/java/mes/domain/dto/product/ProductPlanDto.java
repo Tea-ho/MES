@@ -17,7 +17,7 @@ public class ProductPlanDto {
 
     private String prodPlanDate;// -- 생산 예정 일자
 
-    private ProductEntity productEntity;// -- 마스터 제품 테이블 fk
+    private ProductDto productDto;// -- 마스터 제품 테이블 fk
 
     private AllowApprovalEntity allowApprovalEntity;// -- 결제 승인 여부 테이블 fk
 

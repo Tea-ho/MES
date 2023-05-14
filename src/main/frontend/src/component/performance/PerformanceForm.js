@@ -35,44 +35,44 @@ export default function PerformanceForm(props) {
     let columns;
     if( type === 1 ) {
         columns = [
-            { field: 'prodName', headerName: '제품명', width: 200 },
-            { field: 'prodPrice', headerName: '제품 가격', width: 200,
+            { field: 'prodName', headerName: '제품명', width: 180 },
+            { field: 'prodPrice', headerName: '제품 원가', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'averageSalesPrice', headerName: '평균 판매 가격', width: 200,
+            { field: 'averageSalesPrice', headerName: '평균 판매가', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'totalOrderCount', headerName: '총 주문 수량', width: 200,
+            { field: 'totalOrderCount', headerName: '총 판매량', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'totalSalesAmount', headerName: '총 판매 금액', width: 200,
+            { field: 'totalSalesAmount', headerName: '총 판매 금액', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'profit', headerName: '수익금', width: 200,
+            { field: 'profit', headerName: '수익금', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'profitMargin', headerName: '수익률', width: 200
+            { field: 'profitMargin', headerName: '수익률', width: 180
             },
         ];
     } else if( type === 2 ) {
         columns = [
-            { field: 'prodName', headerName: '제품명', width: 200 },
-            { field: 'prodPrice', headerName: '제품 가격', width: 200,
+            { field: 'prodName', headerName: '제품명', width: 180 },
+            { field: 'prodPrice', headerName: '제품 원가', width: 180,
             valueFormatter: (params) => formatNumber(params.value) + '원'
             },
-            { field: 'averageSalesPrice', headerName: '평균 판매 가격', width: 200,
+            { field: 'averageSalesPrice', headerName: '평균 판매가', width: 180,
             valueFormatter: (params) => formatNumber(params.value) + '원'
             },
-            { field: 'totalOrderCount', headerName: '총 주문 수량', width: 200,
+            { field: 'totalOrderCount', headerName: '총 판매량', width: 180,
             valueFormatter: (params) => formatNumber(params.value) + '개'
             },
-            { field: 'totalSalesAmount', headerName: '총 판매 금액', width: 200,
+            { field: 'totalSalesAmount', headerName: '총 판매 금액', width: 180,
             valueFormatter: (params) => formatNumber(params.value) + '원'
             },
-            { field: 'profit', headerName: '수익금', width: 200,
+            { field: 'profit', headerName: '수익금', width: 180,
             valueFormatter: (params) => formatNumber(params.value) + '원'
             },
-            { field: 'profitMargin', headerName: '수익률', width: 200,
+            { field: 'profitMargin', headerName: '수익률', width: 180,
             valueFormatter: (params) => params.value + '%'
             },
         ];

@@ -39,19 +39,19 @@ export default function PerformanceForm(props) {
             { field: 'prodPrice', headerName: '제품 원가', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'averageSalesPrice', headerName: '평균 판매가', width: 180,
+            { field: 'averageSalesPrice', headerName: '평균 생산량', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'totalOrderCount', headerName: '총 판매량', width: 180,
+            { field: 'totalOrderCount', headerName: '총 생산횟수', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'totalSalesAmount', headerName: '총 판매 금액', width: 180,
+            { field: 'totalSalesAmount', headerName: '총 생산량', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'profit', headerName: '수익금', width: 180,
+            { field: 'profit', headerName: '생산순위', width: 180,
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'profitMargin', headerName: '수익률', width: 180
+            { field: 'profitMargin', headerName: '생산비중', width: 180
             },
         ];
     } else if( type === 2 ) {

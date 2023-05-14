@@ -18,23 +18,13 @@ import java.util.List;
 public class PerformanceController {
     @Autowired private PerformanceService performanceService;
 
-    // 1. 생산 실적 출력
-    @GetMapping("/prdocution")
-    public List<?> printProduction(@RequestParam int type){
-            log.info("printProduction type:"+type);
+    // 1. 실적 출력 (type: 1 - 생산 실적, 2 - 판매실적) 코드 단순화 적용
+    @GetMapping("")
+    public List<?> printPerformance(@RequestParam int type){
+        log.info("printProduction type:"+type);
         try{
-            return performanceService.getProductionDto(type);
+            return performanceService.getPerformanceDto(type);
         } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-    }
-    // 2. 판매 실적 출력
-    @GetMapping("/sales")
-    public List<?> printSales(@RequestParam int type, @RequestParam int id) {
-            log.info("printSales type:"+type);
-        try {
-            return performanceService.getSalesDto(type, id);
-        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }

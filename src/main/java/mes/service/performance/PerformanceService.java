@@ -9,6 +9,7 @@ import mes.domain.dto.product.ProductProductionDto;
 import mes.domain.dto.sales.SalesByCompanyDto;
 import mes.domain.dto.sales.SalesByMemberDto;
 import mes.domain.dto.sales.SalesByProductDto;
+import mes.domain.entity.member.PermissionDeniedException;
 import mes.domain.entity.sales.SalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,30 +23,13 @@ public class PerformanceService { // 실적(생산/판매) 조회
     @Autowired private ProductPlanRepository productPlanRepository;
     @Autowired private SalesRepository salesRepository;
 
-    public List<?> getProductionDto(int type){ // 제품 생산실적
-        if (type == 1) {
-                return productPlanRepository.findProductProduction();
-        } else if (type == 2) {
-                return productPlanRepository.findProductProductionByMonth();
-        } else if (type == 3) {
-                return productPlanRepository.findProductProductionByQuarter();
-        } else if (type == 4) {
-                return productPlanRepository.findProductProductionByYear();
-        } else {
-            throw new IllegalArgumentException("알 수 없는 요청");
-        }
-    }
-
-    public List<?> getSalesDto(int type, int id){
-        if (type == 1) {
-            return salesRepository.findSalesByProduct(id);
-        } else if (type == 2) {
-            return salesRepository.findSalesByMember(id);
-        } else if (type == 3) {
-            return salesRepository.findSalesByCompany(id);
-        } else if (type == 4) {
-            return productPlanRepository.findProductProductionByYear();
-        } else {
+    // repository 소통 창구 (type: 1 - 생산실적, 2 - 판매실적) 코드 단순화 적용
+    public List<?> getPerformanceDto(int type){
+        if( type == 1){ // 생산실적
+            return productPlanRepository.findProductProduction();
+        } else if( type == 2){ // 판매실적
+            return salesRepository.findSalesByProduct();
+        } else{
             throw new IllegalArgumentException("알 수 없는 요청");
         }
     }

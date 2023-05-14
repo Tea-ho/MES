@@ -50,16 +50,22 @@ export default function PlanProductModalContent(props){ //생산 지시 모달 �
         console.log(matId);
     }
 
-    const onPlanProduct = () => { //생산 지시 axios
+    const onPlanProduct = () => { //생산 지시 axios(자재 재고 감소시켜야하는데, 하나라도 자재 재고가 부족하면 막아야함)
         let info = {
             productEntity : planProduct,
             prodPlanCount : document.querySelector('.prodCount').value
         }
 
+        console.log(info)
+
         axios.post('/planProduct', info)
             .then(r => {
-                if(r.data == true){
-                    props.closeModal();
+                props.closeModal();
+
+                if((r.data).length >= 1){ //생산 지시 완료시.
+
+                }else if((r.data).length > 1){ //생산 지시 실패(자재 재고 부족으로)
+
                 }
             })
     }

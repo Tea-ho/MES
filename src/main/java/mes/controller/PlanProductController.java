@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
+import mes.domain.dto.product.ProductPlanDto;
 import mes.service.product.ProductPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,10 @@ public class PlanProductController {
 
     //생산 지시
     @PostMapping("")
-    public boolean postProduct(@RequestBody ProductDto productDto) throws IOException {
-        return false;
+    public List<String> postProduct(@RequestBody ProductPlanDto productPlanDto) throws IOException {
+        System.out.println("생산 지시 : " + productPlanDto.toString());
+
+        return productPlanService.postProduct(productPlanDto);
     }
 
     //생산 지시 수정 => 승인이 안되었을 경우만

@@ -1,8 +1,10 @@
 package mes.domain.dto.product;
 
 import lombok.*;
+import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.product.ProductEntity;
+import mes.domain.entity.product.ProductPlanEntity;
 
 
 @Data
@@ -19,6 +21,15 @@ public class ProductPlanDto {
 
     private ProductDto productDto;// -- 마스터 제품 테이블 fk
 
-    private AllowApprovalEntity allowApprovalEntity;// -- 결제 승인 여부 테이블 fk
+    private AllowApprovalDto allowApprovalDto;// -- 결제 승인 여부 테이블 fk
 
+    public ProductPlanEntity toEntity(){
+        return ProductPlanEntity.builder()
+                .prodPlanCount(this.prodPlanCount)
+                .prodPlanDate(this.prodPlanDate)
+                .productEntity(this.productDto.toEntity())
+                .allowApprovalEntity(this.allowApprovalDto.toInEntity())
+                .build();
+
+    }
 }

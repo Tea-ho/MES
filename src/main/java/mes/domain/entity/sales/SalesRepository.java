@@ -44,11 +44,5 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
             "GROUP BY p.prodName, p.prodPrice " +
             "ORDER BY SUM(s.salesPrice * s.orderCount) DESC, p.prodName ASC")
     List<SalesByProductDto> findSalesByProduct();
-
-
-
-
-
-
     // 특이점: new Dto 이용하여 쿼리 결과를 클래스의 인스턴스로 직접 매핑
 }

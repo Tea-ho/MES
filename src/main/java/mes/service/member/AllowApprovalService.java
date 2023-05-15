@@ -138,19 +138,32 @@ public class AllowApprovalService {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
             productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
+
         } return true;
     }
+    
+    // 판매 승인 처리 후 orderState 상태 변경 추가 적용 [23.05.15, th]
     public boolean approveSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
 
-            salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
+            salesEntity.ifPresent(entity -> {
+                updateAllowApproval(entity.getAllowApprovalEntity(), true, session);
+                entity.setOrder_status(entity.getAllowApprovalEntity().isAl_app_whether() ? 1 : 0);
+                salesRepository.save(entity); // 변경 내용 저장
+            });
+
         } return true;
     }
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
-            salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
+
+            salesEntity.ifPresent(entity -> {
+                updateAllowApproval(entity.getAllowApprovalEntity(), false, session);
+                entity.setOrder_status(entity.getAllowApprovalEntity().isAl_app_whether() ? 1 : 0);
+                salesRepository.save(entity); // 변경 내용 저장
+            });
         } return true;
     }
 }

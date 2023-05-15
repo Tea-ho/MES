@@ -25,4 +25,11 @@ public class AllowApprovalDto {
                 .build();
     }
 
+    //출고용 승인
+    public AllowApprovalEntity toOutEntity(){
+        return AllowApprovalEntity.builder()
+                .al_app_whether(true)
+                .build();
+    }
+
 }

@@ -40,7 +40,7 @@ public class MaterialInOutEntity extends BaseTime {
     @ToString.Exclude
     private MemberEntity memberEntity;
 
-    public MaterialInOutDto toDto(){
+    public MaterialInOutDto toDto() {
         return MaterialInOutDto.builder()
                 .mat_in_outid(this.mat_in_outid)
                 .materialDto(this.materialEntity.toDto())
@@ -54,5 +54,4 @@ public class MaterialInOutEntity extends BaseTime {
                 .build();
 
     }
-
 }

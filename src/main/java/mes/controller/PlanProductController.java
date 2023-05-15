@@ -1,6 +1,7 @@
 package mes.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.controller.member.MemberController;
 import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.product.PageDto;
 import mes.domain.dto.product.ProductDto;
@@ -9,6 +10,7 @@ import mes.service.product.ProductPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

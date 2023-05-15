@@ -1,9 +1,11 @@
 package mes.service.Material;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.controller.member.MemberController;
 import mes.domain.dto.material.InOutPageDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
+import mes.domain.dto.member.MemberDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.material.MaterialEntityRepository;
 import mes.domain.entity.material.MaterialInOutEntity;
@@ -49,7 +51,6 @@ public class MaterialInoutService {
     // 입고내역
     @Transactional
     public boolean materialIn(MaterialInOutDto dto){
-
         if(dto.getMemberdto()==null){return false;}
         MemberEntity member = memberRepository.findByMnameAndMpassword(dto.getMemberdto().getMname() , dto.getMemberdto().getMpassword());
 
@@ -146,5 +147,44 @@ public class MaterialInoutService {
 
         return false;
     }
+
+    @Transactional
+    public boolean materialOut(MaterialInOutDto dto){
+        System.out.println("자재 출고 : " + dto);
+
+        MemberDto memberDto = dto.getMemberdto();
+
+        System.out.println("로그인한 멤버 : " + memberDto);
+
+        dto.setMemberdto(memberDto);
+
+        //로그인한 사람의 정보 확인
+        MemberEntity member = memberRepository.findByMnameAndMpassword(memberDto.getMname() , memberDto.getMpassword());
+
+        MaterialInOutEntity entity = new MaterialInOutEntity();
+        entity.setMemberEntity(memberDto.toEntity());
+        entity.setMat_in_type(dto.getMat_st_stock());
+
+
+        // 자재
+        MaterialEntity materialEntity = dto.getMaterialDto().toEntity();
+
+        // 승인정보
+        AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toOutEntity());
+
+        // 자재와 데이터 넣기
+        entity.setMaterialEntity(materialEntity);
+        entity.setAllowApprovalEntity(approvalEntity);
+        entity.setMemberEntity(member);
+        entity.setMat_in_code(1); //출고는 자재 승인이 필요X
+
+        // 세이브
+        MaterialInOutEntity result = materialInOutEntityRepository.save(entity);
+
+        if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
+        return false;
+
+    }
+
 
 }

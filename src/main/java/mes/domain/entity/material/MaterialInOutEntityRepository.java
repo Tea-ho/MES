@@ -19,7 +19,7 @@ public interface MaterialInOutEntityRepository extends JpaRepository<MaterialInO
     @Query(value = "select * from material_in_out where matid=:matID" , nativeQuery = true)
     List<MaterialInOutEntity> findByMid(int matID);
 
-    @Query(value = "select * from material_in_out where matid=:matID and al_app_no > 0" , nativeQuery = true)
+    @Query(value = "select * from material_in_out where matid=:matID and mat_in_code = 1" , nativeQuery = true)
     List<MaterialInOutEntity> findByMaterial(int matID);
 
     @Query(value = "select * from material_in_out where matid=:matID and 1=mat_in_code order by udate DESC limit 1"  , nativeQuery = true)

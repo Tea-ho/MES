@@ -135,7 +135,7 @@ export default function PlanProduct(){
 
                         <Box sx={{...style, width: '80%' }}>
                           <h2 id="parent-modal-title">{planProduct.prodName}의 생산 지시</h2>
-                          <PlanProductModalContent planProdId={planProduct.prodId} closeModal={handleClose}/>
+                          <PlanProductModalContent planProductInfo={planProduct} closeModal={handleClose}/>
                           <Button onClick={handleClose}>닫기</Button>
                         </Box>
                       </Modal>

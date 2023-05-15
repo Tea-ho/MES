@@ -33,6 +33,7 @@ public class AllowApprovalController {
             throw new PermissionDeniedException("권한이 없습니다.");
         } else{
             try { log.info(allowApprovalService.printAllowApproval(type).toString());
+                    log.info(allowApprovalService.printAllowApproval(type).toString());
                 return allowApprovalService.printAllowApproval(type);
             } catch (PermissionDeniedException e) {
                 // 권한 없음 예외 처리

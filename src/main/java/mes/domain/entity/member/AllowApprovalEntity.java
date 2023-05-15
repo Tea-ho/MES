@@ -1,6 +1,7 @@
 package mes.domain.entity.member;
 
 import lombok.*;
+import mes.domain.dto.member.AllowApprovalDto;
 
 import javax.persistence.*;
 
@@ -25,5 +26,12 @@ public class AllowApprovalEntity {
     private MemberEntity memberEntity; // 승인 요청 or 처리한 사람
 
     // ----------------------------n:n or n:1 관계 설정 필요
-    
+    public AllowApprovalDto toInDto(){
+        return AllowApprovalDto.builder()
+                .al_app_no(this.al_app_no)
+                .al_app_whether(this.al_app_whether)
+                .al_app_date(this.al_app_date)
+
+                .build();
+    }
 }

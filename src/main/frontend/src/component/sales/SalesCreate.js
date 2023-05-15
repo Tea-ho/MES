@@ -21,6 +21,7 @@ import TextField from '@mui/material/TextField';
 
 export default function SalesCreate() {
 
+
     const [ list , setList ] = useState([])     // 회사
     const [ listProduct , setListProduct ] = useState([])   // 물품
 
@@ -53,13 +54,18 @@ export default function SalesCreate() {
             return false;
         }
 
+        // 아이디 로그인 해야함 [ 조건 ]
+        if(sessionStorage.getItem('member') == null){return false}
+
         let info = { // mno , order_status 추가적으로 필요
+
+          memberDto : JSON.parse(sessionStorage.getItem('member')) ,
           orderCount: document.getElementById('orderCount').value,
-          orderDate: document.getElementById('orderDate').value,
+          orderDate : document.getElementById('orderDate').value,
           salesPrice: document.getElementById('salesPrice').value,
-          orderStatus : '1' ,
           cno : company ,
           prodId : prodName
+
         }
 
         console.log(info)
@@ -121,9 +127,8 @@ export default function SalesCreate() {
                                  </Box>
                          </div>
                  <div>
-
+                            <TextField style={{padding : '10px', margin : '10px'}} className="orderDate" id="orderDate" label="판매날짜" variant="outlined" />
                            <TextField style={{padding : '10px', margin : '10px'}} className="orderCount" id="orderCount" label="판매개수" variant="outlined" />
-                           <TextField style={{padding : '10px', margin : '10px'}} className="orderDate" id="orderDate" label="판매날짜" variant="outlined" />
                            <TextField style={{padding : '10px', margin : '10px'}} className="salesPrice" id="salesPrice" label="판매가격" variant="outlined" />
 
                      <Stack spacing={2} direction="row">

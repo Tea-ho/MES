@@ -17,9 +17,11 @@ public class AllowApprovalDto {
 
     private MemberEntity memberEntity; // 승인 요청 or 처리한 사람
 
+    private AllowApprovalDto allowApprovalDto;
+
     public AllowApprovalEntity toInEntity(){
         return AllowApprovalEntity.builder()
-                .al_app_whether(false)
+                .al_app_whether(this.al_app_whether)
                 .build();
     }
 

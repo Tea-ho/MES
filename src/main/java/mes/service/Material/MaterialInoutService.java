@@ -53,7 +53,13 @@ public class MaterialInoutService {
         if(dto.getMemberdto()==null){return false;}
         MemberEntity member = memberRepository.findByMnameAndMpassword(dto.getMemberdto().getMname() , dto.getMemberdto().getMpassword());
 
-        MaterialInOutEntity entity = dto.toInEntity();
+        MaterialInOutEntity entity = new MaterialInOutEntity();
+        entity.setMemberEntity(dto.getMemberdto().toEntity());
+        entity.setMat_in_type(dto.getMat_in_type());
+
+
+
+
 
 
         // 선택된 자재
@@ -82,7 +88,7 @@ public class MaterialInoutService {
     public InOutPageDto MaterialInOutList(InOutPageDto dto){
 
        List<MaterialInOutDto> list = new ArrayList<>();
-        Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "mat_in_outid"));
+        Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "udate"));
 
         Page<MaterialInOutEntity> entityPage = materialInOutEntityRepository.findByMatid(dto.getMatID() , pageable);
         entityPage.forEach((e)->{
@@ -100,11 +106,10 @@ public class MaterialInoutService {
     @Transactional
     public boolean MaterialInStock(MaterialInOutDto dto){
 
-        // 전체 리스트 불러오기
-        //List<MaterialInOutEntity> inOutEntityList = materialInOutEntityRepository.findByMid(dto.getMatID());
+
 
         // 해당 자재의 가장 마지막에 처리된(update) 레코드 가져오기
-        MaterialInOutEntity lastInOut = materialInOutEntityRepository.findByUdate(dto.getMatID() , dto.getMat_in_code());
+        Optional<MaterialInOutEntity> lastInOut = materialInOutEntityRepository.findByUdate(dto.getMatID());
 
         // 최종 확인 요청한 레코드 가져오기
         MaterialInOutEntity AllowIN = materialInOutEntityRepository.findByAlid(dto.getAl_app_no());
@@ -113,10 +118,10 @@ public class MaterialInoutService {
         log.info("AllowIN : " + AllowIN);
         int stock=0;
 
-        if(lastInOut == null){ // 처음이면 stock = 0
+        if(!lastInOut.isPresent()){ // 처음이면 stock = 0
             stock=0;
         }
-        else { stock = lastInOut.getMat_st_stock();} // 처음이 아니면 해당 레코드의 재고를 가져오기
+        else { stock = lastInOut.get().getMat_st_stock();} // 처음이 아니면 해당 레코드의 재고를 가져오기
 
         // 마지막에 처리된 레코드의 stock과 최종 확인한 레코드의 type값을 더해서 stock에 저장
         AllowIN.setMat_st_stock(stock+AllowIN.getMat_in_type());
@@ -132,7 +137,9 @@ public class MaterialInoutService {
 
         Optional<MaterialInOutEntity> entity = materialInOutEntityRepository.findById(mat_in_outid);
         if(entity.isPresent()) {
-            materialInOutEntityRepository.delete(entity.get());
+            MaterialInOutEntity materialInOutEntity = entity.get();
+            allowApprovalRepository.delete(materialInOutEntity.getAllowApprovalEntity());
+            materialInOutEntityRepository.delete(materialInOutEntity);
             return true;
         }
 

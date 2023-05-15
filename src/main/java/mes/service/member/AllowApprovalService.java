@@ -1,6 +1,7 @@
 package mes.service.member;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.dto.sales.SalesDto;
 import mes.domain.entity.member.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,9 +61,10 @@ public class AllowApprovalService {
             for (Object obj : approvalList) {
                 MaterialInOutEntity entity = (MaterialInOutEntity) obj;
 
-                MaterialInOutDto dto = new MaterialInOutDto(
-                        entity.getMat_in_outid(), entity.getMat_in_type(), entity.getMat_st_stock(),
-                        entity.cdate.toLocalDate(), entity.udate.toLocalDate(), entity.getAllowApprovalEntity(), entity.getMaterialEntity());
+                MaterialInOutDto dto = new MaterialInOutDto(entity.getMat_in_outid(), entity.getMat_in_type(), entity.getMat_st_stock(),
+                        entity.cdate.toLocalDate(), entity.udate.toLocalDate(), entity.getAllowApprovalEntity().toInDto(),
+                        entity.getMaterialEntity().toDto(), entity.getMemberEntity().toDto()
+                );
                 result.add(dto);
             }
 
@@ -76,11 +78,11 @@ public class AllowApprovalService {
         } else if ( type == 3) { // 판매
             for (Object obj : approvalList) {
                 SalesEntity entity = (SalesEntity) obj;
-                /* SalesDto dto = new SalesDto(
-                        entity.getOrderId(), entity.getOrderDate(),
-                        entity.getOrderCount(), entity.getOrderStatus(), entity.getSalesPrice(),
-                        entity.getAllowApprovalEntity(), entity.getCompanyEntity(), entity.getProductEntity(), entity.getMemberEntity());*/
-                // result.add(dto);
+                SalesDto dto = new SalesDto(
+                        entity.getOrder_id(), entity.getOrderDate(),
+                        entity.getOrderCount(), entity.getOrder_status(), entity.getSalesPrice(),
+                        entity.getAllowApprovalEntity().toInDto(), entity.getCompanyEntity().toDto(), entity.getProductEntity().toDto(), entity.getMemberEntity().toDto());
+                result.add(dto);
             }
         } else{ // 예외 처리(PermissionDeniedException 클래스 공용 사용)
             throw new PermissionDeniedException("알 수 없는 요청");

@@ -29,12 +29,13 @@ import AllowForm from "./component/member/AllowForm";
 import AllowMaterial from "./component/member/AllowMaterial";
 import AllowProduct from "./component/member/AllowProduct";
 import AllowSales from "./component/member/AllowSales";
-
-
 /* --------------------------- 판매 부분 --------------------------- */
 import SalesHeader from "./component/sales/SalesHeader";
-
-
+/* --------------------------- 실적 부분 --------------------------- */
+import Performance from "./component/performance/Performance";
+import PerformanceForm from "./component/performance/PerformanceForm";
+import PerformanceProduction from "./component/performance/PerformanceProduction";
+import PerformanceSales from "./component/performance/PerformanceSales";
 
 
 export default function Index( props ) {
@@ -98,6 +99,16 @@ export default function Index( props ) {
                                  </ListItemButton>
                                  </Link>
                               </ListItem>
+                              <ListItem disablePadding>
+                              <Link href="/component/performance/Performance">
+                              <ListItemButton>
+                                   <ListItemIcon>
+                                  <WarehouseIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="실적" />
+                               </ListItemButton>
+                               </Link>
+                            </ListItem>
                            </List>
                          </nav>
                        </Box>
@@ -110,6 +121,7 @@ export default function Index( props ) {
                         <Route path="/component/material/MaterialInoutList/:matID" element = { <MaterialInoutList/> } />
                         <Route path="/component/sales/SalesHeader" element ={<SalesHeader/>}/>
                         <Route path="/component/member/AllowApproval" element = { <AllowApproval /> } />
+                        <Route path="/component/performance/Performance" element = { <Performance /> } />
                     </Routes>
 
                 </div>

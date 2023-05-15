@@ -28,24 +28,21 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
     @Query(value = "select * from sales where if(:keyword = '', TRUE, order_status LIKE %:keyword%)" , nativeQuery = true)
     Page<SalesEntity> findByPage(String keyword , Pageable pageable);
 
-    // 판매처별 판매실적 쿼리
-    @Query(value = "SELECT new com.example.dto.SalesByCompanyDto(s.salesPrice, c.toDto()) " +
-            "FROM SalesEntity s " +
-            "JOIN s.companyEntity c " +
-            "WHERE c.companyId = :companyId", nativeQuery = true)
-    List<SalesByCompanyDto> findSalesByCompany(@Param("companyId") int companyId);
 
-    // 판매원별 판매실적 쿼리
-    @Query(value = "SELECT new com.example.dto.SalesByMemberDto(s.salesPrice, m.toDto()) " +
-            "FROM SalesEntity s " +
-            "JOIN s.memberEntity m " +
-            "WHERE m.memberId = :memberId", nativeQuery = true)
-    List<SalesByMemberDto> findSalesByMember(@Param("memberId") int memberId);
-
-    // 제품별 판매실적 쿼리
-    @Query(value = "SELECT new com.example.dto.SalesByProductDto(s.salesPrice, p.prodName) " +
+    // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률)
+    @Query(value = "SELECT new mes.domain.dto.sales.SalesByProductDto(p.prodName, " +
+            "CAST(AVG(p.prodPrice) AS long) AS prodPrice, " +
+            "CAST(AVG(s.salesPrice) AS long) AS averageSalesPrice, " +
+            "SUM(s.orderCount) AS totalOrderCount, " +
+            "CAST(SUM(s.salesPrice * s.orderCount) AS long) AS totalSalesAmount, " +
+            "CAST(SUM(s.salesPrice * s.orderCount) - (AVG(p.prodPrice) * SUM(s.orderCount)) AS int) AS profit, " +
+            "ROUND(((SUM(s.salesPrice * s.orderCount) - (p.prodPrice * SUM(s.orderCount))) / SUM(s.salesPrice * s.orderCount)) * 100, 2) AS profitMargin) " +
             "FROM SalesEntity s " +
             "JOIN s.productEntity p " +
-            "WHERE p.prodId = :productId", nativeQuery = true)
-    List<SalesByProductDto> findSalesByProduct(@Param("productId") int productId);
+            "JOIN s.memberEntity m " +
+            "JOIN s.companyEntity c " +
+            "GROUP BY p.prodName, p.prodPrice " +
+            "ORDER BY SUM(s.salesPrice * s.orderCount) DESC, p.prodName ASC")
+    List<SalesByProductDto> findSalesByProduct();
+    // 특이점: new Dto 이용하여 쿼리 결과를 클래스의 인스턴스로 직접 매핑
 }

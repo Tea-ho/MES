@@ -152,31 +152,27 @@ public class MaterialInoutService {
     public boolean materialOut(MaterialInOutDto dto){
         System.out.println("자재 출고 : " + dto);
 
-        MemberDto memberDto = dto.getMemberdto();
+        System.out.println("로그인한 멤버 : " + dto.getMemberdto());
 
-        System.out.println("로그인한 멤버 : " + memberDto);
+        /*//로그인한 사람의 정보 확인
+        MemberEntity member = memberRepository.findByMnameAndMpassword(dto.getMemberdto().getMname() , dto.getMemberdto().getMpassword());
+*/
+        // materialInOutEntity에 materialEntity 설정
 
-        dto.setMemberdto(memberDto);
+        MaterialInOutEntity entity = new MaterialInOutEntity();;
+        entity.setMaterialEntity(dto.getMaterialDto().toOutEntity());
+        entity.setMemberEntity(dto.getMemberdto().toEntity());
+        entity.setMat_in_type(dto.getMat_in_type());
+        entity.setMat_st_stock(dto.getMat_st_stock());
+        entity.setMat_in_code(dto.getMat_in_code());
 
-        //로그인한 사람의 정보 확인
-        MemberEntity member = memberRepository.findByMnameAndMpassword(memberDto.getMname() , memberDto.getMpassword());
-
-        MaterialInOutEntity entity = new MaterialInOutEntity();
-        entity.setMemberEntity(memberDto.toEntity());
-        entity.setMat_in_type(dto.getMat_st_stock());
-
-
-        // 자재
-        MaterialEntity materialEntity = dto.getMaterialDto().toEntity();
+        System.out.println("자재 중간 점검 : " + entity);
 
         // 승인정보
-        AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toOutEntity());
+        AllowApprovalEntity approvalEntity = allowApprovalRepository.save(dto.getAllowApprovalDto().toOutEntity());
 
         // 자재와 데이터 넣기
-        entity.setMaterialEntity(materialEntity);
         entity.setAllowApprovalEntity(approvalEntity);
-        entity.setMemberEntity(member);
-        entity.setMat_in_code(1); //출고는 자재 승인이 필요X
 
         // 세이브
         MaterialInOutEntity result = materialInOutEntityRepository.save(entity);

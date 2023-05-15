@@ -52,6 +52,6 @@ public class MaterialInOutEntity extends BaseTime {
                 .mat_in_code(this.mat_in_code)
                 .memberdto(this.memberEntity.toDto())
                 .build();
-
     }
+
 }

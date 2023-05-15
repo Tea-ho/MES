@@ -6,6 +6,7 @@ import mes.domain.Repository.product.MaterialProductRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
 import mes.domain.Repository.product.ProductRepository;
 import mes.domain.dto.material.MaterialDto;
+import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.product.ProductDto;
 import mes.domain.dto.product.ProductPlanDto;
@@ -85,15 +86,12 @@ public class ProductPlanService {
 
         ArrayList<String> returnResultStr = new ArrayList<>();  //js에 반환할 내용
 
-        System.out.println("post Product : " + productPlanDto.toString());
-
         //productEntity에 연결된 materialList 찾아서 (+기준량)
         List<MaterialProductEntity> materialProductEntities = materialProductRepository.findByMaterial(productPlanDto.getProductDto().getProdId());
 
         // mpno 개수 = materials 개수
         for(int i = 0; i < materialProductEntities.size(); i++){
 
-            System.out.println(i+"번째 자재-제품 세트" + materialProductEntities.get(i));
             //자재 목록
             Optional<MaterialEntity> materialEntity = materialEntityRepository.findById(materialProductEntities.get(i).getMaterialEntity().getMatID());
 
@@ -134,17 +132,37 @@ public class ProductPlanService {
             for(int i = 0; i < materialProductEntities.size(); i++){
                 Optional<MaterialEntity> materialEntity = materialEntityRepository.findById(materialProductEntities.get(i).getMaterialEntity().getMatID());
                 System.out.println(materialEntity.get());
+
+                List<MaterialInOutEntity> materialInOutEntityList = new ArrayList<>(); //반복문 돌때마다 초기화를 해야 자재마다 재고를 구할 수 있다.
                 if(materialEntity.isPresent()){
-                    MaterialInOutEntity entity = new MaterialInOutEntity();
+                    MaterialInOutDto dto = new MaterialInOutDto();
 
                     AllowApprovalDto allowApprovalDto = new AllowApprovalDto();
                     allowApprovalDto.setMemberEntity(productPlanDto.getMemberDto().toEntity());
-                    allowApprovalDto.setAl_app_whether(false); //제품은 승인X
+                    allowApprovalDto.setAl_app_whether(true); //제품은 승인X
 
-                    entity.setMaterialEntity(materialEntity.get());
-                    entity.setAllowApprovalEntity(allowApprovalDto.toOutEntity());
+                    dto.setMaterialDto(materialEntity.get().toDto());
+                    dto.setAllowApprovalDto(allowApprovalDto);
 
-                    mat_okOut = materialInoutService.materialOut(entity.toDto());
+                    int needMatStock = Integer.parseInt(productPlanDto.getProdPlanCount()) * (materialProductEntities.get(i).getReferencesValue());
+                    int existMatStock = 0; //존재하는 자재 재고 누적해서 구하기
+
+                    materialInOutEntityList = materialInOutEntityRepository.findByMaterial(materialEntity.get().getMatID()); //자재 하나당 가지고 있는 inout
+
+                    for(int j = 0; j < materialInOutEntityList.size(); j++){
+                        existMatStock += materialInOutEntityList.get(j).getMat_in_type(); // 자재 재고 누적 더하기(존재하는 총 재고)
+                    }
+
+                    System.out.println("재고 현황 ? " + existMatStock);
+
+                    dto.setMat_st_stock(existMatStock - needMatStock); //재고처리
+                    dto.setMat_in_type(-needMatStock); // 차감되는 재고
+                    dto.setMat_in_code(0);
+                    dto.setMemberdto(productPlanDto.getMemberDto());
+
+                    System.out.println("materialOut service에 전달 : " + dto);
+
+                    mat_okOut = materialInoutService.materialOut(dto);
 
                     System.out.println(i+"번째 자재입출고 결과 : " + mat_okOut);
                 }
@@ -153,18 +171,26 @@ public class ProductPlanService {
 
         //재고가 무사히 다 적용이 되었다면
         if(mat_okOut && okSign){
-            //제품 지시를 처리하면 된다.
-            productPlanDto.setProdPlanDate(simpleDateFormat.format(new Date()));
+            //제품 생산 지시
+            AllowApprovalEntity inAllowapproval = AllowApprovalEntity.builder()
+                    .memberEntity(productPlanDto.getMemberDto().toEntity())
+                    .al_app_date(simpleDateFormat.format(new Date()))
+                    .al_app_whether(false)
+                    .build();
 
-            AllowApprovalDto allowApprovalDto = new AllowApprovalDto();
-            allowApprovalDto.setMemberEntity(productPlanDto.getMemberDto().toEntity());
-            allowApprovalDto.setAl_app_whether(false); //제품은 승인X
+            System.out.println("확인 " + inAllowapproval);
 
-            productPlanDto.setAllowApprovalDto(allowApprovalDto);
+            AllowApprovalEntity allowApprovalEntity = allowApprovalRepository.save(inAllowapproval);
+            System.out.println("저장되었다면 확인 : " + allowApprovalEntity);
 
-            System.out.println("productPlan DB에 들어가기 전 : " + productPlanDto);
+            productPlanDto.setAllowApprovalDto(allowApprovalEntity.toPlanDto());
+            ProductPlanEntity productPlanEntity = productPlanDto.toEntity();
+            productPlanEntity.setProdPlanDate(simpleDateFormat.format(new Date()));
 
-            ProductPlanEntity entity = productPlanRepository.save(productPlanDto.toEntity());
+
+            System.out.println("productPlan DB에 들어가기 전 : " + productPlanEntity);
+
+            ProductPlanEntity entity = productPlanRepository.save(productPlanEntity);
 
             System.out.println("productPlan 엔티티 DB에 저장 완료 " + entity);
 

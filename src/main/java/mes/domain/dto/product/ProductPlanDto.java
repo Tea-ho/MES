@@ -39,11 +39,16 @@ public class ProductPlanDto {
     public ProductPlanEntity toEntity(){
         return ProductPlanEntity.builder()
                 .prodPlanCount(this.prodPlanCount)
-                .prodPlanDate(this.prodPlanDate)
-                .productEntity(this.productDto.toEntity())
-                .allowApprovalEntity(this.allowApprovalDto.toInEntity())
+                .productEntity(this.productDto.toPlanEntity())
+                .allowApprovalEntity(this.allowApprovalDto.toSaveEntity())
                 .build();
+    }
 
+    //저장용 엔티티
+    public ProductPlanEntity toSaveEntity(){
+        return ProductPlanEntity.builder()
+                .allowApprovalEntity(this.allowApprovalDto.toPlanInEntity())
+                .build();
     }
 
 }

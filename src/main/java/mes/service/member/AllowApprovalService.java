@@ -55,6 +55,7 @@ public class AllowApprovalService {
         // 2. 승인 리스트 저장소 생성
         List<Object> result;
         // 의견: Object 물음표로 변경해도 문제 없는지 테스트 필요
+        // 확인 결과: 문제 없음
 
         // 3. 결재권자인 경우, 아래 내용 출력 [type 별로 List 저장 후 출력]
         if( type == 1) { // 자재
@@ -119,43 +120,37 @@ public class AllowApprovalService {
         for (int id : MatInOutIDs) {
             Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
             materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
-        }
-        return true;
+        } return true;
     }
     public boolean rejectMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
             Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
             materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
-        }
-        return true;
+        } return true;
     }
     public boolean approveProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
             productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
-        }
-        return true;
+        } return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
             productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
-        }
-        return true;
+        } return true;
     }
     public boolean approveSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
 
             salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
-        }
-        return true;
+        } return true;
     }
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
             salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
-        }
-        return true;
+        } return true;
     }
 }

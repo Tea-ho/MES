@@ -7,12 +7,8 @@ import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Entity
-@Table(name = "allowApproval")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Entity@Table(name = "allowApproval")
+@Data@NoArgsConstructor@AllArgsConstructor@Builder
 public class AllowApprovalEntity {
 
     @Id

@@ -58,6 +58,7 @@ public class SalesEntity  {
                 .companyDto(this.companyEntity.toDto() )
                 .prodId(this.productEntity.getProdId())
                 .prodName(this.productEntity.getProdName())
+                .allowApprovalDto(this.allowApprovalEntity.toInDto())
                 .build();
     }
 

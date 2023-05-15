@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.product.ProductProcessDto;
 
 import java.util.List;
@@ -18,9 +19,13 @@ public class SalesPageDto {
 
     private int page;
     private int orderStatus;
+    private int order_id;
     private String keyword;
 
     List<SalesDto> salesDtoList;
+
+    private AllowApprovalDto allowApprovalDto;
+    private int al_app_no;
 
     private int prodStock;
     List<ProductProcessDto> productProcessDtoList;

@@ -100,7 +100,7 @@ public class SalesService {
         salesEntity.setAllowApprovalEntity(approvalEntity);         // 승인 정보 저장
         salesEntity.setCompanyEntity(companyEntity);                // 회사 저장
         salesEntity.setProductEntity( productEntity );              // 물품 저장
-        salesEntity.setOrder_status(approvalEntity.isAl_app_whether() ? 1 : 0 );// 기본 등록 order_status --> 고쳐야할듯!
+        salesEntity.setOrder_status(0);// 기본 등록 order_status --> 고쳐야할듯!
 
         salesEntity.setMemberEntity(member);                        // 멤버 저장
 
@@ -156,7 +156,7 @@ public class SalesService {
     public SalesPageDto salesView(SalesPageDto salesPageDto){
         List<SalesDto> list = new ArrayList<>();
 
-        if(salesPageDto.getOrderStatus() == 0){
+        if(salesPageDto.getOrder_id() == 0){
             Pageable pageable = PageRequest.of(salesPageDto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "order_id"));
 
             Page<SalesEntity> entityPage = salesRepository.findByPage(salesPageDto.getKeyword() , pageable);
@@ -168,13 +168,23 @@ public class SalesService {
             salesPageDto.setTotalPage(entityPage.getTotalPages());
             salesPageDto.setTotalCount(entityPage.getTotalElements());
         }
-        else if(salesPageDto.getOrderStatus() > 0){
-            SalesEntity entity = salesRepository.findById(salesPageDto.getOrderStatus()).get();
+        else if(salesPageDto.getOrder_id() >= 0){
+            SalesEntity entity = salesRepository.findById(salesPageDto.getOrder_id()).get();
+
+            SalesEntity entity1 = salesRepository.findByAllowId(salesPageDto.getAl_app_no());
+
+            System.out.println("entity : " + entity);
+            System.out.println("entity1 : " + entity1);
+
+            if( entity1.getAllowApprovalEntity().isAl_app_whether() == true && entity.getAllowApprovalEntity().getAl_app_no() == entity1.getAllowApprovalEntity().getAl_app_no()){
+                entity.setOrder_status(1);
+            }
+            salesPageDto.setSalesDtoList(list);
+            salesRepository.save(entity);
             list.add(entity.toDto());
 
-            salesPageDto.setSalesDtoList(list);
         }
-        System.out.println("Servicedto : " + salesPageDto);
+        System.out.println("salesPageDto : " + salesPageDto);
 
         return salesPageDto;
 

@@ -28,6 +28,8 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
     @Query(value = "select * from sales where if(:keyword = '', TRUE, order_status LIKE %:keyword%)" , nativeQuery = true)
     Page<SalesEntity> findByPage(String keyword , Pageable pageable);
 
+    @Query(value = "select * from sales where al_app_no=:al_app_no", nativeQuery = true)
+    SalesEntity findByAllowId(int al_app_no);
 
     // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률)
     @Query(value = "SELECT new mes.domain.dto.sales.SalesByProductDto(p.prodName, " +

@@ -21,7 +21,7 @@ public class PerformanceController {
     // 1. 실적 출력 (type: 1 - 생산 실적, 2 - 판매실적) 코드 단순화 적용
     @GetMapping("")
     public List<?> printPerformance(@RequestParam int type){
-        log.info("printProduction type:"+type);
+            log.info("printProduction type (1: production, 2: sales):"+type);
         try{
             return performanceService.getPerformanceDto(type);
         } catch(Exception e){

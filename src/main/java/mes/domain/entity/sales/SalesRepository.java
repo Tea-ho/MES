@@ -1,13 +1,10 @@
 package mes.domain.entity.sales;
 
-import mes.domain.dto.sales.SalesByCompanyDto;
-import mes.domain.dto.sales.SalesByMemberDto;
-import mes.domain.dto.sales.SalesByProductDto;
+import mes.domain.dto.performance.SalesByProductDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,8 +26,8 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
     Page<SalesEntity> findByPage(String keyword , Pageable pageable);
 
 
-    // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률)
-    @Query(value = "SELECT new mes.domain.dto.sales.SalesByProductDto(p.prodName, " +
+    // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률) [23.05.14, th]
+    @Query(value = "SELECT new mes.domain.dto.performance.SalesByProductDto(p.prodName, " +
             "CAST(AVG(p.prodPrice) AS long) AS prodPrice, " +
             "CAST(AVG(s.salesPrice) AS long) AS averageSalesPrice, " +
             "SUM(s.orderCount) AS totalOrderCount, " +

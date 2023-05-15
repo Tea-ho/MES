@@ -2,19 +2,10 @@ package mes.service.performance;
 
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.Repository.product.ProductPlanRepository;
-import mes.domain.dto.product.ProductProductionByMonthDto;
-import mes.domain.dto.product.ProductProductionByQuarterDto;
-import mes.domain.dto.product.ProductProductionByYearDto;
-import mes.domain.dto.product.ProductProductionDto;
-import mes.domain.dto.sales.SalesByCompanyDto;
-import mes.domain.dto.sales.SalesByMemberDto;
-import mes.domain.dto.sales.SalesByProductDto;
-import mes.domain.entity.member.PermissionDeniedException;
 import mes.domain.entity.sales.SalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service@Slf4j

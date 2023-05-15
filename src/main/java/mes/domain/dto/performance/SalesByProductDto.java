@@ -1,4 +1,4 @@
-package mes.domain.dto.sales;
+package mes.domain.dto.performance;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

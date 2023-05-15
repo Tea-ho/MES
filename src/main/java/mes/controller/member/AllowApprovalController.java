@@ -52,19 +52,27 @@ public class AllowApprovalController {
         int approve = (int) requestBody.get("approve"); // approve 1: 승인, 2: 반려
         List<Integer> ids = (List<Integer>) requestBody.get("id");
         // id List로 받음(선택된 항목 전체 처리 적용하기 위함)
-            System.out.println(ids);
-        if(type == 1){ // 자재
-            if( approve == 1 ){ // 승인 or 반려
-                return allowApprovalService.approveMaterialInOut(ids, session);
-            } else{ return allowApprovalService.rejectMaterialInOut(ids, session); }
-        } else if(type == 2){ // 제품
-            if( approve == 1 ){ // 승인 or 반려
-                return allowApprovalService.approveProductInOut(ids, session);
-            } else{ return allowApprovalService.rejectProductInOut(ids, session); }
-        } else{ // 판매
-            if( approve == 1 ){ // 승인 or 반려
-                return allowApprovalService.approveSales(ids, session);
-            } else{ return allowApprovalService.rejectSales(ids, session); }
+            // 아래 log.info로 들어오는 데이터 확인 완료(결과: 이상 없음, 확인일자: 23.05.15, th)
+            // log.info("AllowApprovalController updateAllowApproval(type: 1-자재, 2-제품, 3-판매):" + type);
+            // log.info("AllowApprovalController updateAllowApproval(1-승인, 2-반려):" + approve);
+            // log.info("AllowApprovalController updateAllowApproval(id list)" + ids);
+        try{
+            if(type == 1){ // 자재
+                if( approve == 1 ){ // 승인 or 반려
+                    return allowApprovalService.approveMaterialInOut(ids, session);
+                } else{ return allowApprovalService.rejectMaterialInOut(ids, session); }
+            } else if(type == 2){ // 제품
+                if( approve == 1 ){ // 승인 or 반려
+                    return allowApprovalService.approveProductInOut(ids, session);
+                } else{ return allowApprovalService.rejectProductInOut(ids, session); }
+            } else if(type == 3){ // 판매
+                if( approve == 1 ){ // 승인 or 반려
+                    return allowApprovalService.approveSales(ids, session);
+                } else{ return allowApprovalService.rejectSales(ids, session); }
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
+        return false;
     }
 }

@@ -32,13 +32,13 @@ public class AllowApprovalService {
     // 0. 제네릭 사용하기 위해 생성
     public List<?> getEntityListByType(int type) {
         if (type == 1) {
-                log.info( "getEntityListByType" + meterialRepository.findAll().toString());
+                log.info( "AllowApprovalService getEntityListByType(material)" + meterialRepository.findAll().toString());
             return meterialRepository.findAll();
         } else if (type == 2) {
-                log.info( "getEntityListByType" + productPlanRepository.findAll().toString());
+                log.info( "AllowApprovalService getEntityListByType(product)" + productPlanRepository.findAll().toString());
             return productPlanRepository.findAll();
         } else if (type == 3) {
-                log.info( "getEntityListByType" + salesRepository.findAll().toString());
+                log.info( "AllowApprovalService getEntityListByType(sales)" + salesRepository.findAll().toString());
             return salesRepository.findAll();
         } else{
             throw new IllegalArgumentException("알 수 없는 요청");
@@ -49,14 +49,15 @@ public class AllowApprovalService {
     // *프론트 처리 필요 사항: option: 1 - 미승인, 2 - 승인, 3 - 전체 출력 (Back에서 관리하면 로직 복잡해짐)
     public List<?> printAllowApproval( int type ){
 
-        // 2. 승인 리스트 가져오기 [제네릭 사용 시도 - 3가지 타입 한번에 받기 위함]
+        // 1. 승인 리스트 가져오기 [제네릭 사용 시도 - 3가지 타입 한번에 받기 위함]
         List<?> approvalList = getEntityListByType(type);
 
-        // 3. 승인 리스트 저장소 생성
+        // 2. 승인 리스트 저장소 생성
         List<Object> result;
         // 의견: Object 물음표로 변경해도 문제 없는지 테스트 필요
+        // 확인 결과: 문제 없음
 
-        // 4. 결재권자인 경우, 아래 내용 출력 [type 별로 List 저장 후 출력]
+        // 3. 결재권자인 경우, 아래 내용 출력 [type 별로 List 저장 후 출력]
         if( type == 1) { // 자재
             result = new ArrayList<>();
             for (Object obj : approvalList) {
@@ -68,7 +69,6 @@ public class AllowApprovalService {
                 );
                 result.add(dto);
             }
-
         } else if ( type == 2) { // 제품
             result = new ArrayList<>();
             for (Object obj : approvalList) {
@@ -91,65 +91,66 @@ public class AllowApprovalService {
         } else{ // 예외 처리(PermissionDeniedException 클래스 공용 사용)
             throw new PermissionDeniedException("알 수 없는 요청");
         }
-            log.info("printAllowApproval: " + result);
+            log.info("AllowApprovalService printAllowApproval: " + result);
         return result;
     }
-    // 예상되는 문제점: repository null이면 에러 발생할 거 같음 (확인 필요)
+    // 예상되는 문제점: repository null이면 에러 발생할 거 같음
+    // 확인 완료: 이상 없음. [23.05.15, th]
 
-    // 2. 승인/반려 처리 (코드 중복 최소화 - 동일 작동 메소드 생성)
-    private boolean updateAllowApproval(int id, boolean approval, HttpSession session) {
+    // 2. 승인/반려 처리
+    // 특이사항: 코드 변경함 [23.05.15, th]
+    // 이유: approvalEntity에서 승인/반려 처리하고 있었기 때문에, id값을 제대로 인식하지 못하는 문제점 확인
+    // 해결: 연결되어 있는 entity 별로 승인/반려 처리하고, approvalEntity에 승인/반려 처리 메소드 생성하여 공통 사용
+    private void updateAllowApproval(AllowApprovalEntity entity, boolean approval, HttpSession session) {
 
-        Optional<AllowApprovalEntity> allowApprovalEntity = allowApprovalRepository.findById(id);
-        if (allowApprovalEntity.isPresent()) {
-            AllowApprovalEntity entity = allowApprovalEntity.get();
-            entity.setAl_app_whether(approval);
-            entity.setAl_app_date(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            MemberEntity member = (MemberEntity) session.getAttribute("member");
-            entity.setMemberEntity(member);
+        entity.updateApproval(approval);
+        MemberEntity member = (MemberEntity) session.getAttribute("member");
+        entity.setMemberEntity(member);
+        try {
             allowApprovalRepository.save(entity);
-            return approval; // 코드 최소화하는 방법으로 판단되어 사용
+        } catch (Exception e) {
+            throw new RuntimeException("AllowApprovalService updateAllowApproval failed to save");
         }
-        return false;
-        // 로직 처리가 안되어도 false로 반환되는 문제점이 있음
     }
 
-    // 3. 자재, 제품, 판매 승인/반려 처리 (type에 맞게 updateAllowApproval 메소드에 분배하는 역할)
-    public boolean approveMaterialInOut(List<Integer> MatInOutIDs, HttpSession session ) {
-            System.out.println("approveMaterialInOut");
-            System.out.println(MatInOutIDs.toString());
+    // 3. 자재, 제품, 판매 승인/반려 처리 [23.05.15, th]
+    // 특이사항: repository에서 승인/반려 처리 기능 추가 ('2.승인/반려 처리 메소드 변경 이유와 동일)
+    // 메소드 역할: 1)type에 맞게 연결된 repository에서 승인/반려 처리, 2)updateAllowApproval 메소드에 내용 전달
+    public boolean approveMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
-            updateAllowApproval(id, true, session);
-        }
-        return true;
+            Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
+            materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
+        } return true;
     }
     public boolean rejectMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
-            updateAllowApproval(id, false, session);
-        }
-        return true;
+            Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
+            materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
+        } return true;
     }
     public boolean approveProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
-            updateAllowApproval(id, true, session);
-        }
-        return true;
+            Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
+            productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
+        } return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
-            updateAllowApproval(id, false, session);
-        }
-        return true;
+            Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
+            productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
+        } return true;
     }
     public boolean approveSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
-            updateAllowApproval(id, true, session);
-        }
-        return true;
+            Optional<SalesEntity> salesEntity = salesRepository.findById(id);
+
+            salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
+        } return true;
     }
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
-            updateAllowApproval(id, false, session);
-        }
-        return true;
+            Optional<SalesEntity> salesEntity = salesRepository.findById(id);
+            salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
+        } return true;
     }
 }

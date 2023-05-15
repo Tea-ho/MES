@@ -1,4 +1,4 @@
-package mes.domain.dto.product;
+package mes.domain.dto.performance;
 
 public class ProductProductionDto {
     private String productName;

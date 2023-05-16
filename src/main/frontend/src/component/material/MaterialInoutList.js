@@ -20,8 +20,9 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import LoginSocket from '../webSocket/LoginSocket'
 
-export default function MaterialInoutList(props) {
+export default function MaterialInoutList(props){
 
 
     const params = useParams(); // 매개변수가 객체형태로 들어옴.
@@ -60,6 +61,7 @@ export default function MaterialInoutList(props) {
                         if(r.data == true){
                         alert('등록성공 결제대기합니다.');
                         window.location.href = `/component/material/MaterialInoutList/${params.matID}`;
+
                         }
                         })
         }
@@ -83,8 +85,6 @@ export default function MaterialInoutList(props) {
             console.log(value); //
             pageInfo.page = value;
             setPageInfo({...pageInfo});
-
-
         }
 
     const MaterialStock = (e) => {
@@ -98,6 +98,7 @@ export default function MaterialInoutList(props) {
                                 if(r.data == true){
                                 alert('재고증가');
                                 window.location.href = `/component/material/MaterialInoutList/${params.matID}`;
+
                                 }
                                 })
 

@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 
+
 @Service @Slf4j
 public class MemberSerivce {
+
 
     @Autowired private MemberRepository memberRepository;
 

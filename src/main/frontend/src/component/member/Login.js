@@ -1,6 +1,7 @@
 import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
 import { Container, Grid, Typography, TextField, Button, Box } from '@mui/material';
+import LoginSocket from '../webSocket/LoginSocket'
 
 export default function Login(props) {
 
@@ -38,6 +39,7 @@ export default function Login(props) {
                 console.log(response);
                 setMember(response.data);
                 sessionStorage.setItem('member', JSON.stringify(response.data));
+                {<LoginSocket />}
             })
             .catch(error => {
                 console.error('login user 데이터 업로딩 실패', error);

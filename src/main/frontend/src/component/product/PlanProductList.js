@@ -109,7 +109,7 @@ export default function PlanProductList(props) {
                     },
                 }}
             pageSizeOptions={[5, 10]}
-            isRowSelectable={(params)=>params.row.allowApprovalDto.al_app_whether==true}
+            isRowSelectable={(params)=>params.row.allowApprovalDto.al_app_whether==true ? false : true}
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
                 setRowSelectionModel(newRowSelectionModel);

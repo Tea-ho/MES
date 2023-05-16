@@ -100,7 +100,7 @@ public class SalesService {
         salesEntity.setAllowApprovalEntity(approvalEntity);         // 승인 정보 저장
         salesEntity.setCompanyEntity(companyEntity);                // 회사 저장
         salesEntity.setProductEntity( productEntity );              // 물품 저장
-        salesEntity.setOrder_status(0);// 기본 등록 order_status --> 고쳐야할듯!
+        salesEntity.setOrder_status(0);                             // 기본 등록 order_status = 0
 
         salesEntity.setMemberEntity(member);                        // 멤버 저장
 
@@ -110,19 +110,6 @@ public class SalesService {
         return false;
 
     }
-
-        // * 등록 시에 재고량 불러와서 감소 기능 필요 *
-/*      ProductProcessEntity productProcessEntity = productProcessRepository.findStockByProductId( productEntity.getProdId() );
-
-        int currentStock = productProcessEntity.getProdStock();
-        int salesStock = salesDto.getOrderCount();              // 판매하려는 제품 개수
-        if ( currentStock - salesStock < 0){                    // 개수 유효성 검사( 0보다 작아지지 않게 )
-            return false;
-        }
-        int updateStock = currentStock - salesStock;
-        productProcessEntity.setProdStock(updateStock);         // 판매 성공 성공 시에 개수 줄어들게하기*/
-
-
 
 
 
@@ -167,22 +154,13 @@ public class SalesService {
             salesPageDto.setSalesDtoList(list);
             salesPageDto.setTotalPage(entityPage.getTotalPages());
             salesPageDto.setTotalCount(entityPage.getTotalElements());
+
         }
         else if(salesPageDto.getOrder_id() >= 0){
             SalesEntity entity = salesRepository.findById(salesPageDto.getOrder_id()).get();
 
-            SalesEntity entity1 = salesRepository.findByAllowId(salesPageDto.getAl_app_no());
-
-            System.out.println("entity : " + entity);
-            System.out.println("entity1 : " + entity1);
-
-            if( entity1.getAllowApprovalEntity().isAl_app_whether() == true && entity.getAllowApprovalEntity().getAl_app_no() == entity1.getAllowApprovalEntity().getAl_app_no()){
-                entity.setOrder_status(1);
-            }
-            salesPageDto.setSalesDtoList(list);
-            salesRepository.save(entity);
             list.add(entity.toDto());
-
+            salesPageDto.setSalesDtoList(list);
         }
         System.out.println("salesPageDto : " + salesPageDto);
 
@@ -202,5 +180,38 @@ public class SalesService {
         return false;
     }
 
+    // 5. 판매 stock 바꾸기
+    @Transactional
+    public boolean SalesStock(SalesDto salesDto){
+
+        Optional<SalesEntity> salesEntity = salesRepository.findOrder(salesDto.getOrder_id());
+
+        SalesEntity AllowId = salesRepository.findByAllowId(salesDto.getAl_app_no());
+
+        log.info("salesEntity : " + salesEntity);
+        log.info("AllowId : " + AllowId);
+
+        AllowId.setOrder_status(2);
+        salesRepository.save(AllowId);
+
+        // 1. 판매가격을 productprocess에 order_id가 sales order_id랑 똑같은 stock 저장
+        //int stock = productRepository.findById(salesDto.getProdStock()).get()
+
+        // 2. 그 후에 sales에 저장된 order_count 값 빼주기
+        // 3. [유효성] 재고보다 판매량이 많을 경우 불가! , true 일 경우 productprocess 뺀 값 set 저장
+
+
+        return true;
+    }
 
 }
+// * 등록 시에 재고량 불러와서 감소 기능 필요 *
+/*      ProductProcessEntity productProcessEntity = productProcessRepository.findStockByProductId( productEntity.getProdId() );
+
+        int currentStock = productProcessEntity.getProdStock();
+        int salesStock = salesDto.getOrderCount();              // 판매하려는 제품 개수
+        if ( currentStock - salesStock < 0){                    // 개수 유효성 검사( 0보다 작아지지 않게 )
+            return false;
+        }
+        int updateStock = currentStock - salesStock;
+        productProcessEntity.setProdStock(updateStock);         // 판매 성공 성공 시에 개수 줄어들게하기*/

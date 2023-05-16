@@ -90,6 +90,20 @@ export default function SalesView( props ){
         console.log(e.target.value)
     }
 
+    // 판매 확정
+    const SalesResult = (e) => {
+        console.log(e.target.value)
+         const order_id = e.target.value
+         axios.delete('/sales/SalesStock' , {params : { order_id : order_id}})
+             .then ( r => {
+                 console.log(r);
+                 if( r.data == true ) {
+                     alert('판매 최종 확정 처리되었습니다.')
+                     window.location.href = "/component/sales/SalesHeader"
+                     }
+             })
+    }
+
 
     return (
 
@@ -122,7 +136,7 @@ export default function SalesView( props ){
                                     <TableCell align="center">{e.orderCount}</TableCell>
                                     <TableCell align="center">{e.salesPrice}</TableCell>
                                     <TableCell align="center">{e.companyDto.cname}</TableCell>
-                                    <TableCell align="center">{e.order_status == 0 ? '판매대기' : '판매완료' }</TableCell>
+                                    <TableCell align="center">{e.order_status == 0 ? '판매대기' : e.order_status == 1 ? '판매승인' : '판매확정' }</TableCell>
 
                                     <TableCell align="center">
                                       <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
@@ -183,7 +197,9 @@ export default function SalesView( props ){
 
                                             <Button type="button" value={e.order_id} onClick={SalesDelete}>삭제</Button>
                                           </>
-                                          : null
+                                          : e.order_status === 1 ?
+                                          <Button type="button" value={e.order_id} onClick={SalesResult}>판매확정</Button>
+                                          : e.order_status === 2 ? <div> 판매완료 </div> : null
                                         }
                                       </ButtonGroup>
                                     </TableCell>

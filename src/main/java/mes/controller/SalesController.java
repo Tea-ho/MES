@@ -70,7 +70,11 @@ public class SalesController {
         return salesService.SalesDelete(order_id);
     }
 
-
+    // 5. 판매 확정 / order_status 변경 -> stock 변경
+    @PutMapping("/SalesStock")
+    public boolean SalesStock(@RequestBody SalesDto salesDto){
+        return salesService.SalesStock(salesDto);
+    }
 
     
 }

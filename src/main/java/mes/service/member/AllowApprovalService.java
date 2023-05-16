@@ -144,7 +144,12 @@ public class AllowApprovalService {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
 
-            salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
+            salesEntity.ifPresent(entity -> {
+                updateAllowApproval(entity.getAllowApprovalEntity(), true, session);
+                entity.setOrder_status(entity.getAllowApprovalEntity().isAl_app_whether() ? 1 : 0);
+                salesRepository.save(entity); // 변경 내용 저장
+            });
+
         } return true;
     }
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {

@@ -33,7 +33,7 @@ public class SalesDto {
     private int order_status;    // 주문 상태
     private int salesPrice;     // 판매가
     private AllowApprovalDto allowApprovalDto; // 결제 승인여부
-
+    private int al_app_no;
 
     private CompanyDto companyDto; // 판매회사
     private int cno;

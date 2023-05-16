@@ -8,25 +8,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SalesRepository extends JpaRepository< SalesEntity , Integer > {
 // 생산실적 및 판매실적 Query 구성 인터페이스 (추후 합치기 작업 필요)
 
-    // page , key , keyword [ 판매 회사명, 판매상태 검색 ] --> 추후 : 판매개수 , 판매액 등등?
-/*    @Query(value = "select * " +
-            "from sales s inner join company c " +
-            "on s.cno = c.cno and if(:key = '', true, " +
-            "if(:key = 'orderStatus' , s.order_status like %:keyword% , c.cname like %:keyword%))",
-            nativeQuery = true )
-    Page<SalesEntity> findBySearch(Pageable pageable , String key , String keyword);*/
 
-    // sales order_status 값 찾기 위함
     @Query(value = "select * from sales where if(:keyword = '', TRUE, order_status LIKE %:keyword%)" , nativeQuery = true)
     Page<SalesEntity> findByPage(String keyword , Pageable pageable);
 
     @Query(value = "select * from sales where al_app_no=:al_app_no", nativeQuery = true)
     SalesEntity findByAllowId(int al_app_no);
+
+    @Query(value = "select * from slaes where where order_id=order_id and 2=order_status" , nativeQuery = true)
+    Optional<SalesEntity> findOrder(int order_id);
 
     // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률) [23.05.14, th]
     @Query(value = "SELECT new mes.domain.dto.performance.SalesByProductDto(p.prodName, " +

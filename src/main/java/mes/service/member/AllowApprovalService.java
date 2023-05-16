@@ -1,6 +1,8 @@
 package mes.service.member;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.Repository.product.ProductProcessRepository;
+import mes.domain.entity.product.ProductProcessEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class AllowApprovalService {
     @Autowired MaterialInOutEntityRepository meterialRepository;
     @Autowired SalesRepository salesRepository;
     @Autowired AllowApprovalRepository allowApprovalRepository;
+    @Autowired ProductProcessRepository productProcessRepository;
 
     // 0. 제네릭 사용하기 위해 생성
     public List<?> getEntityListByType(int type) {
@@ -131,6 +134,16 @@ public class AllowApprovalService {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
             productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
+
+            ProductProcessEntity productProcessEntity = new ProductProcessEntity();
+            productProcessEntity.setProductEntity(productPlanEntity.get().getProductEntity());
+            productProcessEntity.setProdStock(Integer.parseInt(productPlanEntity.get().getProdPlanCount()));
+            ProductProcessEntity result = productProcessRepository.save(productProcessEntity.toSaveEntity());
+
+            if(result.getProdProcNo() < 0){
+                return false;
+            }
+
         } return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {

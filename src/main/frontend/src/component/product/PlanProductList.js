@@ -17,11 +17,34 @@ import {Container} from '@mui/material'
 
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
+/* --------- Dialog -----------*/
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const stylesDialog = {
+  dialogContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};
 
 export default function PlanProductList(props) {
    // 1. 상태변수 선언[ 결재 리스트 관리 Controller get으로 받아서 초기화 예정 / DataGrid 적용 ]
    const [ rows, setRows ] = useState([]);
    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+
+   const[deleteNotice, setDeleteNotice] = useState([]); //삭제 결과 확인
+   const [openDialog, setOpenDialog] = useState(false); //dialog 닫기/열기
+
 
     useEffect(() => {
         getPlanProduct();
@@ -37,8 +60,28 @@ export default function PlanProductList(props) {
 
     //생산 지시 취소 => 승인이 안되었을 때만
     const deletePlanProduct = () => {
+        console.log(rowSelectionModel);
 
+        rowSelectionModel.forEach((number) => {
+
+            axios.delete('/planProduct', { params : {prodPlanNo : number}})
+              .then((r) => {
+                  let note = r.data;
+                  setDeleteNotice((prevDeleteNotice) => [...prevDeleteNotice, note]);
+              })
+          })
+
+        openDialogHandler();
     }
+
+    const openDialogHandler = () => { //dialog 열기
+        setOpenDialog(true);
+    };
+
+     const closeDialog = () => { //dialog 닫기
+       setOpenDialog(false);
+       getPlanProduct();
+     };
 
 
     // planProductDto를 담는 공간
@@ -80,7 +123,6 @@ export default function PlanProductList(props) {
                 { field: 'allowApprovalDto.memberEntity.mname', headerName: '승인자', width: 100,
                     valueGetter: (params) => {
                         const { memberEntity, allowApprovalDto } = params.row;
-                        console.log(allowApprovalDto.memberEntity);
                         const mname = allowApprovalDto.memberEntity == null? '-' : allowApprovalDto.memberEntity.mname
                         return `${mname}`
                     }
@@ -116,5 +158,28 @@ export default function PlanProductList(props) {
             }}
             />
         </div>
+        <div style={stylesDialog.dialogContainer}>
+               <Dialog
+                 open={openDialog}
+                 TransitionComponent={Transition}
+                 keepMounted
+                 onClose={closeDialog}
+                 aria-describedby="alert-dialog-slide-description"
+               >
+                 <DialogTitle>{"생산 지시 취소 처리 결과입니다."}</DialogTitle>
+                 <DialogContent>
+                   <DialogContentText id="alert-dialog-slide-description">
+                     {
+                        deleteNotice.map((notice) => {
+                            return <div>{notice}</div>
+                        })
+                     }
+                   </DialogContentText>
+                 </DialogContent>
+                 <DialogActions>
+                   <Button onClick={closeDialog}>닫기</Button>
+                 </DialogActions>
+               </Dialog>
+         </div>
     </>);
 }

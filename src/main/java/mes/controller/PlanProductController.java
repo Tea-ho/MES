@@ -45,8 +45,8 @@ public class PlanProductController {
 
     //생산 지시 삭제 => 승인이 안되었을 경우만
     @DeleteMapping("")
-    public boolean deleteProduct(@RequestParam int prodId){
-        return false;
+    public String deleteProduct(@RequestParam int prodPlanNo){
+        return productPlanService.deleteProduct(prodPlanNo);
     }
 
     //생산 지시를 내릴 자재객체리스트를 넣는다.

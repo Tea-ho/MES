@@ -1,25 +1,24 @@
 package mes.service.member;
 
 import lombok.extern.slf4j.Slf4j;
-import mes.domain.dto.sales.SalesDto;
-import mes.domain.entity.member.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import mes.domain.Repository.product.ProductPlanRepository;
+import mes.domain.dto.sales.SalesDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.product.ProductPlanDto;
+import mes.domain.entity.member.MemberEntity;
 import mes.domain.entity.material.MaterialInOutEntity;
-import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.AllowApprovalRepository;
 import mes.domain.entity.member.PermissionDeniedException;
 import mes.domain.entity.product.ProductPlanEntity;
 import mes.domain.entity.sales.SalesEntity;
+import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.sales.SalesRepository;
-
+import mes.domain.Repository.product.ProductPlanRepository;
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 @Service @Slf4j
 public class AllowApprovalService {
@@ -138,8 +137,11 @@ public class AllowApprovalService {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
             productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
+
         } return true;
     }
+    
+    // 판매 승인 처리 후 orderState 상태 변경 추가 적용 [23.05.15, th]
     public boolean approveSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
@@ -155,7 +157,12 @@ public class AllowApprovalService {
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
-            salesEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
+
+            salesEntity.ifPresent(entity -> {
+                updateAllowApproval(entity.getAllowApprovalEntity(), false, session);
+                entity.setOrder_status(entity.getAllowApprovalEntity().isAl_app_whether() ? 1 : 0);
+                salesRepository.save(entity); // 변경 내용 저장
+            });
         } return true;
     }
 }

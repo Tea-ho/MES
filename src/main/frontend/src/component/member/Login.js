@@ -65,7 +65,7 @@ export default function Login(props) {
     return (
       <>
         {sessionStorage.getItem('member') != null ? (
-          <Container component="main" maxWidth="xs" style={{ marginTop: '8%' }}>
+          <Container component="main" maxWidth="xs" style={{ marginTop: '3%' }}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
                 sx={{ padding: '10px', margin: '10px 20px' }}
@@ -76,7 +76,12 @@ export default function Login(props) {
                 로그아웃
               </Button>
             </Box>
-            <img src={'http://localhost:8080/static/media/MESInfo'} alt="MES Info" />
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+              <img src={'http://localhost:8080/static/media/MESInfo.png'} alt="MES Info" style={{ width: '100%' }} />
+            </Box>
+            <Box mt={5} className="copyright">
+              <Copyright />
+            </Box>
           </Container>
         ) : (
           <Container component="main" maxWidth="xs" style={{ marginTop: '8%' }}>

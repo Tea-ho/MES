@@ -27,7 +27,7 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
     // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률) [23.05.14, th]
     @Query(value = "SELECT new mes.domain.dto.performance.SalesByProductDto(p.prodName, " +
             "CAST(AVG(p.prodPrice) AS long) AS prodPrice, " +
-            "CAST(AVG(s.salesPrice) AS long) AS averageSalesPrice, " +
+            "CAST(SUM(s.salesPrice * s.orderCount) / SUM(s.orderCount) AS long) AS averageSalesPrice, " +
             "SUM(s.orderCount) AS totalOrderCount, " +
             "CAST(SUM(s.salesPrice * s.orderCount) AS long) AS totalSalesAmount, " +
             "CAST(SUM(s.salesPrice * s.orderCount) - (AVG(p.prodPrice) * SUM(s.orderCount)) AS int) AS profit, " +

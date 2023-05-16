@@ -15,10 +15,12 @@ public class ProductProcessEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int prodProcNo;// -- PK
-    @Column private String prodProcDate;// -- 공정 일자
-    @Column private int prodProcStatus;// -- 공정 상태
-    @Column private int prodStock;// -- 완제품 재고 (+, - 아니고 = 으로)
-
+    @Column private String prodProcDate;// -- 공정 일자 (삭제해도 무방 혹은 udate사용하는게 좋을거 같음)
+    @Column private int prodProcStatus;// -- 재고 상태 (1: 판매가능, 2: 재고부족 // 완제품 재고가 0보다 크면 판매가능, 작으면 재고 부족)
+    @Column private int prodStock;// -- 제품 재고(누적) (승인 완료되면, 기존 재고 +=으로 재고 추가 // 반대로 판매되면 +-으로 재고 차감)
+    // ProductProcessEntity 사용 방향 [23.05.15, th]
+    // 1) Repository에서 productEntity pno로 조회하는 메소드 생성 (제품별로 그룹핑되어야 함)
+    // 2) 조회된 데이터의 prodStock값 변경 (생산 승인 완료: 기존재고 +=, 판매 승인 완료: 기존재고 -=)
 
     @ManyToOne
     @JoinColumn(name = "prodId")
@@ -34,6 +36,4 @@ public class ProductProcessEntity {
                 .prodName(this.productEntity.getProdName())
                 .build();
     }
-
-
 }

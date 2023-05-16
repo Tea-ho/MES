@@ -7,7 +7,7 @@ import mes.domain.entity.member.AllowApprovalEntity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "productPlan")
+@Table(name = "product_plan")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

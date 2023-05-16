@@ -35,23 +35,20 @@ export default function PerformanceForm(props) {
     let columns;
     if( type === 1 ) {
         columns = [
-            { field: 'profit', headerName: '생산순위', width: 180, align: 'center', headerAlign: 'center',
+            { field: 'prodName', headerName: '제품명', width: 210, align: 'center', headerAlign: 'center' },
+            { field: 'prodPrice', headerName: '제품 원가', width: 210, align: 'center', headerAlign: 'center',
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'prodName', headerName: '제품명', width: 180, align: 'center', headerAlign: 'center' },
-            { field: 'prodPrice', headerName: '제품 원가', width: 180, align: 'center', headerAlign: 'center',
+            { field: 'averageSalesPrice', headerName: '평균 생산량', width: 210, align: 'center', headerAlign: 'center',
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'averageSalesPrice', headerName: '평균 생산량', width: 180, align: 'center', headerAlign: 'center',
+            { field: 'totalOrderCount', headerName: '총 생산횟수', width: 210, align: 'center', headerAlign: 'center',
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'totalOrderCount', headerName: '총 생산횟수', width: 180, align: 'center', headerAlign: 'center',
+            { field: 'totalSalesAmount', headerName: '총 생산량', width: 210, align: 'center', headerAlign: 'center',
             valueFormatter: (params) => formatNumber(params.value)
             },
-            { field: 'totalSalesAmount', headerName: '총 생산량', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
-            },
-            { field: 'profitMargin', headerName: '생산비중', width: 180, align: 'center', headerAlign: 'center',
+            { field: 'profitMargin', headerName: '생산비중', width: 210, align: 'center', headerAlign: 'center',
             }
         ];
     } else if( type === 2 ) {

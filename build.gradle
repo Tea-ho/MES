@@ -31,6 +31,7 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j' //mysql
     testImplementation 'org.springframework.boot:spring-boot-starter-test' //스프링부트 테스터
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA [application.properties 이 반드시 필요!!!]
+    implementation 'org.springframework.boot:spring-boot-starter-websocket' // WebSocket
 }
 
 tasks.named('test') {

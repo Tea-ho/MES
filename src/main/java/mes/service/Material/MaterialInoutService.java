@@ -13,6 +13,7 @@ import mes.domain.entity.member.AllowApprovalRepository;
 import mes.domain.entity.member.MemberEntity;
 import mes.domain.entity.member.MemberRepository;
 import mes.service.member.MemberSerivce;
+import mes.webSocket.ChattingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.socket.TextMessage;
 
 
 import javax.servlet.http.HttpSession;
@@ -44,7 +46,8 @@ public class MaterialInoutService {
     @Autowired
     private MemberRepository memberRepository;
 
-
+    @Autowired
+    private ChattingHandler chattingHandler;
 
     // 입고내역
     @Transactional
@@ -77,6 +80,14 @@ public class MaterialInoutService {
 
         // 세이브
         MaterialInOutEntity result = materialInOutEntityRepository.save(entity);
+
+        // 소캣 메시지 전송 0 : 결제할 안건 / 1 : 결제 확인된 안건
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("0"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
         if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
         return false;

@@ -26,8 +26,6 @@ import SalesHeader from './SalesHeader'
 export default function SalesView( props ){
     const [list, setList] = useState([]);
 
-    const param2 = useParams();
-
     let [ pageInfo2 , setPageInfo2 ] = useState( { 'page' : 1 , 'keyword' : '' , 'order_id' : 0 } )
     let[totalPage2, setTotalPage2] = useState(1); //총 페이지수
     let[totalCount2, setTotalCount2] = useState(0); //총 판매 등록 개수
@@ -70,11 +68,33 @@ export default function SalesView( props ){
                     }
             })
     }
+    // 판매 수정 박스 style
+    const style = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 400,
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+    };
+      const [open, setOpen] = React.useState(false);
+      const handleOpen = (e) =>{
+        const order_id = e.target.value;
+        const selectedOrder = list.find((item) => item.order_id === order_id);
+        console.log(order_id);
+        console.log(selectedOrder)
+        setOpen(true);
+      }
+      const handleClose = () => setOpen(false);
 
     // 판매 수정
     const SalesUpdate = (e) => {
-        console.log(e.target.value)
-    }
+
+
+    };
 
     // 판매 확정
     const SalesResult = (e) => {
@@ -91,7 +111,9 @@ export default function SalesView( props ){
                  if( r.data == true ) {
                      alert('판매 최종 확정 처리되었습니다.')
                      window.location.href = "/component/sales/SalesHeader"
-                     }
+                 } else{
+                    alert('재고량보다 판매량이 더 많습니다.(삭제요망)')
+                 }
              })
     }
 
@@ -105,13 +127,13 @@ export default function SalesView( props ){
                               <TableRow>
                                 <TableCell align="center" style={{ width:'5%' }}>판매번호</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>판매날짜</TableCell>
-                                <TableCell align="center" style={{ width:'15%' }}>물품번호</TableCell>
-                                <TableCell align="center" style={{ width:'15%' }}>판매물품명</TableCell>
-                                <TableCell align="center" style={{ width:'15%' }}>판매개수</TableCell>
+                                <TableCell align="center" style={{ width:'5%' }}>물품번호</TableCell>
+                                <TableCell align="center" style={{ width:'10%' }}>판매물품명</TableCell>
+                                <TableCell align="center" style={{ width:'10%' }}>판매개수</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>판매가격</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>판매한 회사명</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>판매상태</TableCell>
-                                <TableCell align="center" style={{ width:'10%' }}>비고</TableCell>
+                                <TableCell align="center" style={{ width:'15%' }}>비고</TableCell>
 
                               </TableRow>
                             </TableHead>
@@ -133,11 +155,37 @@ export default function SalesView( props ){
                                       <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
                                         {e.order_status === 0 ?
                                           <>
-                                            <Button type="button" value={e.order_id} onClick={SalesDelete}>수정</Button>
+                                                  <Button type="button" value={e.order_id} onClick={handleOpen}>수정</Button>
+                                                  <Modal
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    aria-labelledby="modal-modal-title"
+                                                    aria-describedby="modal-modal-description"
+                                                  >
+                                                    <Box sx={style}>
+
+                                                      <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                        판매현황
+                                                      </Typography>
+
+                                                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                        order_id에 맞는 값 list에서 빼와야함!
+                                                      </Typography>
+
+                                                      <ButtonGroup>
+                                                        <Button type="button" value={e.order_id} onClick={SalesUpdate}> 수정완료 </Button>
+                                                        <Button type="button" onClick={handleClose}> 수정취소 </Button>
+                                                      </ButtonGroup>
+
+                                                    </Box>
+                                                  </Modal>
                                             <Button type="button" value={e.order_id} onClick={SalesDelete}>삭제</Button>
                                           </>
                                           : e.order_status === 1 ?
-                                          <Button type="button" value={`${e.order_id},${e.allowApprovalDto.al_app_no},${e.prodId}`} onClick={SalesResult}>판매확정</Button>
+                                          <ButtonGroup>
+                                            <Button type="button" value={`${e.order_id},${e.allowApprovalDto.al_app_no},${e.prodId}`} onClick={SalesResult}>판매확정</Button>
+                                            <Button type="button" value={e.order_id} onClick={SalesDelete}>삭제</Button>
+                                          </ButtonGroup>
                                           : e.order_status === 2 ? <div> 판매완료 </div> : null
                                         }
                                       </ButtonGroup>

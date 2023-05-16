@@ -168,6 +168,21 @@ public class SalesService {
 
     }
 
+    @Transactional
+    public boolean SalesUpdate( SalesDto salesDto){
+        SalesEntity salesEntity = salesRepository.findById(salesDto.getOrder_id()).get();
+
+        salesEntity.setOrderCount(salesDto.getOrderCount());
+        salesEntity.setSalesPrice(salesDto.getSalesPrice());
+
+        CompanyEntity companyEntity = companyRepository.findById(salesDto.getCno()).get();
+        salesEntity.setCompanyEntity(companyEntity);
+
+        salesRepository.save(salesEntity);
+
+        return true;
+    }
+
     // 4. 판매 삭제
     @Transactional
     public boolean SalesDelete(int order_id){

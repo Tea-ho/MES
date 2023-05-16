@@ -61,11 +61,6 @@ public class MaterialInoutService {
         entity.setMemberEntity(dto.getMemberdto().toEntity());
         entity.setMat_in_type(dto.getMat_in_type());
 
-
-
-
-
-
         // 선택된 자재
         Optional<MaterialEntity> optionalMaterial = materialEntityRepository.findById(dto.getMatID());
         MaterialEntity materialEntity = optionalMaterial.get();
@@ -82,13 +77,19 @@ public class MaterialInoutService {
         // 세이브
         MaterialInOutEntity result = materialInOutEntityRepository.save(entity);
 
-        // 소캣 메시지 전송 0 : 결제할 안건 / 1 : 결제 확인된 안건
+
+        // 소캣 메시지 전송
+        // 자재 - 10 : 결제 대기중인 안건 / 11 : 결제 완료
+        // 제품 - 20 : 결제 대기중인 안건 / 21 : 결제 완료
+        // 판매 - 30 : 결제 대기중인 안건 / 31 : 결제 완료
         try{
-            chattingHandler.handleMessage(null , new TextMessage("0"));
+            chattingHandler.handleMessage(null , new TextMessage("10"));
 
         }catch (Exception e){
             System.out.println(e);
         }
+
+
 
         if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
         return false;
@@ -114,11 +115,9 @@ public class MaterialInoutService {
         return dto;
     }
 
-
+    // 최종 완료 이후 재고증가 처리
     @Transactional
     public boolean MaterialInStock(MaterialInOutDto dto){
-
-
 
         // 해당 자재의 가장 마지막에 처리된(update) 레코드 가져오기
         Optional<MaterialInOutEntity> lastInOut = materialInOutEntityRepository.findByUdate(dto.getMatID());

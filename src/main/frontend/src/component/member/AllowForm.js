@@ -109,10 +109,10 @@ export default function AllowForm(props) {
                  const prefix = orderCount > 0 ? '판매' : '반품';
                  return `${productDto.prodName} ${prefix}`;
                } },
-            { field: 'orderCount', headerName: '판매수량', width: 150, align: 'center', headerAlign: 'center' },
-            { field: 'salesPrice', headerName: '판매금액', width: 150, align: 'center', headerAlign: 'center' },
+            { field: 'orderCount', headerName: '판매수량', width: 220, align: 'center', headerAlign: 'center' },
+            { field: 'salesPrice', headerName: '판매금액', width: 220, align: 'center', headerAlign: 'center' },
             { field: 'orderDate', headerName: '요청일자', width: 140, align: 'center', headerAlign: 'center' },
-            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 290, align: 'center', headerAlign: 'center',
+            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 150, align: 'center', headerAlign: 'center',
               valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
             },
             { field: 'memberDto.mname', headerName: '요청자', width: 90, align: 'center', headerAlign: 'center',

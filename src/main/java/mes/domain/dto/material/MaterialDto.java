@@ -33,6 +33,7 @@ public class MaterialDto{
     private String mdate; // 등록날짜
     private int cno;
     private List<MaterialProductDto> MaterialProductDtoList = new ArrayList<>();
+    private int m_stock; // 스톡 출력용
 
     private int ratio; //비율 값(plan에서 사용할)
 

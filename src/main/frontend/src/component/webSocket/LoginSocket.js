@@ -3,7 +3,7 @@ import axios from 'axios';
 import { BrowserRouter , Routes , Route } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-
+import "./LoginSocket.css";
 
 
 export default function LoginSocket(props) {
@@ -13,8 +13,6 @@ export default function LoginSocket(props) {
     let [msg , setMsg ] = useState([]);
 
     let ws = useRef( null ) ;   // 1.모든 함수 사용할 클라이언트소켓 변수
-
-    const [code , setCode ] = useState();
 
 
 
@@ -44,9 +42,14 @@ export default function LoginSocket(props) {
             }
     } , [])
 
+    useEffect ( () => {
+            document.querySelector('.socketWrap').scrollTop = document.querySelector('.socketWrap').scrollHeight;
+        },[msg])
 
 
   return (<>
-                 {msg}
+       <div className='socketWrap' style={{ width: '40%', height: '125px'}}>
+          {msg}
+       </div>
   </>);
 }

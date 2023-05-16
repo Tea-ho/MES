@@ -7,6 +7,8 @@ import mes.domain.dto.material.MaterialPageDto;
 import mes.domain.dto.member.CompanyDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.material.MaterialEntityRepository;
+import mes.domain.entity.material.MaterialInOutEntity;
+import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.member.CompanyRepository;
 import mes.domain.entity.product.MaterialProductEntity;
@@ -29,10 +31,13 @@ import java.util.Optional;
 public class MaterialService {
 
     @Autowired
-    MaterialEntityRepository materialEntityRepository;
+    private MaterialEntityRepository materialEntityRepository;
 
     @Autowired
-    CompanyRepository companyRepository;
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private MaterialInOutEntityRepository materialInOutEntityRepository;
 
 
     // 자재 등록
@@ -64,7 +69,21 @@ public class MaterialService {
             System.out.println("Servicedto : " + dto);
             Page<MaterialEntity> entityPage = materialEntityRepository.findByPage(dto.getKeyword() , pageable);
             entityPage.forEach((e)->{
-                list.add(e.toDto());
+                // 검색된 자재로 마지막으로 update된 inout레코드 출력
+                Optional<MaterialInOutEntity> lastInOut = materialInOutEntityRepository.findByUdate(e.toDto().getMatID());
+
+                // Dto 객체 만들어서 나온 stock값 세팅
+                MaterialDto materialDto = e.toDto();
+                if(!lastInOut.isPresent()){ // 검색된 것이 없으면 재고 0
+                    materialDto.setM_stock(0);
+                }
+                else{ // 검색된 것이 있으면 재고세팅
+                    materialDto.setM_stock(lastInOut.get().toDto().getMat_st_stock());
+                    System.out.println("materialDtoss : " + materialDto);
+                }
+
+                // 만들어진 materialDto를 리스트에 담기
+                list.add(materialDto);
             });
 
            dto.setMaterialList(list);

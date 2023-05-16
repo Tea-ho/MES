@@ -120,6 +120,10 @@ export default function MaterialInoutList(props){
 
     }
 
+    const backSpace = ()=>{
+        window.location.href = `/component/material/Material`;
+    }
+
 
     return (<>
 
@@ -220,7 +224,7 @@ export default function MaterialInoutList(props){
                 <Button style={{padding : '10px', margin : '10px 20px'}}variant="contained" type="button" onClick={MaterialIn}>입고</Button>
             </Stack>
         </div>
-
+        <Button style={{padding : '10px', margin : '10px 20px'}}variant="contained" type="button" onClick={backSpace}>뒤로가기</Button>
 
 
 

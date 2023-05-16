@@ -90,8 +90,9 @@ export default function MaterialView(props) {
                       <TableCell align="center" style={{ width:'10%' }}>유통기한(Day)</TableCell>
                       <TableCell align="center" style={{ width:'10%' }}>생산자</TableCell>
                       <TableCell align="center" style={{ width:'15%' }}>구입일</TableCell>
+                      <TableCell align="center" style={{ width:'5%' }}>재고</TableCell>
                       <TableCell align="center" style={{ width:'5%' }}>코드</TableCell>
-                      <TableCell align="center" style={{ width:'20%' }}>비고</TableCell>
+                      <TableCell align="center" style={{ width:'15%' }}>비고</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -104,13 +105,13 @@ export default function MaterialView(props) {
                        <TableCell align="center" >{e.mat_st_exp}</TableCell>
                        <TableCell align="center" >{e.companyDto.cname}</TableCell>
                        <TableCell align="center" >{e.mdate}</TableCell>
+                       <TableCell align="center" >{e.m_stock} / {e.mat_unit}</TableCell>
                        <TableCell align="center" >{e.mat_code}</TableCell>
                        <TableCell align="center" >
                            <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
                              <Button type="button" value={e.matID} onClick={MaterialInoutList}>상세보기</Button>
                              <Button onClick={onChangecountHandler} value={e.matID} >수정</Button>
-
-                           </ButtonGroup>
+                            </ButtonGroup>
                         </TableCell>
                       </TableRow>
                     ))}

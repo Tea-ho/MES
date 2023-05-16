@@ -1,9 +1,9 @@
-.header {
+.socketWrap {
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 }
 
-.header::-webkit-scrollbar {
+.socketWrap::-webkit-scrollbar {
   display: none;
 }

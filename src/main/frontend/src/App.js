@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState , useEffect } from 'react';
 import { BrowserRouter , Routes , Route } from "react-router-dom";
 import Header from "./component/Header";
 import "./App.css";
@@ -12,9 +12,14 @@ import Divider from '@mui/material/Divider';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
-import Material from "./component/material/Material";
 import Link from '@mui/material/Link';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Button from '@mui/material/Button';
+
+
+/*--------------------------- 자재 부분 ------------------------------*/
 import Main from "./Main";
+import Material from "./component/material/Material";
 import MaterialInoutList from "./component/material/MaterialInoutList";
 
 /*--------------------------- 제품 부분 ------------------------------*/
@@ -38,81 +43,15 @@ import PerformanceProduction from "./component/performance/PerformanceProduction
 import PerformanceSales from "./component/performance/PerformanceSales";
 
 
+
 export default function Index( props ) {
-    return ( <>
+
+ return ( <>
         <BrowserRouter>
             <div className="header">
                 <Header />
             </div>
             <div className="content">
-                <div className="sidebar">
-                   <Box >
-                         <nav aria-label="main mailbox folders">
-                           <List>
-                             <ListItem disablePadding>
-                               <Link href="/component/member/Login">
-                               <ListItemButton>
-                                    <ListItemIcon>
-                                   <WarehouseIcon />
-                                 </ListItemIcon>
-                                 <ListItemText primary="HOME" />
-                                </ListItemButton>
-                                </Link>
-                             </ListItem>
-                             <ListItem disablePadding>
-                             <Link href="/component/material/Material">
-                              <ListItemButton>
-                              <ListItemIcon>
-                              <WarehouseIcon />
-                              </ListItemIcon>
-                              <ListItemText primary="자재" />
-                              </ListItemButton>
-                              </Link>
-                              </ListItem>
-                                <ListItem disablePadding>
-                               <Link href="/component/product/productTab">
-                               <ListItemButton>
-                                    <ListItemIcon>
-                                   <WarehouseIcon />
-                                 </ListItemIcon>
-                                 <ListItemText primary="제품" />
-                                </ListItemButton>
-                                </Link>
-                                </ListItem>
-                                <ListItem disablePadding>
-                               <Link href="/component/sales/SalesHeader">
-                               <ListItemButton>
-                                    <ListItemIcon>
-                                   <WarehouseIcon />
-                                 </ListItemIcon>
-                                 <ListItemText primary="판매" />
-                                </ListItemButton>
-                                </Link>
-                             </ListItem>
-                             <ListItem disablePadding>
-                                <Link href="/component/member/AllowApproval">
-                                <ListItemButton>
-                                     <ListItemIcon>
-                                    <WarehouseIcon />
-                                  </ListItemIcon>
-                                  <ListItemText primary="승인" />
-                                 </ListItemButton>
-                                 </Link>
-                              </ListItem>
-                              <ListItem disablePadding>
-                              <Link href="/component/performance/Performance">
-                              <ListItemButton>
-                                   <ListItemIcon>
-                                  <WarehouseIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="실적" />
-                               </ListItemButton>
-                               </Link>
-                            </ListItem>
-                           </List>
-                         </nav>
-                       </Box>
-                </div>
                 <div className="main-content">
                     <Routes >
                         <Route path="/component/member/Login" element = { <Login /> } />

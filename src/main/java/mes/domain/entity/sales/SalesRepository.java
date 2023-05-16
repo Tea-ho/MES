@@ -31,7 +31,7 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
             "SUM(s.orderCount) AS totalOrderCount, " +
             "CAST(SUM(s.salesPrice * s.orderCount) AS long) AS totalSalesAmount, " +
             "CAST(SUM(s.salesPrice * s.orderCount) - (AVG(p.prodPrice) * SUM(s.orderCount)) AS int) AS profit, " +
-            "ROUND(((SUM(s.salesPrice * s.orderCount) - (p.prodPrice * SUM(s.orderCount))) / SUM(s.salesPrice * s.orderCount)) * 100, 2) AS profitMargin) " +
+            "ROUND(((SUM(s.salesPrice * s.orderCount) - (p.prodPrice * SUM(s.orderCount))) / (p.prodPrice * SUM(s.orderCount))) * 100, 2) AS profitMargin) " +
             "FROM SalesEntity s " +
             "JOIN s.productEntity p " +
             "JOIN s.memberEntity m " +

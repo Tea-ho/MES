@@ -21,6 +21,8 @@ import mes.domain.entity.sales.SalesRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
 import javax.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 @Service @Slf4j
 public class AllowApprovalService {
@@ -133,17 +135,15 @@ public class AllowApprovalService {
     public boolean approveProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
-            productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
+            productPlanEntity.ifPresent(entity -> {
+                updateAllowApproval(entity.getAllowApprovalEntity(), true, session);
+                ProductProcessEntity productProcessEntity = new ProductProcessEntity();
 
-            ProductProcessEntity productProcessEntity = new ProductProcessEntity();
-            productProcessEntity.setProductEntity(productPlanEntity.get().getProductEntity());
-            productProcessEntity.setProdStock(Integer.parseInt(productPlanEntity.get().getProdPlanCount()));
-            ProductProcessEntity result = productProcessRepository.save(productProcessEntity.toSaveEntity());
-
-            if(result.getProdProcNo() < 0){
-                return false;
-            }
-
+                productProcessEntity.setProductEntity(entity.getProductEntity());
+                productProcessEntity.setProdStock(Integer.parseInt(entity.getProdPlanCount()));
+                productProcessEntity.setProdProcDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                productProcessRepository.save(productProcessEntity);
+            });
         } return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {

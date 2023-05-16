@@ -225,7 +225,7 @@ public class ProductPlanService {
            if(allowApprovalEntity.isPresent()){
                productPlanRepository.delete(productPlanEntity.get());
                allowApprovalRepository.delete(allowApprovalEntity.get());
-               return "[성공]"+ prodPlanNo+ "번째 생산 지시가 삭제 완료되었습니다.";
+               return "[성공]"+ prodPlanNo+ "번 생산 지시가 삭제 완료되었습니다.";
            }
         }
         return "[에러] 알 수 없는 에러가 발생하여 해당 " + prodPlanNo +"번째 생산 지시를 삭제할 수 없습니다.";

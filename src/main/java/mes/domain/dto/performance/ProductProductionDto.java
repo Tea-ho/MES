@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Data@NoArgsConstructor@AllArgsConstructor@Builder
 public class ProductProductionDto {
-    private String productName;
-    private long prodPrice;
+    private String prodName;
+    private int prodPrice;
     private long averageProductionCount;
-    private long totalProductionCount;
+    private int totalProductionCount;
     private long totalProductionAmount;
-    private double productionPercentage;
+    private long productionPercentage;
 }

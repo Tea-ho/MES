@@ -23,8 +23,6 @@ import mes.service.member.MemberSerivce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
-import javax.swing.text.html.Option;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,7 +62,6 @@ public class ProductPlanService {
         for(int i = 0; i < productPlanEntitiesList.size(); i++){
             productPlanDtoList.add(productPlanEntitiesList.get(i).toDto());
         }
-
 
         return productPlanDtoList;
     }
@@ -151,7 +148,7 @@ public class ProductPlanService {
                     MaterialInOutDto dto = new MaterialInOutDto();
 
                     AllowApprovalDto allowApprovalDto = new AllowApprovalDto();
-                    allowApprovalDto.setMemberEntity(productPlanDto.getMemberDto().toEntity());
+
                     allowApprovalDto.setAl_app_whether(true); //제품은 승인X
 
                     dto.setMaterialDto(materialEntity.get().toDto());
@@ -186,7 +183,6 @@ public class ProductPlanService {
         if(mat_okOut && okSign){
             //제품 생산 지시
             AllowApprovalEntity inAllowapproval = AllowApprovalEntity.builder()
-                    .memberEntity(productPlanDto.getMemberDto().toEntity())
                     .al_app_date(simpleDateFormat.format(new Date()))
                     .al_app_whether(false)
                     .build();

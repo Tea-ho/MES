@@ -23,6 +23,7 @@ import mes.service.member.MemberSerivce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -167,14 +168,13 @@ public class ProductPlanService {
 
                     dto.setMat_st_stock(existMatStock - needMatStock); //재고처리
                     dto.setMat_in_type(-needMatStock); // 차감되는 재고
-                    dto.setMat_in_code(0);
+                    dto.setMat_in_code(1);
                     dto.setMemberdto(productPlanDto.getMemberDto());
-
-                    System.out.println("materialOut service에 전달 : " + dto);
 
                     mat_okOut = materialInoutService.materialOut(dto);
 
-                    System.out.println(i+"번째 자재입출고 결과 : " + mat_okOut);
+                    log.info("materialOut service에 전달 : " + dto + "출고 결과 : " + mat_okOut);
+
                 }
             }
         }
@@ -203,11 +203,31 @@ public class ProductPlanService {
 
             System.out.println("productPlan 엔티티 DB에 저장 완료 " + entity);
 
+            log.info("생산 지시에 들어간 productPlan" + entity.toString());
+
             if(entity.getProdPlanNo() > 0){ //생산 지시가 들어갔으면
                 returnResultStr.add("[성공]생산지시가 완료되었습니다.");
             }
         }
 
         return returnResultStr;
+    }
+
+    //생산 지시 취소
+    public String deleteProduct(int prodPlanNo){
+        //prodPlanNo로 해당 ProductPlanEntity찾기 => ProductPlanEntity에 승인 정보를 가지고 있음
+        Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
+        System.out.println("생산 지시 취소 : " + productPlanEntity);
+
+        if(productPlanEntity.isPresent()) {
+           Optional<AllowApprovalEntity> allowApprovalEntity = allowApprovalRepository.findById(productPlanEntity.get().getAllowApprovalEntity().getAl_app_no());
+            System.out.println("생산 지시 관련 allow : " + allowApprovalEntity);
+           if(allowApprovalEntity.isPresent()){
+               productPlanRepository.delete(productPlanEntity.get());
+               allowApprovalRepository.delete(allowApprovalEntity.get());
+               return "[성공]"+ prodPlanNo+ "번째 생산 지시가 삭제 완료되었습니다.";
+           }
+        }
+        return "[에러] 알 수 없는 에러가 발생하여 해당 " + prodPlanNo +"번째 생산 지시를 삭제할 수 없습니다.";
     }
 }

@@ -178,15 +178,19 @@ public class MaterialInoutService {
         entity.setMat_in_code(dto.getMat_in_code());
 
         System.out.println("자재 중간 점검 : " + entity);
+        log.info("자재 출고 " + entity.toString());
 
         // 승인정보
         AllowApprovalEntity approvalEntity = allowApprovalRepository.save(dto.getAllowApprovalDto().toOutEntity());
+
+        log.info("자재" + entity.getMaterialEntity().getMatID() + "-" +entity.getMaterialEntity().getMat_name() + "승인 정보 : " + approvalEntity.toString());
 
         // 자재와 데이터 넣기
         entity.setAllowApprovalEntity(approvalEntity);
 
         // 세이브
         MaterialInOutEntity result = materialInOutEntityRepository.save(entity);
+        log.info("자재 출고 완료 :" + result.toString());
 
         if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
         return false;

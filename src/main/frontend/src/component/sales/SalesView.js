@@ -1,4 +1,5 @@
 import React,{ useEffect , useState , useRef } from 'react';
+import {useParams} from 'react-router-dom'; // HTTP경로상의 매개변수 호출
 import axios from 'axios';
 /* ---------table mui -------- */
 import Table from '@mui/material/Table';
@@ -24,6 +25,8 @@ import SalesHeader from './SalesHeader'
 
 export default function SalesView( props ){
     const [list, setList] = useState([]);
+
+    const param2 = useParams();
 
     let [ pageInfo2 , setPageInfo2 ] = useState( { 'page' : 1 , 'keyword' : '' , 'order_id' : 0 } )
     let[totalPage2, setTotalPage2] = useState(1); //총 페이지수
@@ -68,23 +71,6 @@ export default function SalesView( props ){
             })
     }
 
-    // 판매 수정 모달
-        const style = {
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 1000,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          p: 4,
-        };
-
-      const [open, setOpen] = React.useState(false);
-      const handleOpen = () => setOpen(true);
-      const handleClose = () => setOpen(false);
-
     // 판매 수정
     const SalesUpdate = (e) => {
         console.log(e.target.value)
@@ -92,9 +78,14 @@ export default function SalesView( props ){
 
     // 판매 확정
     const SalesResult = (e) => {
-        console.log(e.target.value)
-         const order_id = e.target.value
-         axios.delete('/sales/SalesStock' , {params : { order_id : order_id}})
+         console.log(e.target.value)
+         const [order_id, al_app_no , prodId] = e.target.value.split(",");
+         let info = {
+                    al_app_no : al_app_no ,
+                    order_id : order_id ,
+                    prodId : prodId
+         }
+         axios.put('/sales/SalesStock' , info )
              .then ( r => {
                  console.log(r);
                  if( r.data == true ) {
@@ -130,7 +121,7 @@ export default function SalesView( props ){
                                 {list.map((e) => (
                                   <TableRow>
                                     <TableCell align="center">{e.order_id}</TableCell>
-                                    <TableCell align="center">{e.orderDate}</TableCell>
+                                    <TableCell align="center">{e.udate}</TableCell>
                                     <TableCell align="center">{e.prodId}</TableCell>
                                     <TableCell align="center">{e.prodName}</TableCell>
                                     <TableCell align="center">{e.orderCount}</TableCell>
@@ -142,63 +133,11 @@ export default function SalesView( props ){
                                       <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
                                         {e.order_status === 0 ?
                                           <>
-
-                                                                                  <Button onClick={handleOpen}>수정</Button>
-                                                                                  <Modal
-                                                                                    open={open}
-                                                                                    onClose={handleClose}
-                                                                                    aria-labelledby="modal-modal-title"
-                                                                                    aria-describedby="modal-modal-description"
-                                                                                  >
-                                                                                    <Box sx={style}>
-                                                                                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                                                                                        판매 현황
-                                                                                      </Typography>
-                                                                                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                                                                        <TableContainer component={Paper}>
-                                                                                                                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                                                                                                    <TableHead>
-                                                                                                                      <TableRow>
-                                                                                                                        <TableCell align="center" style={{ width:'5%' }}>판매번호</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매날짜</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'15%' }}>물품번호</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'15%' }}>판매물품명</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'15%' }}>판매개수</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매가격</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매한 회사명</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>판매상태</TableCell>
-                                                                                                                        <TableCell align="center" style={{ width:'10%' }}>비고</TableCell>
-
-                                                                                                                      </TableRow>
-                                                                                                                    </TableHead>
-
-
-                                                                                                                    <TableBody>
-                                                                                                                        {list.map((e) => (
-                                                                                                                          <TableRow>
-                                                                                                                            <TableCell align="center">{e.order_id}</TableCell>
-                                                                                                                            <TableCell align="center">{e.orderDate}</TableCell>
-                                                                                                                            <TableCell align="center">{e.prodId}</TableCell>
-                                                                                                                            <TableCell align="center">{e.prodName}</TableCell>
-                                                                                                                            <TableCell align="center">{e.orderCount}</TableCell>
-                                                                                                                            <TableCell align="center">{e.salesPrice}</TableCell>
-                                                                                                                            <TableCell align="center">{e.companyDto.cname}</TableCell>
-                                                                                                                            <TableCell align="center">{e.order_status}</TableCell>
-                                                                                                                            <Button type="button" value={e.order_id} onClick={SalesUpdate}>수정완료</Button>
-                                                                                                                          </TableRow>
-                                                                                                                        ))}
-                                                                                                                    </TableBody>
-
-                                                                                                                  </Table>
-                                                                                                                </TableContainer>
-                                                                                      </Typography>
-                                                                                    </Box>
-                                                                                  </Modal>
-
+                                            <Button type="button" value={e.order_id} onClick={SalesDelete}>수정</Button>
                                             <Button type="button" value={e.order_id} onClick={SalesDelete}>삭제</Button>
                                           </>
                                           : e.order_status === 1 ?
-                                          <Button type="button" value={e.order_id} onClick={SalesResult}>판매확정</Button>
+                                          <Button type="button" value={`${e.order_id},${e.allowApprovalDto.al_app_no},${e.prodId}`} onClick={SalesResult}>판매확정</Button>
                                           : e.order_status === 2 ? <div> 판매완료 </div> : null
                                         }
                                       </ButtonGroup>

@@ -188,30 +188,26 @@ public class SalesService {
 
         SalesEntity AllowId = salesRepository.findByAllowId(salesDto.getAl_app_no());
 
-        log.info("salesEntity : " + salesEntity);
-        log.info("AllowId : " + AllowId);
+        ProductEntity productEntity = productRepository.findById(salesDto.getProdId()).get();
+
+        ProductProcessEntity productProcessEntities  = productProcessRepository.findByProdId(productEntity.getProdId());
+
+
+
+        int baseStock = productProcessEntities.getProdStock();
+            log.info("baseStock : " + baseStock);
+        int salesStock = salesEntity.get().getOrderCount();
+            log.info("salesStock : " + salesStock);
+        if ( baseStock - salesStock < 0){
+            return false;
+        }
+        int updateStock = baseStock - salesStock;
+        productProcessEntities.setProdStock(updateStock);
 
         AllowId.setOrder_status(2);
         salesRepository.save(AllowId);
-
-        // 1. 판매가격을 productprocess에 order_id가 sales order_id랑 똑같은 stock 저장
-        //int stock = productRepository.findById(salesDto.getProdStock()).get()
-
-        // 2. 그 후에 sales에 저장된 order_count 값 빼주기
-        // 3. [유효성] 재고보다 판매량이 많을 경우 불가! , true 일 경우 productprocess 뺀 값 set 저장
-
+        productProcessRepository.save(productProcessEntities);
 
         return true;
     }
-
 }
-// * 등록 시에 재고량 불러와서 감소 기능 필요 *
-/*      ProductProcessEntity productProcessEntity = productProcessRepository.findStockByProductId( productEntity.getProdId() );
-
-        int currentStock = productProcessEntity.getProdStock();
-        int salesStock = salesDto.getOrderCount();              // 판매하려는 제품 개수
-        if ( currentStock - salesStock < 0){                    // 개수 유효성 검사( 0보다 작아지지 않게 )
-            return false;
-        }
-        int updateStock = currentStock - salesStock;
-        productProcessEntity.setProdStock(updateStock);         // 판매 성공 성공 시에 개수 줄어들게하기*/

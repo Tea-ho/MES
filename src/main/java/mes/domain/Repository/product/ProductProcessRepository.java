@@ -19,4 +19,9 @@ public interface ProductProcessRepository extends JpaRepository<ProductProcessEn
     //제품 삭제 확인용
     @Query(value = "select * from product_process where prod_id = :prodId ", nativeQuery = true)
     List<ProductProcessEntity> findByProductEntity(int prodId);
+
+    // 제품 stock 확인용
+    @Query(value = "select * from product_process where prod_id = :prodId" , nativeQuery = true)
+    ProductProcessEntity findByProdId(int prodId);
+
 }

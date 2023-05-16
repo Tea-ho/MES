@@ -61,7 +61,6 @@ export default function SalesCreate() {
 
           memberDto : JSON.parse(sessionStorage.getItem('member')) ,
           orderCount: document.getElementById('orderCount').value,
-          orderDate : document.getElementById('orderDate').value,
           salesPrice: document.getElementById('salesPrice').value,
           cno : company ,
           prodId : prodName
@@ -127,7 +126,6 @@ export default function SalesCreate() {
                                  </Box>
                          </div>
                  <div>
-                            <TextField style={{padding : '10px', margin : '10px'}} className="orderDate" id="orderDate" label="판매날짜" variant="outlined" />
                            <TextField style={{padding : '10px', margin : '10px'}} className="orderCount" id="orderCount" label="판매개수" variant="outlined" />
                            <TextField style={{padding : '10px', margin : '10px'}} className="salesPrice" id="salesPrice" label="판매가격" variant="outlined" />
 

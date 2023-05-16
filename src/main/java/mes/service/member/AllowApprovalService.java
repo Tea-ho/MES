@@ -82,7 +82,7 @@ public class AllowApprovalService {
                 SalesEntity entity = (SalesEntity) obj;
                 System.out.println(entity);
                 SalesDto dto = new SalesDto(
-                        entity.getOrder_id(), entity.getOrderDate(),
+                        entity.getOrder_id(), entity.cdate.toLocalDate() , entity.udate.toLocalDate(),
                         entity.getOrderCount(), entity.getOrder_status(), entity.getSalesPrice(),
                         entity.getAllowApprovalEntity().toInDto(), entity.getCompanyEntity().toDto(), entity.getProductEntity().toDto(), entity.getMemberEntity().toDto());
                 result.add(dto);

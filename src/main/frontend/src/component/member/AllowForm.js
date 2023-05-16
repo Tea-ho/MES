@@ -69,18 +69,18 @@ export default function AllowForm(props) {
     let columns;
     if( type === 1 ){ // --- 자재
         columns = [
-            { field: 'materialDto.mat_name', headerName: '내용', width: 400, align: 'center', headerAlign: 'center',
+            { field: 'materialDto.mat_name', headerName: '내용', width: 390, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                  const { mat_in_type, materialDto } = params.row;
                  const prefix = mat_in_type > 0 ? '입고 ' : mat_in_type < 0 ? '출고 ' : '기타';
                  return `${materialDto.mat_name} ${prefix}`;
                }
              },
-            { field: 'udate', headerName: '요청일자', width: 300, align: 'center', headerAlign: 'center' },
-            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 300, align: 'center', headerAlign: 'center',
+            { field: 'udate', headerName: '요청일자', width: 290, align: 'center', headerAlign: 'center' },
+            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 290, align: 'center', headerAlign: 'center',
               valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
             },
-            { field: 'memberdto.mname', headerName: '요청자', width: 250, align: 'center', headerAlign: 'center',
+            { field: 'memberdto.mname', headerName: '요청자', width: 240, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                 const { mname, memberdto } = params.row;
                 return `${memberdto.mname}`; }
@@ -89,21 +89,21 @@ export default function AllowForm(props) {
 
     } else if( type === 2 ){ // --- 제품 (columns 없으면 오류 뜸)
         columns = [
-            { field: 'productDto.prodName', headerName: '내용', width: 400, align: 'center', headerAlign: 'center',
+            { field: 'productDto.prodName', headerName: '내용', width: 390, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                  const { prodPlanCount, productDto } = params.row;
                  const prefix = prodPlanCount > 0 ? '생산' : '폐기';
                  return `${productDto.prodName} ${prefix}`;
                } },
-            { field: 'prodPlanCount', headerName: '생산수량', width: 300, align: 'center', headerAlign: 'center' },
-            { field: 'prodPlanDate', headerName: '생산일자', width: 300, align: 'center', headerAlign: 'center' },
-            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 250, align: 'center', headerAlign: 'center',
+            { field: 'prodPlanCount', headerName: '생산수량', width: 290, align: 'center', headerAlign: 'center' },
+            { field: 'prodPlanDate', headerName: '생산일자', width: 290, align: 'center', headerAlign: 'center' },
+            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 240, align: 'center', headerAlign: 'center',
               valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
             },
         ]
     } else if( type === 3){ // --- 판매 (columns 없으면 오류 뜸)
         columns = [
-            { field: 'productDto.prodName', headerName: '내용', width: 400, align: 'center', headerAlign: 'center',
+            { field: 'productDto.prodName', headerName: '내용', width: 390, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                  const { orderCount, productDto } = params.row;
                  const prefix = orderCount > 0 ? '판매' : '반품';
@@ -111,11 +111,11 @@ export default function AllowForm(props) {
                } },
             { field: 'orderCount', headerName: '판매수량', width: 150, align: 'center', headerAlign: 'center' },
             { field: 'salesPrice', headerName: '판매금액', width: 150, align: 'center', headerAlign: 'center' },
-            { field: 'orderDate', headerName: '요청일자', width: 150, align: 'center', headerAlign: 'center' },
-            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 300, align: 'center', headerAlign: 'center',
+            { field: 'orderDate', headerName: '요청일자', width: 140, align: 'center', headerAlign: 'center' },
+            { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 290, align: 'center', headerAlign: 'center',
               valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
             },
-            { field: 'memberDto.mname', headerName: '요청자', width: 100, align: 'center', headerAlign: 'center',
+            { field: 'memberDto.mname', headerName: '요청자', width: 90, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                 const { mname, memberDto } = params.row;
                 return `${memberDto.mname}`; }

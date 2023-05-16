@@ -55,6 +55,19 @@ public class ProductPlanService {
     @Autowired
     MemberSerivce memberSerivce;
 
+    //생산 지시 목록 가져오기
+    public List<ProductPlanDto> getPlanProductList(){
+        List<ProductPlanEntity> productPlanEntitiesList = productPlanRepository.findAll();
+
+        List<ProductPlanDto> productPlanDtoList = new ArrayList<>();
+
+        for(int i = 0; i < productPlanEntitiesList.size(); i++){
+            productPlanDtoList.add(productPlanEntitiesList.get(i).toDto());
+        }
+
+
+        return productPlanDtoList;
+    }
 
     //제품별 자재에 비율 담아서 보내기
     public List<MaterialDto> getExistMaterialList(int prodId){
@@ -117,7 +130,7 @@ public class ProductPlanService {
                     String str = "[알림]"+materialEntity.get().getMatID()+"-"+materialEntity.get().getMat_name() + "자재의 재고가 " + (needMatStock - existMatStock) +materialEntity.get().getMat_unit()+" 부족합니다.";
                     returnResultStr.add(str); //재고 부족 알림을 String 배열에 담는다.
                 }else{
-                    String str = "[알림]"+materialEntity.get().getMatID()+"-"+materialEntity.get().getMat_name() + "자재의 재고가 " + (existMatStock - needMatStock) +materialEntity.get().getMat_unit()+"정도 충분합니다.";
+                    String str = "[알림]"+materialEntity.get().getMatID()+"-"+materialEntity.get().getMat_name() + "자재의 재고가 "+ needMatStock+ "만큼 차감되어" + (existMatStock - needMatStock) +materialEntity.get().getMat_unit()+"되었습니다.";
                     returnResultStr.add(str); //재고 부족 알림을 String 배열에 담는다.
                 }
             }

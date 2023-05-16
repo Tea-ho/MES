@@ -25,8 +25,8 @@ public class PlanProductController {
 
     //생산 지시 목록 가져오기
     @GetMapping("")
-    public PageDto getProductList(PageDto pageDto) throws IllegalStateException{
-        return null;
+    public List<ProductPlanDto> getPlanProductList() throws IllegalStateException{
+        return productPlanService.getPlanProductList();
     }
 
     //생산 지시

@@ -32,7 +32,6 @@ public class MaterialInOutDto {
 
 
 
-
     public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, LocalDate cdate, LocalDate udate, AllowApprovalDto allowApprovalDto, MaterialDto materialDto, MemberDto memberdto) {
         this.mat_in_outid = mat_in_outid;
         this.mat_in_type = mat_in_type;
@@ -53,7 +52,19 @@ public class MaterialInOutDto {
                 .allowApprovalEntity(this.allowApprovalDto.toInEntity())
                 .mat_in_code(this.mat_in_code)
                 .memberEntity(this.memberdto.toEntity())
+                .build();
+    }
 
+    //출고용
+    public MaterialInOutEntity toOutEntity(){
+        return MaterialInOutEntity.builder()
+                .mat_in_outid(this.mat_in_outid)
+                .mat_st_stock(this.mat_st_stock)
+                .mat_in_type(this.mat_in_type)
+                .materialEntity(this.materialDto.toEntity())
+                .allowApprovalEntity(this.allowApprovalDto.toOutEntity())
+                .mat_in_code(this.mat_in_code)
+                .memberEntity(this.memberdto.toEntity())
                 .build();
     }
 }

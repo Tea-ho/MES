@@ -37,7 +37,19 @@ public class MaterialDto{
     private int ratio; //비율 값(plan에서 사용할)
 
     public MaterialEntity toEntity() { // 저장용 추후 추가할것있음
-        return   MaterialEntity.builder()
+        return  MaterialEntity.builder()
+                .mat_name(this.mat_name)
+                .mat_unit(this.mat_unit)
+                .mat_code(this.mat_code)
+                .mat_st_exp(this.mat_st_exp)
+                .mat_price(this.mat_price)
+                .build();
+    }
+
+    //출고용 엔티티
+    public MaterialEntity toOutEntity() { // 저장용 추후 추가할것있음
+        return  MaterialEntity.builder()
+                .MatID(this.MatID)
                 .mat_name(this.mat_name)
                 .mat_unit(this.mat_unit)
                 .mat_code(this.mat_code)

@@ -9,7 +9,11 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 import Modal from '@mui/material/Modal';
 
+//모달 내용
 import PlanProductModalContent from './PlanProductModalContent';
+
+//PlanProductList component
+import PlanProductList from './PlanProductList'
 
 //모달 CSS
 const style = {
@@ -125,6 +129,7 @@ export default function PlanProduct(){
                 <div style={{display : "flex", justifyContent : "center", margin : '40px 0px'}}>
                     <Pagination count={totalPage} page = {pageInfo.page} color="primary" onChange = {selectPage}/>
                 </div>
+                <PlanProductList />
                 <div>
                     <Modal
                         open={open}
@@ -135,7 +140,7 @@ export default function PlanProduct(){
 
                         <Box sx={{...style, width: '80%' }}>
                           <h2 id="parent-modal-title">{planProduct.prodName}의 생산 지시</h2>
-                          <PlanProductModalContent planProdId={planProduct.prodId} closeModal={handleClose}/>
+                          <PlanProductModalContent planProductInfo={planProduct} closeModal={handleClose}/>
                           <Button onClick={handleClose}>닫기</Button>
                         </Box>
                       </Modal>

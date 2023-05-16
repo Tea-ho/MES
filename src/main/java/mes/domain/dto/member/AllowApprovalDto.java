@@ -25,4 +25,28 @@ public class AllowApprovalDto {
                 .build();
     }
 
+    //출고용 승인
+    public AllowApprovalEntity toOutEntity(){
+        return AllowApprovalEntity.builder()
+                .al_app_whether(true)
+                .build();
+    }
+
+    public AllowApprovalEntity toPlanInEntity(){
+        return AllowApprovalEntity.builder()
+                .al_app_whether(false)
+                .memberEntity(this.memberEntity)
+                .build();
+    }
+
+    //저장용
+    public AllowApprovalEntity toSaveEntity(){
+        return AllowApprovalEntity.builder()
+                .al_app_no(this.al_app_no)
+                .al_app_whether(this.al_app_whether)
+                .al_app_date(this.al_app_date)
+                .memberEntity(this.memberEntity)
+                .build();
+    }
+
 }

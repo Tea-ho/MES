@@ -47,4 +47,16 @@ public class ProductDto {
                 .build();
 
     }
+
+    //plan 저장용 product
+    public ProductEntity toPlanEntity(){
+        return ProductEntity.builder()
+                .prodId(this.prodId)
+                .prodCode(this.prodCode)
+                .prodDate(this.prodDate)
+                .prodPrice(this.prodPrice)
+                .prodName(this.prodName)
+                .companyEntity(this.companyDto.toEntity())
+                .build();
+    }
 }

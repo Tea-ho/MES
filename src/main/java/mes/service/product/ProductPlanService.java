@@ -1,10 +1,12 @@
 package mes.service.product;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.controller.member.MemberController;
 import mes.domain.Repository.product.MaterialProductRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
 import mes.domain.Repository.product.ProductRepository;
 import mes.domain.dto.material.MaterialDto;
+import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.product.ProductDto;
 import mes.domain.dto.product.ProductPlanDto;
@@ -15,10 +17,17 @@ import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.AllowApprovalRepository;
 import mes.domain.entity.product.MaterialProductEntity;
+import mes.domain.entity.product.ProductPlanEntity;
+import mes.service.Material.MaterialInoutService;
+import mes.service.member.MemberSerivce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
+import javax.swing.text.html.Option;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +48,26 @@ public class ProductPlanService {
 
     @Autowired
     AllowApprovalRepository allowApprovalRepository;
+
+    @Autowired
+    MaterialInoutService materialInoutService;
+
+    @Autowired
+    MemberSerivce memberSerivce;
+
+    //생산 지시 목록 가져오기
+    public List<ProductPlanDto> getPlanProductList(){
+        List<ProductPlanEntity> productPlanEntitiesList = productPlanRepository.findAll();
+
+        List<ProductPlanDto> productPlanDtoList = new ArrayList<>();
+
+        for(int i = 0; i < productPlanEntitiesList.size(); i++){
+            productPlanDtoList.add(productPlanEntitiesList.get(i).toDto());
+        }
+
+
+        return productPlanDtoList;
+    }
 
     //제품별 자재에 비율 담아서 보내기
     public List<MaterialDto> getExistMaterialList(int prodId){
@@ -64,64 +93,125 @@ public class ProductPlanService {
 
     // 제품 생산 지시 => 자재 재고 감소시켜야하는데, 자재 하나라도 재고 부족하면, 생산 지시 막아야 함
     public List<String> postProduct(ProductPlanDto productPlanDto){
-        boolean OKsign = true; //제품 생산 지시 여부 => 유효성 검사(자재 재고) 통과하면 그대로 남는다.
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //date format
 
-        ArrayList<String> resultString = new ArrayList<>(); //결과 문자열
+        boolean okSign = true; //제품 생산 지시 여부 => 유효성 검사(자재 재고) 통과하면 그대로 남는다.
 
-        System.out.println("post Product : " + productPlanDto.toString());
+        ArrayList<String> returnResultStr = new ArrayList<>();  //js에 반환할 내용
 
-        //productEntity에 연결된 materialList 찾아서
+        //productEntity에 연결된 materialList 찾아서 (+기준량)
         List<MaterialProductEntity> materialProductEntities = materialProductRepository.findByMaterial(productPlanDto.getProductDto().getProdId());
-        ArrayList<MaterialInOutEntity> materialInOutEntities = new ArrayList<>(); //자재별 재고들 찾기
 
-        //자재 재고 유효성 검사
+        // mpno 개수 = materials 개수
         for(int i = 0; i < materialProductEntities.size(); i++){
-            //하나씩 자재 목록의 정보를 받아와서 재고 리스트를 받는다.
-            List<MaterialInOutEntity> materialInOutEntitiy = materialInOutEntityRepository.findByMid(materialProductEntities.get(i).getMaterialEntity().getMatID());
 
-            int existMatStock = 0; //존재하는 자재 재고 누적해서 구하기
+            //자재 목록
+            Optional<MaterialEntity> materialEntity = materialEntityRepository.findById(materialProductEntities.get(i).getMaterialEntity().getMatID());
 
-            //자재 재고 모두 더해서 가져오기
-            for(int j = 0; j < materialInOutEntitiy.size(); j++) {
-                existMatStock += materialInOutEntitiy.get(j).getMat_st_stock();
-            }
+            List<MaterialInOutEntity> materialInOutEntityList = new ArrayList<>(); //반복문 돌때마다 초기화를 해야 자재마다 재고를 구할 수 있다.
 
-            // 하나씩 엔티티로 변환
-            MaterialInOutEntity materialInOut = materialInOutEntitiy.get(i);
-            System.out.println("자재 재고 엔티티 "+ i +"번째 하나 변환 : " +materialInOut);
+            if(materialEntity.isPresent()){
+                int existMatStock = 0; //존재하는 자재 재고 누적해서 구하기
+                int needMatStock = 0; // 필요한 자재 재고
 
-            //자재별 필요한 자재 재고
-            int needMatStock = (materialProductEntities.get(i).getReferencesValue()) * Integer.parseInt(productPlanDto.getProdPlanCount());
+                materialInOutEntityList = materialInOutEntityRepository.findByMaterial(materialEntity.get().getMatID()); //자재 하나당 가지고 있는 inout
 
-            //재고 여부 확인
-            if(existMatStock < needMatStock) { //자재 재고 부족하면
-                OKsign = false;
-                String strResult = materialInOut.getMaterialEntity().getMatID() + "번 자재의 재고가 " + (needMatStock - materialInOut.getMat_st_stock()) + "개 부족합니다.";
-                resultString.add(strResult);
-            }else{ //자재 재고 부족하지 않으면 아래서 재고 빼주기 위해 List에 추가해준다.
-                MaterialInOutEntity materialInOutEntity = new MaterialInOutEntity();
-                //필요한 정보 장착하기
-                materialInOutEntity.setMaterialEntity(materialInOut.getMaterialEntity());
-                materialInOutEntity.setMat_st_stock(-(needMatStock));
-                materialInOutEntity.setMat_in_code(materialInOut.getMat_in_code());
-                materialInOutEntity.setMat_in_type(materialInOut.getMat_in_type());
+                for(int j = 0; j < materialInOutEntityList.size(); j++){
+                    existMatStock += materialInOutEntityList.get(j).getMat_in_type(); // 자재 재고 누적 더하기(존재하는 총 재고)
+                }
+                System.out.println(materialEntity.get().getMat_name() + "자재 총 재고 : " + existMatStock);
 
-                // 승인정보
-                AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toInEntity());
+                //제품을 만들기 위해 각각의 자재 필요한 재고
+                needMatStock = Integer.parseInt(productPlanDto.getProdPlanCount()) * (materialProductEntities.get(i).getReferencesValue());
+                System.out.println(materialEntity.get().getMat_name() + "자재 필요한 재고 : " + needMatStock);
 
-                materialInOutEntities.add(materialInOutEntity);
+                if(existMatStock < needMatStock){ //재고가 부족하면.
+                    okSign = false; //한개라도 부족하면 제품을 만들 수 없음.
+                    String str = "[알림]"+materialEntity.get().getMatID()+"-"+materialEntity.get().getMat_name() + "자재의 재고가 " + (needMatStock - existMatStock) +materialEntity.get().getMat_unit()+" 부족합니다.";
+                    returnResultStr.add(str); //재고 부족 알림을 String 배열에 담는다.
+                }else{
+                    String str = "[알림]"+materialEntity.get().getMatID()+"-"+materialEntity.get().getMat_name() + "자재의 재고가 "+ needMatStock+ "만큼 차감되어" + (existMatStock - needMatStock) +materialEntity.get().getMat_unit()+"되었습니다.";
+                    returnResultStr.add(str); //재고 부족 알림을 String 배열에 담는다.
+                }
             }
         }
 
-        if(OKsign){ //제품 생산 지시 넘기고, 자재 재고 감소 시킨다.
-            //자재 재고 처리
-            for(int i = 0; i < materialInOutEntities.size(); i++){
+        boolean mat_okOut = true; //자재 재고가 모두 감소되었는지 확인용
 
+        if(okSign){ //자재의 재고가 모두 충분한게 확인이 되었음
+
+            //자재 재고를 이제 빼준다.
+            //material_product row의 개수 = material row 개수
+            for(int i = 0; i < materialProductEntities.size(); i++){
+                Optional<MaterialEntity> materialEntity = materialEntityRepository.findById(materialProductEntities.get(i).getMaterialEntity().getMatID());
+                System.out.println(materialEntity.get());
+
+                List<MaterialInOutEntity> materialInOutEntityList = new ArrayList<>(); //반복문 돌때마다 초기화를 해야 자재마다 재고를 구할 수 있다.
+                if(materialEntity.isPresent()){
+                    MaterialInOutDto dto = new MaterialInOutDto();
+
+                    AllowApprovalDto allowApprovalDto = new AllowApprovalDto();
+                    allowApprovalDto.setMemberEntity(productPlanDto.getMemberDto().toEntity());
+                    allowApprovalDto.setAl_app_whether(true); //제품은 승인X
+
+                    dto.setMaterialDto(materialEntity.get().toDto());
+                    dto.setAllowApprovalDto(allowApprovalDto);
+
+                    int needMatStock = Integer.parseInt(productPlanDto.getProdPlanCount()) * (materialProductEntities.get(i).getReferencesValue());
+                    int existMatStock = 0; //존재하는 자재 재고 누적해서 구하기
+
+                    materialInOutEntityList = materialInOutEntityRepository.findByMaterial(materialEntity.get().getMatID()); //자재 하나당 가지고 있는 inout
+
+                    for(int j = 0; j < materialInOutEntityList.size(); j++){
+                        existMatStock += materialInOutEntityList.get(j).getMat_in_type(); // 자재 재고 누적 더하기(존재하는 총 재고)
+                    }
+
+                    System.out.println("재고 현황 ? " + existMatStock);
+
+                    dto.setMat_st_stock(existMatStock - needMatStock); //재고처리
+                    dto.setMat_in_type(-needMatStock); // 차감되는 재고
+                    dto.setMat_in_code(0);
+                    dto.setMemberdto(productPlanDto.getMemberDto());
+
+                    System.out.println("materialOut service에 전달 : " + dto);
+
+                    mat_okOut = materialInoutService.materialOut(dto);
+
+                    System.out.println(i+"번째 자재입출고 결과 : " + mat_okOut);
+                }
             }
-            String strResult = "제품 생산 지시가 완료 되었습니다.";
         }
 
+        //재고가 무사히 다 적용이 되었다면
+        if(mat_okOut && okSign){
+            //제품 생산 지시
+            AllowApprovalEntity inAllowapproval = AllowApprovalEntity.builder()
+                    .memberEntity(productPlanDto.getMemberDto().toEntity())
+                    .al_app_date(simpleDateFormat.format(new Date()))
+                    .al_app_whether(false)
+                    .build();
 
-        return resultString;
+            System.out.println("확인 " + inAllowapproval);
+
+            AllowApprovalEntity allowApprovalEntity = allowApprovalRepository.save(inAllowapproval);
+            System.out.println("저장되었다면 확인 : " + allowApprovalEntity);
+
+            productPlanDto.setAllowApprovalDto(allowApprovalEntity.toPlanDto());
+            ProductPlanEntity productPlanEntity = productPlanDto.toEntity();
+            productPlanEntity.setProdPlanDate(simpleDateFormat.format(new Date()));
+
+
+            System.out.println("productPlan DB에 들어가기 전 : " + productPlanEntity);
+
+            ProductPlanEntity entity = productPlanRepository.save(productPlanEntity);
+
+            System.out.println("productPlan 엔티티 DB에 저장 완료 " + entity);
+
+            if(entity.getProdPlanNo() > 0){ //생산 지시가 들어갔으면
+                returnResultStr.add("[성공]생산지시가 완료되었습니다.");
+            }
+        }
+
+        return returnResultStr;
     }
 }

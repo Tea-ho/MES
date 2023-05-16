@@ -1,9 +1,11 @@
 package mes.service.Material;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.controller.member.MemberController;
 import mes.domain.dto.material.InOutPageDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
+import mes.domain.dto.member.MemberDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.material.MaterialEntityRepository;
 import mes.domain.entity.material.MaterialInOutEntity;
@@ -52,7 +54,6 @@ public class MaterialInoutService {
     // 입고내역
     @Transactional
     public boolean materialIn(MaterialInOutDto dto){
-
         if(dto.getMemberdto()==null){return false;}
         MemberEntity member = memberRepository.findByMnameAndMpassword(dto.getMemberdto().getMname() , dto.getMemberdto().getMpassword());
 
@@ -157,5 +158,40 @@ public class MaterialInoutService {
 
         return false;
     }
+
+    @Transactional
+    public boolean materialOut(MaterialInOutDto dto){
+        System.out.println("자재 출고 : " + dto);
+
+        System.out.println("로그인한 멤버 : " + dto.getMemberdto());
+
+        /*//로그인한 사람의 정보 확인
+        MemberEntity member = memberRepository.findByMnameAndMpassword(dto.getMemberdto().getMname() , dto.getMemberdto().getMpassword());
+*/
+        // materialInOutEntity에 materialEntity 설정
+
+        MaterialInOutEntity entity = new MaterialInOutEntity();;
+        entity.setMaterialEntity(dto.getMaterialDto().toOutEntity());
+        entity.setMemberEntity(dto.getMemberdto().toEntity());
+        entity.setMat_in_type(dto.getMat_in_type());
+        entity.setMat_st_stock(dto.getMat_st_stock());
+        entity.setMat_in_code(dto.getMat_in_code());
+
+        System.out.println("자재 중간 점검 : " + entity);
+
+        // 승인정보
+        AllowApprovalEntity approvalEntity = allowApprovalRepository.save(dto.getAllowApprovalDto().toOutEntity());
+
+        // 자재와 데이터 넣기
+        entity.setAllowApprovalEntity(approvalEntity);
+
+        // 세이브
+        MaterialInOutEntity result = materialInOutEntityRepository.save(entity);
+
+        if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
+        return false;
+
+    }
+
 
 }

@@ -20,6 +20,10 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+
+import { getcompany, getproduct } from './salescreate.js';
 
 import SalesHeader from './SalesHeader'
 
@@ -80,21 +84,16 @@ export default function SalesView( props ){
       boxShadow: 24,
       p: 4,
     };
+
       const [open, setOpen] = React.useState(false);
       const handleOpen = (e) =>{
         const order_id = e.target.value;
         const selectedOrder = list.find((item) => item.order_id === order_id);
         console.log(order_id);
-        console.log(selectedOrder)
         setOpen(true);
       }
       const handleClose = () => setOpen(false);
 
-    // 판매 수정
-    const SalesUpdate = (e) => {
-
-
-    };
 
     // 판매 확정
     const SalesResult = (e) => {
@@ -118,6 +117,84 @@ export default function SalesView( props ){
     }
 
 
+    const [ CompanyList , setCompanyList ] = useState([])     // 회사
+    const [ listProduct , setListProduct ] = useState([])     // 물품
+    const [orderCount, setOrderCount] = useState('');         // 개수
+    const [salesPrice, setSalesPrice] = useState('');         // 가격
+
+    // 회사 호출
+    useEffect ( () => {
+        axios.get('/sales/getcompany')
+            .then( r => {
+                console.log(r)
+                setCompanyList(r.data)
+            })
+    }, [] )
+
+    // 물품 호출
+        useEffect ( () => {
+            axios.get('/sales/getproduct')
+                .then( r => {
+                    console.log(r)
+                    setListProduct(r.data)
+                })
+        }, [] )
+
+    const SalesUpdate = (order_id) => {
+
+        // 유효성검사1 [ 공백 or 기본값인 경우 불가 ]
+        if ( company == 0 ){ alert('회사를 선택해주세요.') return false; }
+        if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.') return false; }
+        if ( orderCount == '' ){ alert('판매할 물품 개수를 입력해주세요.') return false; }
+        if ( salesPrice == '' ){ alert('판매할 물품 가격을 입력해주세요.') return false; }
+
+        // 유효성검사2 [ 아이디 로그인 ]
+        if(sessionStorage.getItem('member') == null){return false}
+
+        let info = {
+          order_id : order_id ,
+          memberDto : JSON.parse(sessionStorage.getItem('member')) ,
+          orderCount: orderCount,
+          salesPrice: salesPrice,
+          cno : company ,
+          prodId : prodName
+        }
+
+        console.log(info)
+
+        axios.put('/sales/SalesUpdate', info)
+          .then(r => { console.log(r);
+            if (r.data === true) {
+              alert('수정성공')
+              window.location.href = "/component/sales/SalesHeader"
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+
+    const [company, setCompany] = useState(0);
+        const handleChange = (event) => {
+            console.log(event.target.value)
+            setCompany(event.target.value);
+        };
+
+    const [ prodName, setProdName] = useState(0);
+            const handleChange2 = (event) => {
+                console.log(event.target.value)
+                setProdName(event.target.value);
+        };
+
+    // orderCount와 salesPrice 값 업데이트 함수
+    const handleOrderCountChange = (event) => {
+      setOrderCount(event.target.value);
+    }
+
+    const handleSalesPriceChange = (event) => {
+      setSalesPrice(event.target.value);
+    }
+
     return (
 
         <div>
@@ -127,13 +204,15 @@ export default function SalesView( props ){
                               <TableRow>
                                 <TableCell align="center" style={{ width:'5%' }}>판매번호</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>판매날짜</TableCell>
-                                <TableCell align="center" style={{ width:'5%' }}>물품번호</TableCell>
-                                <TableCell align="center" style={{ width:'10%' }}>판매물품명</TableCell>
-                                <TableCell align="center" style={{ width:'10%' }}>판매개수</TableCell>
-                                <TableCell align="center" style={{ width:'10%' }}>판매가격</TableCell>
-                                <TableCell align="center" style={{ width:'10%' }}>판매한 회사명</TableCell>
+                                <TableCell align="center" style={{ width:'6%' }}>물품번호</TableCell>
+                                <TableCell align="center" style={{ width:'10%' }}>물품명</TableCell>
+                                <TableCell align="center" style={{ width:'8%' }}>판매개수</TableCell>
+                                <TableCell align="center" style={{ width:'8%' }}>판매가격</TableCell>
+                                <TableCell align="center" style={{ width:'10%' }}>회사명</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>판매상태</TableCell>
-                                <TableCell align="center" style={{ width:'15%' }}>비고</TableCell>
+                                <TableCell align="center" style={{ width:'10%' }}>이름(직급)</TableCell>
+                                <TableCell align="center" style={{ width:'12%' }}>비고</TableCell>
+
 
                               </TableRow>
                             </TableHead>
@@ -150,6 +229,7 @@ export default function SalesView( props ){
                                     <TableCell align="center">{e.salesPrice}</TableCell>
                                     <TableCell align="center">{e.companyDto.cname}</TableCell>
                                     <TableCell align="center">{e.order_status == 0 ? '판매대기' : e.order_status == 1 ? '판매승인' : '판매확정' }</TableCell>
+                                    <TableCell align="center">  {`${e.memberDto.mname} (${e.memberDto.position})`}</TableCell>
 
                                     <TableCell align="center">
                                       <ButtonGroup variant="contained" aria-label="outlined Secondary button group">
@@ -169,14 +249,50 @@ export default function SalesView( props ){
                                                       </Typography>
 
                                                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                                        order_id에 맞는 값 list에서 빼와야함!
+                                                                         <div style={{border: "2px solid #1a75ff" , borderRadius : '15px'}}>
+                                                                         <div style={{display : 'flex' , padding : '10px', margin : '10px'}}>
+                                                                                <Box sx={{ minWidth: 120 }}>
+                                                                                           <FormControl style={{ width : '100px' , margin : '20px 0px'}}>
+                                                                                             <InputLabel id="demo-simple-select-label">회사</InputLabel>
+                                                                                             <Select  value={ company } label="카테고리" onChange={ handleChange } >
+                                                                                                 <MenuItem value={0}>회사</MenuItem>
+                                                                                                 {
+                                                                                                     CompanyList.map( (c) => {
+                                                                                                         return   <MenuItem value={c.cno}> { c.cname } </MenuItem>
+                                                                                                     })
+                                                                                                 }
+                                                                                             </Select>
+                                                                                           </FormControl>
+                                                                                         </Box>
+                                                                                <Box sx={{ minWidth: 120 }}>
+                                                                                           <FormControl style={{ width : '100px' , margin : '20px 0px'}}>
+                                                                                             <InputLabel id="demo-simple-select-label">물품</InputLabel>
+                                                                                             <Select  value={ prodName } label="카테고리" onChange={ handleChange2 } >
+                                                                                                 <MenuItem value={0}>물품이름</MenuItem>
+                                                                                                 {
+                                                                                                     listProduct.map( (p) => {
+                                                                                                         return   <MenuItem value={p.prodId}>{ p.prodName }</MenuItem>
+                                                                                                     })
+                                                                                                 }
+                                                                                             </Select>
+                                                                                           </FormControl>
+                                                                                         </Box>
+                                                                                 </div>
+                                                                         <div>
+                                                                                            <TextField style={{ padding: '10px', margin: '10px' }} className="orderCount" id="orderCount" label="판매개수" variant="outlined" value={orderCount} onChange={(e) => setOrderCount(e.target.value)} />
+                                                                                            <TextField style={{ padding: '10px', margin: '10px' }} className="salesPrice" id="salesPrice" label="판매가격" variant="outlined" value={salesPrice} onChange={(e) => setSalesPrice(e.target.value)} />
+
+                                                                             <Stack spacing={2} direction="row">
+                                                                                  <ButtonGroup>
+                                                                                        <Button type="submit" value={e.order_id} onClick={() => SalesUpdate(e.order_id)}>
+                                                                                          수정완료
+                                                                                        </Button>
+                                                                                        <Button type="button" onClick={handleClose}> 수정취소 </Button>
+                                                                                  </ButtonGroup>
+                                                                             </Stack>
+                                                                          </div>
+                                                                         </div>
                                                       </Typography>
-
-                                                      <ButtonGroup>
-                                                        <Button type="button" value={e.order_id} onClick={SalesUpdate}> 수정완료 </Button>
-                                                        <Button type="button" onClick={handleClose}> 수정취소 </Button>
-                                                      </ButtonGroup>
-
                                                     </Box>
                                                   </Modal>
                                             <Button type="button" value={e.order_id} onClick={SalesDelete}>삭제</Button>

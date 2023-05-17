@@ -56,6 +56,7 @@ public class SalesEntity extends BaseTime {
                 .companyDto(this.companyEntity.toDto() )
                 .prodId(this.productEntity.getProdId())
                 .prodName(this.productEntity.getProdName())
+                .memberDto(this.memberEntity.toDto())
                 .allowApprovalDto(this.allowApprovalEntity.toInDto())
                 .cdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .udate(this.udate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))

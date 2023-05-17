@@ -22,8 +22,8 @@ import TextField from '@mui/material/TextField';
 export default function SalesCreate() {
 
 
-    const [ list , setList ] = useState([])     // 회사
-    const [ listProduct , setListProduct ] = useState([])   // 물품
+    const [ list , setList ] = useState([])                 // ctype 2(판매처)인 회사
+    const [ listProduct , setListProduct ] = useState([])   // 공정 완료된 물품
 
     // 회사 호출
     useEffect ( () => {
@@ -45,26 +45,23 @@ export default function SalesCreate() {
 
     const salesCreate = () => {
 
-        if ( company == 0 ){
-            alert('회사를 선택해주세요.')
-            return false;
+        // 값들 null or 기본값일때 유효성검사
+        if ( company == 0 ){ alert('회사를 선택해주세요.'); return false; }
+        if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.') return false; }
+        if ( document.getElementById('orderCount').value == '' ){ alert('판매할 물품 개수를 입력해주세요.') return false; }
+        if ( document.getElementById('salesPrice').value == '' ){ alert('판매할 물품 가격을 입력해주세요.') return false; }
+
+        // 로그인해야 판매등록 가능!
+        if(sessionStorage.getItem('member') == null){
+        alert('로그인 후 가능한 기능입니다.'); return false;
         }
-        if ( prodName == 0 ){
-            alert('판매할 물품 이름을 선택해주세요.')
-            return false;
-        }
 
-        // 아이디 로그인 해야함 [ 조건 ]
-        if(sessionStorage.getItem('member') == null){return false}
-
-        let info = { // mno , order_status 추가적으로 필요
-
+        let info = {
           memberDto : JSON.parse(sessionStorage.getItem('member')) ,
           orderCount: document.getElementById('orderCount').value,
           salesPrice: document.getElementById('salesPrice').value,
           cno : company ,
           prodId : prodName
-
         }
 
         console.log(info)
@@ -81,18 +78,18 @@ export default function SalesCreate() {
           });
       }
 
+    // 선택한 회사 번호 저장
     const [company, setCompany] = useState(0);
         const handleChange = (event) => {
             console.log(event.target.value)
             setCompany(event.target.value);
-
         };
 
+    // 선택한 물품 번호 저장
     const [ prodName, setProdName] = useState(0);
             const handleChange2 = (event) => {
                 console.log(event.target.value)
                 setProdName(event.target.value);
-
         };
 
       return (
@@ -134,6 +131,5 @@ export default function SalesCreate() {
                      </Stack>
                   </div>
                  </div>
-
                );
 }

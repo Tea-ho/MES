@@ -17,6 +17,7 @@ import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductProcessEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
+import mes.webSocket.ChattingHandler;
 import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.socket.TextMessage;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -56,6 +58,9 @@ public class SalesService {
 
     @Autowired
     AllowApprovalRepository allowApprovalRepository;
+
+    @Autowired
+    private ChattingHandler chattingHandler;
 
     // 0. 판매 공정 product_process 출력
     public ProductProcessPageDto getProductProcess(ProductProcessPageDto productProcessPageDto){
@@ -100,11 +105,21 @@ public class SalesService {
         salesEntity.setAllowApprovalEntity(approvalEntity);         // 승인 정보 저장
         salesEntity.setCompanyEntity(companyEntity);                // 회사 저장
         salesEntity.setProductEntity( productEntity );              // 물품 저장
+
         salesEntity.setOrder_status(0);                             // 기본 등록 order_status = 0
 
         salesEntity.setMemberEntity(member);                        // 멤버 저장
 
         log.info("salesEntity : " + salesEntity);
+
+        // 채팅 소켓 판매쪽 : 30번
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("30"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
         if ( salesEntity.getOrder_id() >= 1 ) { return true; }
 
         return false;
@@ -113,7 +128,7 @@ public class SalesService {
 
 
 
-    // [등록 조건1] ctype 2인 회사불러오기 ( react 에서 처리 )
+    // [등록 조건1] ctype 2인 회사불러오기
     @Transactional
     public List<CompanyDto> getCompany( ) {
         List<CompanyDto> companyDtoList = new ArrayList<>();
@@ -168,15 +183,24 @@ public class SalesService {
 
     }
 
+    // 3. 판매 수정
     @Transactional
     public boolean SalesUpdate( SalesDto salesDto){
         SalesEntity salesEntity = salesRepository.findById(salesDto.getOrder_id()).get();
 
-        salesEntity.setOrderCount(salesDto.getOrderCount());
-        salesEntity.setSalesPrice(salesDto.getSalesPrice());
-
         CompanyEntity companyEntity = companyRepository.findById(salesDto.getCno()).get();
-        salesEntity.setCompanyEntity(companyEntity);
+        salesEntity.setCompanyEntity(companyEntity);            // 회사 수정
+
+
+        ProductEntity productEntity = productRepository.findById( salesDto.getProdId()).get();
+        salesEntity.setProductEntity( productEntity );          // 물품 저장
+
+        log.info("productEntity 수정된 prodid번호 : " + productEntity.getProdId());
+
+        salesEntity.setOrderCount(salesDto.getOrderCount());    // 개수 수정
+        salesEntity.setSalesPrice(salesDto.getSalesPrice());    // 가격 수정
+
+        log.info("수정 처리 salesEntity : " + salesEntity);
 
         salesRepository.save(salesEntity);
 

@@ -40,7 +40,7 @@ export default function CreateProduct(props){
             } )
     }, [pageInfo] )
 
-    //체크 박스 업데이트 (수량을 입력하고 넣어야하는 문제점이 존재함...ㅠ)
+    //체크 박스 업데이트
     const checkboxEventHandler = (event, num) => {
         let domValue = '.matRate'+num;
         let rate = document.querySelector(domValue)

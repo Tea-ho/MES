@@ -74,6 +74,7 @@ export default function InProduct(props){ //제품 추가 부분
             .then((r) => {
                 if(r.data == true){
                     alert('등록 성공');
+                    props.tapHandler(null, 1)
                 }else{
                     alert('등록 실패')
                 }

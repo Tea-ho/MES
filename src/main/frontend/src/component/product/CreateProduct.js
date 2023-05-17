@@ -34,7 +34,6 @@ export default function CreateProduct(props){
      useEffect( ()=>{//컴포넌트 로딩시(열때, 시작시) 해당 쟈재 정보를 모두 가져온다.
         axios.get('/materials/materialList',  { params : pageInfo })
           .then( r => {
-                console.log(r)
                 setList(r.data.materialList)//가져온 자재 정보를 list에 담는다.
                 setTotalPage(r.data.totalPage);
                 setTotalCount(r.data.totalCount);
@@ -58,6 +57,28 @@ export default function CreateProduct(props){
        } else {
          setChecked([...checked, referencesValue]);
        }
+    }
+
+    //비율 설정 바꿀 때 checkbox 바꾸기
+    const rateChangeHandler = (event, num) => {
+        let domValue = '.matRate'+num;
+        let rate = document.querySelector(domValue)
+
+        let referencesValue = {
+            matId : num,
+            matRate : rate ? Number(rate.value)  : 0
+        }
+
+        //비율 설정할 때 checked되어있을 경우만 비율 설정(체크되어있지 않으면 추가X)
+        setChecked(checked.map((item) => {
+               if (item.matId === referencesValue.matId) {
+                   return {
+                       ...item,
+                       matRate: referencesValue.matRate //비율값만 변경
+                   };
+               }
+               return item;
+        }));
     }
 
     //자재 페이지 변경
@@ -107,7 +128,7 @@ export default function CreateProduct(props){
                              <TableCell align="center" >{e.mdate}</TableCell>
                              <TableCell align="center" >{e.mat_code}</TableCell>
                              <TableCell align="center"><Checkbox onChange={(event) => checkboxEventHandler(event, e.matID)}/></TableCell>
-                             <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율"/></TableCell>
+                             <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율" onChange = {(event) => rateChangeHandler(event, e.matID)}/></TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -123,7 +144,7 @@ export default function CreateProduct(props){
                         </div>
                     </Container>
                     <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
-                        <InProduct material={checked}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
+                        <InProduct material={checked} tapHandler={props.handleTap}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                     </div>
              </div>
     </>);

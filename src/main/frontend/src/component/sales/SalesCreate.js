@@ -44,7 +44,6 @@ export default function SalesCreate() {
         }, [] )
 
     const salesCreate = () => {
-
         // 값들 null or 기본값일때 유효성검사
         if ( company == 0 ){ alert('회사를 선택해주세요.'); return false; }
         if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.'); return false; }

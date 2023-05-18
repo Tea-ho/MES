@@ -28,10 +28,14 @@ import { getcompany, getproduct } from './salescreate.js';
 import SalesHeader from './SalesHeader'
 
 export default function SalesView( props ){
-    const [list, setList] = useState([]);
+    const [list, setList] = useState([]); // sales 모든 정보 담긴 변수
+    const [ CompanyList , setCompanyList ] = useState([])     // 저장된 회사 리스트
+    const [ ProductList , setProductList ] = useState([])     // 저장된 물품 리스트
+    const [orderCount, setOrderCount] = useState('');         // 개수
+    const [salesPrice, setSalesPrice] = useState('');         // 가격
 
     let [ pageInfo2 , setPageInfo2 ] = useState( { 'page' : 1 , 'keyword' : '' , 'order_id' : 0 } )
-    let[totalPage2, setTotalPage2] = useState(1); //총 페이지수
+    let[totalPage2, setTotalPage2] = useState(1);   //총 페이지수
     let[totalCount2, setTotalCount2] = useState(0); //총 판매 등록 개수
 
     // 판매 출력 페이지 렌더링
@@ -45,9 +49,9 @@ export default function SalesView( props ){
         });
     }, [pageInfo2]);
 
-    // sales 검색
+    // sales order_status 검색 [ 0 : 승인 전 / 1 : 승인 후, 판매 전 / 2 : 판매 후 ]
     const onSearch2 =()=>{
-        pageInfo2.keyword = document.querySelector(".keyword2").value;
+        pageInfo2.keyword = document.querySelector(".keyword").value;
         pageInfo2.page = 1
         document.querySelector(".keyword").value = '';
         setPageInfo2({...pageInfo2});
@@ -73,40 +77,29 @@ export default function SalesView( props ){
             })
     }
     // 판매 수정 박스 style
-    const style = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: 400,
-      bgcolor: 'background.paper',
-      border: '2px solid #000',
-      boxShadow: 24,
-      p: 4,
+    const style = { position: 'absolute', top: '50%', left: '50%',
+      transform: 'translate(-50%, -50%)', width: 360, bgcolor: 'background.paper',
+      border: '2px solid #000', boxShadow: 24, p: 4,
     };
 
-      const [open, setOpen] = React.useState(false);
-      const handleOpen = (e) =>{
-        const order_id = e.target.value;
-        const selectedOrder = list.find((item) => item.order_id === order_id);
-        console.log(order_id);
-        setOpen(true);
-      }
-      const handleClose = () => setOpen(false);
 
+    const [open, setOpen] = React.useState(false);
+    const handleClose = () => setOpen(false);
+
+    const handleOpen = (e) =>{
+       const order_id = e.target.value;
+       const selectedOrder = list.find((item) => item.order_id === order_id);
+       console.log(order_id);
+       setOpen(true);
+    }
 
     // 판매 확정
     const SalesResult = (e) => {
          console.log(e.target.value)
-         const [order_id, al_app_no , prodId] = e.target.value.split(",");
-         let info = {
-                    al_app_no : al_app_no ,
-                    order_id : order_id ,
-                    prodId : prodId
-         }
+         const [order_id, al_app_no , prodId] = e.target.value.split(","); // 값 전달 split , 로 분류
+         let info = { al_app_no : al_app_no , order_id : order_id , prodId : prodId }
          axios.put('/sales/SalesStock' , info )
              .then ( r => {
-                 console.log(r);
                  if( r.data == true ) {
                      alert('판매 최종 확정 처리되었습니다.')
                      window.location.href = "/component/sales/SalesHeader"
@@ -115,12 +108,6 @@ export default function SalesView( props ){
                  }
              })
     }
-
-
-    const [ CompanyList , setCompanyList ] = useState([])     // 회사
-    const [ listProduct , setListProduct ] = useState([])     // 물품
-    const [orderCount, setOrderCount] = useState('');         // 개수
-    const [salesPrice, setSalesPrice] = useState('');         // 가격
 
     // 회사 호출
     useEffect ( () => {
@@ -136,12 +123,12 @@ export default function SalesView( props ){
             axios.get('/sales/getproduct')
                 .then( r => {
                     console.log(r)
-                    setListProduct(r.data)
+                    setProductList(r.data)
                 })
         }, [] )
 
+    // 판매 수정
     const SalesUpdate = (order_id) => {
-
         // 유효성검사1 [ 공백 or 기본값인 경우 불가 ]
         if ( company == 0 ){ alert('회사를 선택해주세요.'); return false; }
         if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.'); return false; }
@@ -154,10 +141,8 @@ export default function SalesView( props ){
         let info = {
           order_id : order_id ,
           memberDto : JSON.parse(sessionStorage.getItem('member')) ,
-          orderCount: orderCount,
-          salesPrice: salesPrice,
-          cno : company ,
-          prodId : prodName
+          orderCount: orderCount, salesPrice: salesPrice,
+          cno : company , prodId : prodName
         }
 
         console.log(info)
@@ -174,29 +159,30 @@ export default function SalesView( props ){
           });
       }
 
+    // 저장할 회사
     const [company, setCompany] = useState(0);
         const handleChange = (event) => {
             console.log(event.target.value)
             setCompany(event.target.value);
         };
 
+    // 저장할 물품
     const [ prodName, setProdName] = useState(0);
             const handleChange2 = (event) => {
                 console.log(event.target.value)
                 setProdName(event.target.value);
         };
 
-    // orderCount와 salesPrice 값 업데이트 함수
+    // OrderCount  업데이트 함수
     const handleOrderCountChange = (event) => {
       setOrderCount(event.target.value);
     }
-
+    // SalesPrice  업데이트  값
     const handleSalesPriceChange = (event) => {
       setSalesPrice(event.target.value);
     }
 
     return (
-
         <div>
                 <TableContainer component={Paper}>
                           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -212,11 +198,8 @@ export default function SalesView( props ){
                                 <TableCell align="center" style={{ width:'10%' }}>판매상태</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>이름(직급)</TableCell>
                                 <TableCell align="center" style={{ width:'12%' }}>비고</TableCell>
-
-
                               </TableRow>
                             </TableHead>
-
 
                             <TableBody>
                                 {list.map((e) => (
@@ -236,21 +219,16 @@ export default function SalesView( props ){
                                         {e.order_status === 0 ?
                                           <>
                                                   <Button type="button" value={e.order_id} onClick={handleOpen}>수정</Button>
-                                                  <Modal
-                                                    open={open}
-                                                    onClose={handleClose}
-                                                    aria-labelledby="modal-modal-title"
-                                                    aria-describedby="modal-modal-description"
-                                                  >
+                                                  <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" >
                                                     <Box sx={style}>
 
-                                                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                                                        판매현황
+                                                      <Typography style={{display:'flex' , justifyContent : 'center'}} id="modal-modal-title" variant="h6" component="h2">
+                                                        판매 수정
                                                       </Typography>
 
                                                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                                                          <div style={{border: "2px solid #1a75ff" , borderRadius : '15px'}}>
-                                                                         <div style={{display : 'flex' , padding : '10px', margin : '10px'}}>
+                                                                         <div style={{display : 'flex' , justifyContent: 'center', padding : '10px', margin : '10px'}}>
                                                                                 <Box sx={{ minWidth: 120 }}>
                                                                                            <FormControl style={{ width : '100px' , margin : '20px 0px'}}>
                                                                                              <InputLabel id="demo-simple-select-label">회사</InputLabel>
@@ -270,7 +248,7 @@ export default function SalesView( props ){
                                                                                              <Select  value={ prodName } label="카테고리" onChange={ handleChange2 } >
                                                                                                  <MenuItem value={0}>물품이름</MenuItem>
                                                                                                  {
-                                                                                                     listProduct.map( (p) => {
+                                                                                                     ProductList.map( (p) => {
                                                                                                          return   <MenuItem value={p.prodId}>{ p.prodName }</MenuItem>
                                                                                                      })
                                                                                                  }
@@ -279,17 +257,18 @@ export default function SalesView( props ){
                                                                                          </Box>
                                                                                  </div>
                                                                          <div>
-                                                                                            <TextField style={{ padding: '10px', margin: '10px' }} className="orderCount" id="orderCount" label="판매개수" variant="outlined" value={orderCount} onChange={(e) => setOrderCount(e.target.value)} />
-                                                                                            <TextField style={{ padding: '10px', margin: '10px' }} className="salesPrice" id="salesPrice" label="판매가격" variant="outlined" value={salesPrice} onChange={(e) => setSalesPrice(e.target.value)} />
 
-                                                                             <Stack spacing={2} direction="row">
+                                                                                <TextField  style={{ display : 'flex' , justifyContent: 'center', padding: '10px', margin: '10px' }} className="orderCount" id="orderCount" label="판매개수" variant="outlined" value={orderCount} onChange={(e) => setOrderCount(e.target.value)} />
+                                                                                <TextField style={{ display : 'flex' , justifyContent: 'center', padding: '10px', margin: '10px' }} className="salesPrice" id="salesPrice" label="판매가격" variant="outlined" value={salesPrice} onChange={(e) => setSalesPrice(e.target.value)} />
+
+                                                                                <Stack style={{ display : 'flex' , justifyContent: 'center' , marginBottom: '30px' }} spacing={2} direction="row">
                                                                                   <ButtonGroup>
                                                                                         <Button type="submit" value={e.order_id} onClick={() => SalesUpdate(e.order_id)}>
                                                                                           수정완료
                                                                                         </Button>
                                                                                         <Button type="button" onClick={handleClose}> 수정취소 </Button>
                                                                                   </ButtonGroup>
-                                                                             </Stack>
+                                                                                </Stack>
                                                                           </div>
                                                                          </div>
                                                       </Typography>
@@ -313,15 +292,16 @@ export default function SalesView( props ){
 
                           </Table>
                         </TableContainer>
+                        <Container>
+                            <div style={{display : 'flex' , justifyContent : 'center' }}>
+                                        <Pagination count={totalPage2}  color="primary" onChange={selectPage2}/>
+                            </div>
 
-                        <div style={{display : 'flex' , justifyContent : 'center' }}>
-                                    <Pagination count={totalPage2}  color="primary" onChange={selectPage2}/>
-                        </div>
-
-                        <div>
-                            <input type="text" className="keyword2" />
-                            <button type="button" onClick={onSearch2}> 검색 </button>
-                         </div>
+                            <div style={{display : 'flex' , justifyContent : 'center' , padding : '10px'  }}>
+                                <input type="text" className="keyword" />
+                                <button type="button" onClick={onSearch2}> 검색 </button>
+                            </div>
+                        </Container>
         </div>
 
     )

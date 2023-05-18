@@ -21,7 +21,7 @@ export default function SalesHeader() {
   return (
     <>
       <div>
-        <h3> 판매가능 제품 현황 </h3>
+        <h3> 제품공정 현황 </h3>
         <StockView />
       </div>
 

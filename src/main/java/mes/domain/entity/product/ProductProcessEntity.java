@@ -47,4 +47,6 @@ public class ProductProcessEntity extends BaseTime {
                 .prodProcStatus(1)
                 .build();
     }
+
+
 }

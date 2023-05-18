@@ -137,14 +137,26 @@ public class AllowApprovalService {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
             productPlanEntity.ifPresent(entity -> {
                 updateAllowApproval(entity.getAllowApprovalEntity(), true, session);
-                ProductProcessEntity productProcessEntity = new ProductProcessEntity();
 
-                productProcessEntity.setProductEntity(entity.getProductEntity());
-                productProcessEntity.setProdStock(Integer.parseInt(entity.getProdPlanCount()));
-                productProcessEntity.setProdProcDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                ProductProcessEntity productProcessEntity = productProcessRepository.findByProductEntity(entity.getProductEntity());
+
+                if (productProcessEntity != null) {
+                    // 동일한 정보가 이미 존재하는 경우
+                    int existingStock = productProcessEntity.getProdStock();
+                    int newStock = existingStock + Integer.parseInt(entity.getProdPlanCount());
+                    productProcessEntity.setProdStock(newStock);
+                } else {
+                    // 새로운 정보를 생성하는 경우
+                    productProcessEntity = new ProductProcessEntity();
+                    productProcessEntity.setProductEntity(entity.getProductEntity());
+                    productProcessEntity.setProdStock(Integer.parseInt(entity.getProdPlanCount()));
+                    productProcessEntity.setProdProcDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                }
+
                 productProcessRepository.save(productProcessEntity);
             });
-        } return true;
+        }
+        return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {

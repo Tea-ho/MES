@@ -21,7 +21,7 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
     @Query(value = "select * from sales where al_app_no=:al_app_no", nativeQuery = true)
     SalesEntity findByAllowId(int al_app_no);
 
-    @Query(value = "select * from slaes where where order_id=order_id and 2=order_status" , nativeQuery = true)
+    @Query(value = "select * from sales where order_id=:order_id and order_status=1 order by udate desc limit 1" , nativeQuery = true)
     Optional<SalesEntity> findOrder(int order_id);
 
     // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률) [23.05.14, th]

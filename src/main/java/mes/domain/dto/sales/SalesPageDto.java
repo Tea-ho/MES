@@ -24,6 +24,11 @@ public class SalesPageDto {
 
     List<SalesDto> salesDtoList;
 
+
+    private int mno;
+    private String mname;
+
+
     private AllowApprovalDto allowApprovalDto;
     private int al_app_no;
 

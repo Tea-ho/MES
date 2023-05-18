@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing //BaseTime합의 @EntityListeners(AuditingEntityListener.class)와 세트
 public class AppStart {
     public static void main(String[] args) {
-        //05/18 SeongAh 병합
+        //05/18 병합
         SpringApplication.run(AppStart.class);
 
     }

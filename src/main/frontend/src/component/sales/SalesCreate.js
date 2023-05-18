@@ -47,9 +47,9 @@ export default function SalesCreate() {
 
         // 값들 null or 기본값일때 유효성검사
         if ( company == 0 ){ alert('회사를 선택해주세요.'); return false; }
-        if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.') return false; }
-        if ( document.getElementById('orderCount').value == '' ){ alert('판매할 물품 개수를 입력해주세요.') return false; }
-        if ( document.getElementById('salesPrice').value == '' ){ alert('판매할 물품 가격을 입력해주세요.') return false; }
+        if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.'); return false; }
+        if ( document.getElementById('orderCount').value == '' ){ alert('판매할 물품 개수를 입력해주세요.'); return false; }
+        if ( document.getElementById('salesPrice').value == '' ){ alert('판매할 물품 가격을 입력해주세요.'); return false; }
 
         // 로그인해야 판매등록 가능!
         if(sessionStorage.getItem('member') == null){

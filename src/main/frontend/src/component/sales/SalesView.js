@@ -143,10 +143,10 @@ export default function SalesView( props ){
     const SalesUpdate = (order_id) => {
 
         // 유효성검사1 [ 공백 or 기본값인 경우 불가 ]
-        if ( company == 0 ){ alert('회사를 선택해주세요.') return false; }
-        if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.') return false; }
-        if ( orderCount == '' ){ alert('판매할 물품 개수를 입력해주세요.') return false; }
-        if ( salesPrice == '' ){ alert('판매할 물품 가격을 입력해주세요.') return false; }
+        if ( company == 0 ){ alert('회사를 선택해주세요.'); return false; }
+        if ( prodName == 0 ){ alert('판매할 물품 이름을 선택해주세요.'); return false; }
+        if ( orderCount == '' ){ alert('판매할 물품 개수를 입력해주세요.'); return false; }
+        if ( salesPrice == '' ){ alert('판매할 물품 가격을 입력해주세요.'); return false; }
 
         // 유효성검사2 [ 아이디 로그인 ]
         if(sessionStorage.getItem('member') == null){return false}

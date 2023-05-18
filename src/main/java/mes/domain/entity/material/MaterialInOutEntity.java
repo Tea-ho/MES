@@ -54,4 +54,16 @@ public class MaterialInOutEntity extends BaseTime {
                 .build();
     }
 
+    //재고 취소 entity
+    public MaterialInOutEntity toCancelEntity(){
+        return MaterialInOutEntity.builder()
+                .mat_st_stock(this.mat_st_stock)
+                .mat_in_code(this.mat_in_code)
+                .allowApprovalEntity(this.allowApprovalEntity)
+                .mat_in_type(this.mat_in_type)
+                .materialEntity(this.materialEntity)
+                .memberEntity(this.memberEntity)
+                .build();
+    }
+
 }

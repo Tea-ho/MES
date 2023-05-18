@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,6 +90,7 @@ public class ProductPlanService {
         return materialDtoList;
     }
 
+    @Transactional
     // 제품 생산 지시 => 자재 재고 감소시켜야하는데, 자재 하나라도 재고 부족하면, 생산 지시 막아야 함
     public List<String> postProduct(ProductPlanDto productPlanDto){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //date format
@@ -127,14 +129,12 @@ public class ProductPlanService {
                     okSign = false; //한개라도 부족하면 제품을 만들 수 없음.
                     String str = "[알림]"+materialEntity.get().getMatID()+"-"+materialEntity.get().getMat_name() + "자재의 재고가 " + (needMatStock - existMatStock) +materialEntity.get().getMat_unit()+" 부족합니다.";
                     returnResultStr.add(str); //재고 부족 알림을 String 배열에 담는다.
-                }else{
-                    String str = "[알림]"+materialEntity.get().getMatID()+"-"+materialEntity.get().getMat_name() + "자재의 재고가 "+ needMatStock+ "만큼 차감되어" + (existMatStock - needMatStock) +materialEntity.get().getMat_unit()+"되었습니다.";
-                    returnResultStr.add(str); //재고 부족 알림을 String 배열에 담는다.
                 }
             }
         }
 
         boolean mat_okOut = true; //자재 재고가 모두 감소되었는지 확인용
+        ArrayList<AllowApprovalEntity> allowApprovalEntityArrayList = new ArrayList<>();
 
         if(okSign){ //자재의 재고가 모두 충분한게 확인이 되었음
 
@@ -142,7 +142,6 @@ public class ProductPlanService {
             //material_product row의 개수 = material row 개수
             for(int i = 0; i < materialProductEntities.size(); i++){
                 Optional<MaterialEntity> materialEntity = materialEntityRepository.findById(materialProductEntities.get(i).getMaterialEntity().getMatID());
-                System.out.println(materialEntity.get());
 
                 List<MaterialInOutEntity> materialInOutEntityList = new ArrayList<>(); //반복문 돌때마다 초기화를 해야 자재마다 재고를 구할 수 있다.
                 if(materialEntity.isPresent()){
@@ -171,8 +170,13 @@ public class ProductPlanService {
                     dto.setMat_in_code(1);
                     dto.setMemberdto(productPlanDto.getMemberDto());
 
-                    mat_okOut = materialInoutService.materialOut(dto);
+                    AllowApprovalEntity allowApprovalEntity = materialInoutService.materialOut(dto);
 
+                    if(allowApprovalEntity!= null){
+                        allowApprovalEntityArrayList.add(allowApprovalEntity);
+                    }else{
+                        mat_okOut = false;
+                    }
                     log.info("materialOut service에 전달 : " + dto + "출고 결과 : " + mat_okOut);
 
                 }
@@ -196,6 +200,7 @@ public class ProductPlanService {
             ProductPlanEntity productPlanEntity = productPlanDto.toEntity();
             productPlanEntity.setProdPlanDate(simpleDateFormat.format(new Date()));
 
+            String date = allowApprovalEntity.getAl_app_date() +"/"+allowApprovalEntity.getAl_app_no();
 
             System.out.println("productPlan DB에 들어가기 전 : " + productPlanEntity);
 
@@ -206,6 +211,10 @@ public class ProductPlanService {
             log.info("생산 지시에 들어간 productPlan" + entity.toString());
 
             if(entity.getProdPlanNo() > 0){ //생산 지시가 들어갔으면
+                for(int i = 0; i < allowApprovalEntityArrayList.size(); i++){
+                    System.out.println(allowApprovalEntityArrayList.get(i));
+                    allowApprovalEntityArrayList.get(i).setAl_app_date(date);
+                }
                 returnResultStr.add("[성공]생산지시가 완료되었습니다.");
             }
         }
@@ -219,7 +228,9 @@ public class ProductPlanService {
         Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
         System.out.println("생산 지시 취소 : " + productPlanEntity);
 
-        if(productPlanEntity.isPresent()) {
+        boolean materialOk = materialInoutService.materialCancel(productPlanEntity.get().getAllowApprovalEntity().getAl_app_no());
+
+        if(productPlanEntity.isPresent() && materialOk) {
            Optional<AllowApprovalEntity> allowApprovalEntity = allowApprovalRepository.findById(productPlanEntity.get().getAllowApprovalEntity().getAl_app_no());
             System.out.println("생산 지시 관련 allow : " + allowApprovalEntity);
            if(allowApprovalEntity.isPresent()){

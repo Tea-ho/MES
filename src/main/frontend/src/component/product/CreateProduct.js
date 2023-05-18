@@ -144,7 +144,7 @@ export default function CreateProduct(props){
                         </div>
                     </Container>
                     <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
-                        <InProduct material={checked} tapHandler={props.handleTap}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
+                        <InProduct material={checked} handleChange={props.handleChange}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                     </div>
              </div>
     </>);

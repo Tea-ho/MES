@@ -137,7 +137,7 @@ export default function PlanProductList(props) {
                 onClick={deletePlanProduct}
                 disabled={ rowSelectionModel.length === 0 ? true : false }
             >
-                삭제
+                생산지시 취소
             </button>
         </Box>
         <div style={{ height: 400, width: '100%' }}>

@@ -18,6 +18,9 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import PercentIcon from '@mui/icons-material/Percent';
+import Logo from './member/img/MESInfo.png';
+
+
 export default function SwipeableTemporaryDrawer() {
   const [state, setState] = React.useState({
 
@@ -122,7 +125,7 @@ const list = (anchor: Anchor) => (
     <div>
       {['left'].map((anchor) => (
         <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}><ReorderIcon fontSize="large" sx={{ color: 'black' }}/></Button>
+          <Button onClick={toggleDrawer(anchor, true)}><img src={Logo} width="150"/></Button>
           <SwipeableDrawer
             anchor={anchor}
             open={state[anchor]}

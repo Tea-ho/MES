@@ -1,18 +1,16 @@
 import React from 'react';
-import Logo from './member/img/MESInfo.png';
+
 import LoginSocket from './webSocket/LoginSocket'
 import SwipeableTemporaryDrawer from './SwipeableTemporaryDrawer'
+import HeaderImg from '../component/member/img/Header.jpg';
 
 export default function Header() {
   return (<>
-        <div style={{ display: 'flex', padding: '10px', margin: '10px', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' , backgroundImage: `url(${HeaderImg})` , backgroundSize: 'cover' , width : '100%' , height : '150px'}}>
 
 
 
             <div style={{ display: 'flex' , width : '50%' }}>
-                <span>
-                   <img src={Logo} width="150"/>
-                </span>
                 <SwipeableTemporaryDrawer />
             </div>
 

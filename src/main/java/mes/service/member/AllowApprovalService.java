@@ -20,7 +20,6 @@ import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.sales.SalesRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

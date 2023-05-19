@@ -17,7 +17,7 @@ export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭
     setValue(newValue);
     //바뀔때마다 아래 화면을 바꿔주는 화면
     if(newValue == 0){ //제품 생산
-        setScreen(<CreateProduct handleTap={handleChange}/>)
+        setScreen(<CreateProduct handleChange={handleChange}/>)
     }else if(newValue == 1){//제품 관리
         setScreen(<ManageProduct/>)
     }else if(newValue == 2){ //제품 지시

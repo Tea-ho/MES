@@ -23,5 +23,6 @@ public interface ProductProcessRepository extends JpaRepository<ProductProcessEn
     // 제품 stock 확인용
     @Query(value = "select * from product_process where prod_id = :prodId" , nativeQuery = true)
     ProductProcessEntity findByProdId(int prodId);
-
+    // 제품재고 누적 추가를 위해 생성 [23.05.18, th]
+    ProductProcessEntity findByProductEntity(ProductEntity productEntity);
 }

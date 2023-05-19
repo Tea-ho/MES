@@ -15,6 +15,7 @@ public class PerformanceService { // 실적(생산/판매) 조회
     @Autowired private SalesRepository salesRepository;
 
     // repository 소통 창구 (type: 1 - 생산실적, 2 - 판매실적) 코드 단순화 적용
+    // 특이사항: JPA에서 DTO 인스턴스를 생성하여 초기화 후 바로 내보냄
     public List<?> getPerformanceDto(int type){
         if( type == 1){ // 생산실적
             return productPlanRepository.findProductProduction();

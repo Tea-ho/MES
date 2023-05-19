@@ -118,8 +118,9 @@ public class AllowApprovalService {
     }
 
     // 3. 자재, 제품, 판매 승인/반려 처리 [23.05.15, th]
-    // 특이사항: repository에서 승인/반려 처리 기능 추가 ('2.승인/반려 처리 메소드 변경 이유와 동일)
     // 메소드 역할: 1)type에 맞게 연결된 repository에서 승인/반려 처리, 2)updateAllowApproval 메소드에 내용 전달
+    // 특이사항-1: repository에서 승인/반려 처리 기능 추가 ('2.승인/반려 처리 메소드 변경 이유와 동일)
+    // 특이사항-2: @Transactional 어노테이션 사용하지 않았기 때문에 set으로 데이터 초기화 후 save하여 db에 저장
     public boolean approveMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
             Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
@@ -132,6 +133,9 @@ public class AllowApprovalService {
             materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
         } return true;
     }
+    // 제품 재고 로직 변경 [23.05.18, th]
+    // 기존: 제품 구분 없이 재고 추가 (DB에서 집계처리하여 제품 재고를 사용하고자 함)
+    // 변경: 제품 구분 하여 재고 추가 (1회 이상 재고 등록된 제품의 경우, 기재고에 누적 더하기 & 신규 제품은 행 추가)
     public boolean approveProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
@@ -166,7 +170,7 @@ public class AllowApprovalService {
         } return true;
     }
     
-    // 판매 승인 처리 후 orderState 상태 변경 추가 적용 [23.05.15, th]
+    // 판매 승인&반려 처리 후 orderState 상태 변경 추가 적용 [23.05.15, th]
     public boolean approveSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);

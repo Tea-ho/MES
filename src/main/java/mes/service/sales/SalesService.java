@@ -17,6 +17,7 @@ import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductProcessEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
+import mes.webSocket.ChattingHandler;
 import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.socket.TextMessage;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -56,6 +58,9 @@ public class SalesService {
 
     @Autowired
     AllowApprovalRepository allowApprovalRepository;
+
+    @Autowired
+    private ChattingHandler chattingHandler;
 
     // 0. 판매 공정 product_process 출력
     public ProductProcessPageDto getProductProcess(ProductProcessPageDto productProcessPageDto){
@@ -100,11 +105,21 @@ public class SalesService {
         salesEntity.setAllowApprovalEntity(approvalEntity);         // 승인 정보 저장
         salesEntity.setCompanyEntity(companyEntity);                // 회사 저장
         salesEntity.setProductEntity( productEntity );              // 물품 저장
+
         salesEntity.setOrder_status(0);                             // 기본 등록 order_status = 0
 
         salesEntity.setMemberEntity(member);                        // 멤버 저장
 
         log.info("salesEntity : " + salesEntity);
+
+        // 채팅 소켓 판매쪽 : 30번
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("30"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
         if ( salesEntity.getOrder_id() >= 1 ) { return true; }
 
         return false;
@@ -113,7 +128,7 @@ public class SalesService {
 
 
 
-    // [등록 조건1] ctype 2인 회사불러오기 ( react 에서 처리 )
+    // [등록 조건1] ctype 2인 회사불러오기
     @Transactional
     public List<CompanyDto> getCompany( ) {
         List<CompanyDto> companyDtoList = new ArrayList<>();
@@ -168,6 +183,30 @@ public class SalesService {
 
     }
 
+    // 3. 판매 수정
+    @Transactional
+    public boolean SalesUpdate( SalesDto salesDto){
+        SalesEntity salesEntity = salesRepository.findById(salesDto.getOrder_id()).get();
+
+        CompanyEntity companyEntity = companyRepository.findById(salesDto.getCno()).get();
+        salesEntity.setCompanyEntity(companyEntity);            // 회사 수정
+
+
+        ProductEntity productEntity = productRepository.findById( salesDto.getProdId()).get();
+        salesEntity.setProductEntity( productEntity );          // 물품 저장
+
+        log.info("productEntity 수정된 prodid번호 : " + productEntity.getProdId());
+
+        salesEntity.setOrderCount(salesDto.getOrderCount());    // 개수 수정
+        salesEntity.setSalesPrice(salesDto.getSalesPrice());    // 가격 수정
+
+        log.info("수정 처리 salesEntity : " + salesEntity);
+
+        salesRepository.save(salesEntity);
+
+        return true;
+    }
+
     // 4. 판매 삭제
     @Transactional
     public boolean SalesDelete(int order_id){
@@ -188,30 +227,26 @@ public class SalesService {
 
         SalesEntity AllowId = salesRepository.findByAllowId(salesDto.getAl_app_no());
 
-        log.info("salesEntity : " + salesEntity);
-        log.info("AllowId : " + AllowId);
+        ProductEntity productEntity = productRepository.findById(salesDto.getProdId()).get();
+
+        ProductProcessEntity productProcessEntities  = productProcessRepository.findByProdId(productEntity.getProdId());
+
+
+
+        int baseStock = productProcessEntities.getProdStock();
+            log.info("baseStock : " + baseStock);
+        int salesStock = salesEntity.get().getOrderCount();
+            log.info("salesStock : " + salesStock);
+        if ( baseStock - salesStock < 0){
+            return false;
+        }
+        int updateStock = baseStock - salesStock;
+        productProcessEntities.setProdStock(updateStock);
 
         AllowId.setOrder_status(2);
         salesRepository.save(AllowId);
-
-        // 1. 판매가격을 productprocess에 order_id가 sales order_id랑 똑같은 stock 저장
-        //int stock = productRepository.findById(salesDto.getProdStock()).get()
-
-        // 2. 그 후에 sales에 저장된 order_count 값 빼주기
-        // 3. [유효성] 재고보다 판매량이 많을 경우 불가! , true 일 경우 productprocess 뺀 값 set 저장
-
+        productProcessRepository.save(productProcessEntities);
 
         return true;
     }
-
 }
-// * 등록 시에 재고량 불러와서 감소 기능 필요 *
-/*      ProductProcessEntity productProcessEntity = productProcessRepository.findStockByProductId( productEntity.getProdId() );
-
-        int currentStock = productProcessEntity.getProdStock();
-        int salesStock = salesDto.getOrderCount();              // 판매하려는 제품 개수
-        if ( currentStock - salesStock < 0){                    // 개수 유효성 검사( 0보다 작아지지 않게 )
-            return false;
-        }
-        int updateStock = currentStock - salesStock;
-        productProcessEntity.setProdStock(updateStock);         // 판매 성공 성공 시에 개수 줄어들게하기*/

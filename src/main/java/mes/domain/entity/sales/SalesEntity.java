@@ -17,13 +17,12 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SalesEntity  {
+public class SalesEntity extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int order_id;// -- 주문 D
 
 
-    @Column private String orderDate;   // -- 주문 일자
     @Column private int orderCount;     // -- 주문 수량
     @Column private int order_status;    // -- 주문 상태
     @Column private int salesPrice;     // 판매가
@@ -53,12 +52,14 @@ public class SalesEntity  {
                 .order_id(this.order_id)
                 .order_status(this.order_status)
                 .orderCount(this.orderCount)
-                .orderDate(this.orderDate)
                 .salesPrice(this.salesPrice)
                 .companyDto(this.companyEntity.toDto() )
                 .prodId(this.productEntity.getProdId())
                 .prodName(this.productEntity.getProdName())
+                .memberDto(this.memberEntity.toDto())
                 .allowApprovalDto(this.allowApprovalEntity.toInDto())
+                .cdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .udate(this.udate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 

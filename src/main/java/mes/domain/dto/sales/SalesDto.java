@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mes.domain.BaseTime;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.member.CompanyDto;
 import mes.domain.dto.member.MemberDto;
@@ -18,13 +19,16 @@ import mes.domain.entity.sales.SalesEntity;
 
 import javax.persistence.Column;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SalesDto {
+public class SalesDto extends BaseTime {
 
     private int order_id;// -- 주문 ID
 
@@ -47,21 +51,23 @@ public class SalesDto {
 
     private MemberDto memberDto;   // 판매등록자(판매원) * MemberEntity -> MemberDto로 변경
     private int mname;
-
+    private String cdate;
+    private String udate;
 
     public SalesEntity toEntity(){ // 저장용
         return SalesEntity.builder()
                 .orderCount(this.orderCount)
-                .orderDate(this.orderDate )
                 .order_status(this.order_status)
                 .salesPrice(this.salesPrice)
                 .memberEntity(this.memberDto.toEntity())
+
                 .build();
     }
 
-    public SalesDto(int order_id, String orderDate, int orderCount, int order_status, int salesPrice, AllowApprovalDto allowApprovalDto, CompanyDto companyDto, ProductDto productDto, MemberDto memberDto) {
+    public SalesDto(int order_id, LocalDate cdate , LocalDate udate , int orderCount, int order_status, int salesPrice, AllowApprovalDto allowApprovalDto, CompanyDto companyDto, ProductDto productDto, MemberDto memberDto) {
         this.order_id = order_id;
-        this.orderDate = orderDate;
+        this.cdate = cdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.udate = udate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.orderCount = orderCount;
         this.order_status = order_status;
         this.salesPrice = salesPrice;

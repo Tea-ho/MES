@@ -11,10 +11,10 @@ export default function PerformanceForm(props) {
     // 1. 상태변수
     const [ rows, setRows ] = useState([]);
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
-    const[ type, setType ] = useState(props.type);
+    const [ type, setType ] = useState(props.type);
 
     // 2. fetchRows 메소드 생성
-    // 생성이유: Controller랑 소통 창구 (Sortation: 1 - 생산실적, 2 - 판매실적)
+    // 생성이유: Controller랑 소통 창구 (type: 1 - 생산실적, 2 - 판매실적)
     const fetchRows = (type, setRows) => {
         axios.get('/perform', { params: { type: type } })
             .then((r) => {
@@ -35,23 +35,21 @@ export default function PerformanceForm(props) {
     let columns;
     if( type === 1 ) {
         columns = [
-            { field: 'profit', headerName: '생산순위', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'prodName', headerName: '제품명', width: 210, align: 'center', headerAlign: 'center' },
+            { field: 'prodPrice', headerName: '제품 원가', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '원'
             },
-            { field: 'prodName', headerName: '제품명', width: 180, align: 'center', headerAlign: 'center' },
-            { field: 'prodPrice', headerName: '제품 원가', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'averageProductionCount', headerName: '평균 생산량', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '개'
             },
-            { field: 'averageSalesPrice', headerName: '평균 생산량', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'totalProductionCount', headerName: '총 생산횟수', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '개'
             },
-            { field: 'totalOrderCount', headerName: '총 생산횟수', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'totalProductionAmount', headerName: '총 생산량', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '개'
             },
-            { field: 'totalSalesAmount', headerName: '총 생산량', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
-            },
-            { field: 'profitMargin', headerName: '생산비중', width: 180, align: 'center', headerAlign: 'center',
+            { field: 'productionPercentage', headerName: '생산비중', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => params.value + '%'
             }
         ];
     } else if( type === 2 ) {
@@ -77,8 +75,9 @@ export default function PerformanceForm(props) {
             },
         ];
     }
+    // 수정 필요 내용: 수익률 1,000 자리 쉼표 표기 적용되지 않음
 
-    // 숫자 리모델링 함수 생성(1,000 단위 기준으로 표기)
+    // 4-1. (option) 숫자 리모델링 함수 생성(1,000 단위 기준으로 표기)
     function formatNumber(value) {
     if (typeof value !== 'number') { return value; }
         return value.toLocaleString();

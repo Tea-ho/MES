@@ -1,6 +1,9 @@
 package mes.service.member;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.Repository.product.ProductProcessRepository;
+import mes.domain.entity.product.ProductProcessEntity;
+import mes.webSocket.ChattingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +20,12 @@ import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.sales.SalesRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
+import org.springframework.web.socket.TextMessage;
+
 import javax.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 @Service @Slf4j
 public class AllowApprovalService {
@@ -27,6 +34,8 @@ public class AllowApprovalService {
     @Autowired MaterialInOutEntityRepository meterialRepository;
     @Autowired SalesRepository salesRepository;
     @Autowired AllowApprovalRepository allowApprovalRepository;
+    @Autowired ProductProcessRepository productProcessRepository;
+    @Autowired private ChattingHandler chattingHandler; //소켓
 
     // 0. 제네릭 사용하기 위해 생성
     public List<?> getEntityListByType(int type) {
@@ -82,7 +91,7 @@ public class AllowApprovalService {
                 SalesEntity entity = (SalesEntity) obj;
                 System.out.println(entity);
                 SalesDto dto = new SalesDto(
-                        entity.getOrder_id(), entity.getOrderDate(),
+                        entity.getOrder_id(), entity.cdate.toLocalDate() , entity.udate.toLocalDate(),
                         entity.getOrderCount(), entity.getOrder_status(), entity.getSalesPrice(),
                         entity.getAllowApprovalEntity().toInDto(), entity.getCompanyEntity().toDto(), entity.getProductEntity().toDto(), entity.getMemberEntity().toDto());
                 result.add(dto);
@@ -113,13 +122,22 @@ public class AllowApprovalService {
     }
 
     // 3. 자재, 제품, 판매 승인/반려 처리 [23.05.15, th]
-    // 특이사항: repository에서 승인/반려 처리 기능 추가 ('2.승인/반려 처리 메소드 변경 이유와 동일)
     // 메소드 역할: 1)type에 맞게 연결된 repository에서 승인/반려 처리, 2)updateAllowApproval 메소드에 내용 전달
+    // 특이사항-1: repository에서 승인/반려 처리 기능 추가 ('2.승인/반려 처리 메소드 변경 이유와 동일)
+    // 특이사항-2: @Transactional 어노테이션 사용하지 않았기 때문에 set으로 데이터 초기화 후 save하여 db에 저장
     public boolean approveMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
             Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
             materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
-        } return true;
+        }
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("11"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        return true;
     }
     public boolean rejectMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
@@ -127,11 +145,41 @@ public class AllowApprovalService {
             materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), false, session));
         } return true;
     }
+    // 제품 재고 로직 변경 [23.05.18, th]
+    // 기존: 제품 구분 없이 재고 추가 (DB에서 집계처리하여 제품 재고를 사용하고자 함)
+    // 변경: 제품 구분 하여 재고 추가 (1회 이상 재고 등록된 제품의 경우, 기재고에 누적 더하기 & 신규 제품은 행 추가)
     public boolean approveProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
-            productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
-        } return true;
+            productPlanEntity.ifPresent(entity -> {
+                updateAllowApproval(entity.getAllowApprovalEntity(), true, session);
+
+                ProductProcessEntity productProcessEntity = productProcessRepository.findByProductEntity(entity.getProductEntity());
+
+                if (productProcessEntity != null) {
+                    // 동일한 정보가 이미 존재하는 경우
+                    int existingStock = productProcessEntity.getProdStock();
+                    int newStock = existingStock + Integer.parseInt(entity.getProdPlanCount());
+                    productProcessEntity.setProdStock(newStock);
+                } else {
+                    // 새로운 정보를 생성하는 경우
+                    productProcessEntity = new ProductProcessEntity();
+                    productProcessEntity.setProductEntity(entity.getProductEntity());
+                    productProcessEntity.setProdStock(Integer.parseInt(entity.getProdPlanCount()));
+                    productProcessEntity.setProdProcDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                }
+
+                productProcessRepository.save(productProcessEntity);
+            });
+        }
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("21"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
@@ -141,7 +189,7 @@ public class AllowApprovalService {
         } return true;
     }
     
-    // 판매 승인 처리 후 orderState 상태 변경 추가 적용 [23.05.15, th]
+    // 판매 승인&반려 처리 후 orderState 상태 변경 추가 적용 [23.05.15, th]
     public boolean approveSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {
             Optional<SalesEntity> salesEntity = salesRepository.findById(id);
@@ -152,7 +200,15 @@ public class AllowApprovalService {
                 salesRepository.save(entity); // 변경 내용 저장
             });
 
-        } return true;
+        }
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("31"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        return true;
     }
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {

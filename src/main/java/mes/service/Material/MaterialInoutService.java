@@ -159,7 +159,7 @@ public class MaterialInoutService {
     }
 
     @Transactional
-    public boolean materialOut(MaterialInOutDto dto){
+    public AllowApprovalEntity materialOut(MaterialInOutDto dto){
         System.out.println("자재 출고 : " + dto);
 
         System.out.println("로그인한 멤버 : " + dto.getMemberdto());
@@ -177,20 +177,50 @@ public class MaterialInoutService {
         entity.setMat_in_code(dto.getMat_in_code());
 
         System.out.println("자재 중간 점검 : " + entity);
+        log.info("자재 출고 " + entity.toString());
 
         // 승인정보
         AllowApprovalEntity approvalEntity = allowApprovalRepository.save(dto.getAllowApprovalDto().toOutEntity());
+
+        log.info("자재" + entity.getMaterialEntity().getMatID() + "-" +entity.getMaterialEntity().getMat_name() + "승인 정보 : " + approvalEntity.toString());
 
         // 자재와 데이터 넣기
         entity.setAllowApprovalEntity(approvalEntity);
 
         // 세이브
         MaterialInOutEntity result = materialInOutEntityRepository.save(entity);
+        log.info("자재 출고 완료 :" + result.toString());
 
-        if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
-        return false;
+        if( result.getMat_in_outid() >= 1 ){ return approvalEntity; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
+        return null;
 
     }
 
+    //생산지시 취소시 자재 재고 돌려놓기
+    public boolean materialCancel(int findId){
+        List<AllowApprovalEntity> allowApprovalEntities = allowApprovalRepository.findByAllow("/"+findId);
+        System.out.println(allowApprovalEntities);
 
+        boolean checking = true;
+
+        for(int i = 0; i < allowApprovalEntities.size(); i++){
+            MaterialInOutEntity materialInOutEntity = materialInOutEntityRepository.findByAlid(allowApprovalEntities.get(i).getAl_app_no());
+
+            MaterialInOutEntity saveEntity = new MaterialInOutEntity();
+            saveEntity.setMat_in_type(-1*materialInOutEntity.getMat_in_type());
+            saveEntity.setMat_st_stock(materialInOutEntity.getMat_st_stock()+ (-1 *(materialInOutEntity.getMat_in_type())));
+            saveEntity.setMemberEntity(materialInOutEntity.getMemberEntity());
+            saveEntity.setAllowApprovalEntity(materialInOutEntity.getAllowApprovalEntity());
+            saveEntity.setMat_in_code(materialInOutEntity.getMat_in_code());
+            saveEntity.setMaterialEntity(materialInOutEntity.getMaterialEntity());
+
+            MaterialInOutEntity entity = materialInOutEntityRepository.save(saveEntity.toCancelEntity());
+
+            System.out.println(entity);
+            if(entity.getMat_in_code() < 1){
+                checking = false;
+            }
+        }
+        return checking;
+    }
 }

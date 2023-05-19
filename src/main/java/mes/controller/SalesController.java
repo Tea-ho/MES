@@ -62,7 +62,10 @@ public class SalesController {
     }
 
     // 3. 판매 수정 ( 판매 수정했을 경우, 제품 재고량이 다시 늘어나야 함 ) / 결제자 승인 허락 전
-
+    @PutMapping("/SalesUpdate")
+    public boolean SalesUpdate(@RequestBody SalesDto salesDto){
+        return salesService.SalesUpdate(salesDto);
+    }
 
     // 4. 판매 삭제  / 결제자 승인 허락 전 -> order_status가 0인 경우 가능
     @DeleteMapping("/delete")

@@ -11,10 +11,10 @@ export default function PerformanceForm(props) {
     // 1. 상태변수
     const [ rows, setRows ] = useState([]);
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
-    const[ type, setType ] = useState(props.type);
+    const [ type, setType ] = useState(props.type);
 
     // 2. fetchRows 메소드 생성
-    // 생성이유: Controller랑 소통 창구 (Sortation: 1 - 생산실적, 2 - 판매실적)
+    // 생성이유: Controller랑 소통 창구 (type: 1 - 생산실적, 2 - 판매실적)
     const fetchRows = (type, setRows) => {
         axios.get('/perform', { params: { type: type } })
             .then((r) => {

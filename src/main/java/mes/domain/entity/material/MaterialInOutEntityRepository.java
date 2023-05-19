@@ -27,4 +27,10 @@ public interface MaterialInOutEntityRepository extends JpaRepository<MaterialInO
 
     @Query(value = "select * from material_in_out where al_app_no=:al_app_no"  , nativeQuery = true)
     MaterialInOutEntity findByAlid(int al_app_no);
+
+    @Query(value = "select date_format(udate ,'%Y-%m-%d') from material_in_out where matid=:matID and 1=mat_in_code order by udate asc limit 1;"  , nativeQuery = true)
+    MaterialInOutEntity findByFirstDate(int matID);
+
+    @Query(value = "select date_format(udate ,'%Y-%m-%d') from material_in_out where matid=:matID and 1=mat_in_code order by udate desc limit 1;"  , nativeQuery = true)
+    MaterialInOutEntity findByLastDate(int matID);
 }

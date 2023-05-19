@@ -2,6 +2,7 @@ package mes.service.Material;
 
 import lombok.extern.slf4j.Slf4j;
 import mes.controller.member.MemberController;
+import mes.domain.dto.material.ApexChart;
 import mes.domain.dto.material.InOutPageDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
@@ -28,7 +29,10 @@ import org.springframework.web.socket.TextMessage;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,6 +92,8 @@ public class MaterialInoutService {
         }catch (Exception e){
             System.out.println(e);
         }
+
+
 
 
 
@@ -158,6 +164,28 @@ public class MaterialInoutService {
         return false;
     }
 
+    // 차트용 데이터 검색
+
+    @Transactional
+    public List<ApexChart> charts(int MatID) throws ParseException {
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<ApexChart> chartList = new ArrayList();
+
+        MaterialInOutEntity FirstEntity = materialInOutEntityRepository.findByFirstDate(MatID);
+        String FirstDate_str = FirstEntity.toDto().getUdate();
+        Date FirstDate = transFormat.parse(FirstDate_str);
+
+        MaterialInOutEntity LastEntity = materialInOutEntityRepository.findByLastDate(MatID);
+        String LastDate_str = LastEntity.toDto().getUdate();
+        Date LastDate = transFormat.parse(LastDate_str);
+
+
+
+
+        return null;
+    }
+
+
     @Transactional
     public AllowApprovalEntity materialOut(MaterialInOutDto dto){
         System.out.println("자재 출고 : " + dto);
@@ -223,4 +251,7 @@ public class MaterialInoutService {
         }
         return checking;
     }
+
+
+
 }

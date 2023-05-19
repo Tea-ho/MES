@@ -1,6 +1,8 @@
 package mes.service.member;
 
 import lombok.extern.slf4j.Slf4j;
+import mes.domain.Repository.product.ProductProcessRepository;
+import mes.domain.entity.product.ProductProcessEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import mes.domain.entity.sales.SalesRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
 import javax.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 @Service @Slf4j
 public class AllowApprovalService {
@@ -27,6 +31,7 @@ public class AllowApprovalService {
     @Autowired MaterialInOutEntityRepository meterialRepository;
     @Autowired SalesRepository salesRepository;
     @Autowired AllowApprovalRepository allowApprovalRepository;
+    @Autowired ProductProcessRepository productProcessRepository;
 
     // 0. 제네릭 사용하기 위해 생성
     public List<?> getEntityListByType(int type) {
@@ -82,7 +87,7 @@ public class AllowApprovalService {
                 SalesEntity entity = (SalesEntity) obj;
                 System.out.println(entity);
                 SalesDto dto = new SalesDto(
-                        entity.getOrder_id(), entity.getOrderDate(),
+                        entity.getOrder_id(), entity.cdate.toLocalDate() , entity.udate.toLocalDate(),
                         entity.getOrderCount(), entity.getOrder_status(), entity.getSalesPrice(),
                         entity.getAllowApprovalEntity().toInDto(), entity.getCompanyEntity().toDto(), entity.getProductEntity().toDto(), entity.getMemberEntity().toDto());
                 result.add(dto);
@@ -130,8 +135,28 @@ public class AllowApprovalService {
     public boolean approveProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {
             Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(id);
-            productPlanEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
-        } return true;
+            productPlanEntity.ifPresent(entity -> {
+                updateAllowApproval(entity.getAllowApprovalEntity(), true, session);
+
+                ProductProcessEntity productProcessEntity = productProcessRepository.findByProductEntity(entity.getProductEntity());
+
+                if (productProcessEntity != null) {
+                    // 동일한 정보가 이미 존재하는 경우
+                    int existingStock = productProcessEntity.getProdStock();
+                    int newStock = existingStock + Integer.parseInt(entity.getProdPlanCount());
+                    productProcessEntity.setProdStock(newStock);
+                } else {
+                    // 새로운 정보를 생성하는 경우
+                    productProcessEntity = new ProductProcessEntity();
+                    productProcessEntity.setProductEntity(entity.getProductEntity());
+                    productProcessEntity.setProdStock(Integer.parseInt(entity.getProdPlanCount()));
+                    productProcessEntity.setProdProcDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                }
+
+                productProcessRepository.save(productProcessEntity);
+            });
+        }
+        return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
         for (int id : ProdInOutIDs) {

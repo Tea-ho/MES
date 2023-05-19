@@ -1,9 +1,11 @@
 package mes.domain.entity.product;
 
 import lombok.*;
+import mes.domain.BaseTime;
 import mes.domain.dto.product.ProductProcessDto;
 
 import javax.persistence.*;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "productProcess")
@@ -11,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductProcessEntity {
+public class ProductProcessEntity extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int prodProcNo;// -- PK
@@ -36,4 +38,15 @@ public class ProductProcessEntity {
                 .prodName(this.productEntity.getProdName())
                 .build();
     }
+
+    public ProductProcessEntity toSaveEntity(){
+        return ProductProcessEntity.builder()
+                .prodProcDate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .prodStock(this.prodStock)
+                .productEntity(this.productEntity)
+                .prodProcStatus(1)
+                .build();
+    }
+
+
 }

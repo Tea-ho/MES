@@ -21,7 +21,7 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
     @Query(value = "select * from sales where al_app_no=:al_app_no", nativeQuery = true)
     SalesEntity findByAllowId(int al_app_no);
 
-    @Query(value = "select * from slaes where where order_id=order_id and 2=order_status" , nativeQuery = true)
+    @Query(value = "select * from sales where order_id=:order_id and order_status=1 order by udate desc limit 1" , nativeQuery = true)
     Optional<SalesEntity> findOrder(int order_id);
 
     // 제품별 판매실적 쿼리 (조회 데이터: 제품명, 제품원가, 평균판매가격, 총 주문건수, 총 판매금액, 수익금, 수익률) [23.05.14, th]
@@ -31,7 +31,7 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
             "SUM(s.orderCount) AS totalOrderCount, " +
             "CAST(SUM(s.salesPrice * s.orderCount) AS long) AS totalSalesAmount, " +
             "CAST(SUM(s.salesPrice * s.orderCount) - (AVG(p.prodPrice) * SUM(s.orderCount)) AS int) AS profit, " +
-            "ROUND(((SUM(s.salesPrice * s.orderCount) - (p.prodPrice * SUM(s.orderCount))) / SUM(s.salesPrice * s.orderCount)) * 100, 2) AS profitMargin) " +
+            "ROUND(((SUM(s.salesPrice * s.orderCount) - (p.prodPrice * SUM(s.orderCount))) / (p.prodPrice * SUM(s.orderCount))) * 100, 2) AS profitMargin) " +
             "FROM SalesEntity s " +
             "JOIN s.productEntity p " +
             "JOIN s.memberEntity m " +
@@ -40,4 +40,5 @@ public interface SalesRepository extends JpaRepository< SalesEntity , Integer > 
             "ORDER BY SUM(s.salesPrice * s.orderCount) DESC, p.prodName ASC")
     List<SalesByProductDto> findSalesByProduct();
     // 특이점: new Dto 이용하여 쿼리 결과를 클래스의 인스턴스로 직접 매핑
+    // 코드 완료 되면, WHERE s.order_status = 3 조건 추가 [23.05.16, th]
 }

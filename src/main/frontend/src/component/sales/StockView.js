@@ -59,13 +59,11 @@ export default function StockView( props ){
                           <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                               <TableRow>
-                                <TableCell align="center" style={{ width:'5%' }}>생산된제품번호</TableCell>
+                                <TableCell align="center" style={{ width:'5%' }}> 생산번호</TableCell>
                                 <TableCell align="center" style={{ width:'15%' }}>생산날짜</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>물품번호</TableCell>
                                 <TableCell align="center" style={{ width:'10%' }}>물품명</TableCell>
-                                <TableCell align="center" style={{ width:'15%' }}>제품재고량</TableCell>
-
-
+                                <TableCell align="center" style={{ width:'15%' }}>재고량</TableCell>
                               </TableRow>
                             </TableHead>
 
@@ -83,16 +81,16 @@ export default function StockView( props ){
 
                           </Table>
                         </TableContainer>
+                        <Container>
+                            <div style={{display : 'flex' , justifyContent : 'center' , }}>
+                                        <Pagination count={totalPage1}  color="primary" onChange={selectPage1}/>
+                            </div>
 
-                        <div style={{display : 'flex' , justifyContent : 'center' }}>
-                                    <Pagination count={totalPage1}  color="primary" onChange={selectPage1}/>
-                        </div>
-
-                        <div>
-                            <input type="text" className="keyword1" />
-                            <button type="button" onClick={onSearch1}> 검색 </button>
-                         </div>
-
+                            <div style={{display : 'flex' , justifyContent : 'center' , padding : '10px'  }}>
+                                <input type="text" className="keyword1" />
+                                <button type="button" onClick={onSearch1}> 검색 </button>
+                            </div>
+                        </Container>
       </div>
 
     )

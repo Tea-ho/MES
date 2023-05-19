@@ -35,23 +35,21 @@ export default function PerformanceForm(props) {
     let columns;
     if( type === 1 ) {
         columns = [
-            { field: 'profit', headerName: '생산순위', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'prodName', headerName: '제품명', width: 210, align: 'center', headerAlign: 'center' },
+            { field: 'prodPrice', headerName: '제품 원가', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '원'
             },
-            { field: 'prodName', headerName: '제품명', width: 180, align: 'center', headerAlign: 'center' },
-            { field: 'prodPrice', headerName: '제품 원가', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'averageProductionCount', headerName: '평균 생산량', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '개'
             },
-            { field: 'averageSalesPrice', headerName: '평균 생산량', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'totalProductionCount', headerName: '총 생산횟수', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '개'
             },
-            { field: 'totalOrderCount', headerName: '총 생산횟수', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
+            { field: 'totalProductionAmount', headerName: '총 생산량', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => formatNumber(params.value) + '개'
             },
-            { field: 'totalSalesAmount', headerName: '총 생산량', width: 180, align: 'center', headerAlign: 'center',
-            valueFormatter: (params) => formatNumber(params.value)
-            },
-            { field: 'profitMargin', headerName: '생산비중', width: 180, align: 'center', headerAlign: 'center',
+            { field: 'productionPercentage', headerName: '생산비중', width: 210, align: 'center', headerAlign: 'center',
+            valueFormatter: (params) => params.value + '%'
             }
         ];
     } else if( type === 2 ) {

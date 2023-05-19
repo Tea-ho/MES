@@ -165,8 +165,6 @@ public class ProductPlanService {
                         existMatStock += materialInOutEntityList.get(j).getMat_in_type(); // 자재 재고 누적 더하기(존재하는 총 재고)
                     }
 
-                    System.out.println("재고 현황 ? " + existMatStock);
-
                     dto.setMat_st_stock(existMatStock - needMatStock); //재고처리
                     dto.setMat_in_type(-needMatStock); // 차감되는 재고
                     dto.setMat_in_code(1);
@@ -193,10 +191,7 @@ public class ProductPlanService {
                     .al_app_whether(false)
                     .build();
 
-            System.out.println("확인 " + inAllowapproval);
-
             AllowApprovalEntity allowApprovalEntity = allowApprovalRepository.save(inAllowapproval);
-            System.out.println("저장되었다면 확인 : " + allowApprovalEntity);
 
             productPlanDto.setAllowApprovalDto(allowApprovalEntity.toPlanDto());
             ProductPlanEntity productPlanEntity = productPlanDto.toEntity();
@@ -204,11 +199,7 @@ public class ProductPlanService {
 
             String date = allowApprovalEntity.getAl_app_date() +"/"+allowApprovalEntity.getAl_app_no();
 
-            System.out.println("productPlan DB에 들어가기 전 : " + productPlanEntity);
-
             ProductPlanEntity entity = productPlanRepository.save(productPlanEntity);
-
-            System.out.println("productPlan 엔티티 DB에 저장 완료 " + entity);
 
             log.info("생산 지시에 들어간 productPlan" + entity.toString());
 
@@ -218,14 +209,14 @@ public class ProductPlanService {
                     allowApprovalEntityArrayList.get(i).setAl_app_date(date);
                 }
                 returnResultStr.add("[성공]생산지시가 완료되었습니다.");
+
+                try{
+                    chattingHandler.handleMessage(null , new TextMessage("20"));
+
+                }catch (Exception e){
+                    System.out.println(e);
+                }
             }
-        }
-
-        try{
-            chattingHandler.handleMessage(null , new TextMessage("20"));
-
-        }catch (Exception e){
-            System.out.println(e);
         }
 
         return returnResultStr;
@@ -235,13 +226,12 @@ public class ProductPlanService {
     public String deleteProduct(int prodPlanNo){
         //prodPlanNo로 해당 ProductPlanEntity찾기 => ProductPlanEntity에 승인 정보를 가지고 있음
         Optional<ProductPlanEntity> productPlanEntity = productPlanRepository.findById(prodPlanNo);
-        System.out.println("생산 지시 취소 : " + productPlanEntity);
 
         boolean materialOk = materialInoutService.materialCancel(productPlanEntity.get().getAllowApprovalEntity().getAl_app_no());
 
         if(productPlanEntity.isPresent() && materialOk) {
            Optional<AllowApprovalEntity> allowApprovalEntity = allowApprovalRepository.findById(productPlanEntity.get().getAllowApprovalEntity().getAl_app_no());
-            System.out.println("생산 지시 관련 allow : " + allowApprovalEntity);
+
            if(allowApprovalEntity.isPresent()){
                productPlanRepository.delete(productPlanEntity.get());
                allowApprovalRepository.delete(allowApprovalEntity.get());

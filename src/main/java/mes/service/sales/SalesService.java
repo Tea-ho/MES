@@ -17,6 +17,8 @@ import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductProcessEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
+import mes.service.product.AutoProduceService;
+import mes.service.product.ProductProcessService;
 import mes.webSocket.ChattingHandler;
 import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,9 @@ public class SalesService {
 
     @Autowired
     AllowApprovalRepository allowApprovalRepository;
+
+    @Autowired
+    AutoProduceService autoProduceService; //제품 자동 생성을 위해
 
     @Autowired
     private ChattingHandler chattingHandler;
@@ -120,7 +125,12 @@ public class SalesService {
             System.out.println(e);
         }
 
-        if ( salesEntity.getOrder_id() >= 1 ) { return true; }
+        if ( salesEntity.getOrder_id() >= 1 ) {
+            //판매처리가 되면 제품별 자동 생성 (재고 안정성을 위해)
+            autoProduceService.addAutoProduceService();
+
+            return true;
+        }
 
         return false;
 

@@ -3,6 +3,7 @@ package mes.service.member;
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.Repository.product.ProductProcessRepository;
 import mes.domain.entity.product.ProductProcessEntity;
+import mes.webSocket.ChattingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.sales.SalesRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
+import org.springframework.web.socket.TextMessage;
+
 import javax.servlet.http.HttpSession;
 
 import java.time.LocalDate;
@@ -32,6 +35,7 @@ public class AllowApprovalService {
     @Autowired SalesRepository salesRepository;
     @Autowired AllowApprovalRepository allowApprovalRepository;
     @Autowired ProductProcessRepository productProcessRepository;
+    @Autowired private ChattingHandler chattingHandler; //소켓
 
     // 0. 제네릭 사용하기 위해 생성
     public List<?> getEntityListByType(int type) {
@@ -125,7 +129,15 @@ public class AllowApprovalService {
         for (int id : MatInOutIDs) {
             Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
             materialInOutEntity.ifPresent(entity -> updateAllowApproval(entity.getAllowApprovalEntity(), true, session));
-        } return true;
+        }
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("11"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        return true;
     }
     public boolean rejectMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
@@ -160,6 +172,13 @@ public class AllowApprovalService {
                 productProcessRepository.save(productProcessEntity);
             });
         }
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("21"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
         return true;
     }
     public boolean rejectProductInOut(List<Integer> ProdInOutIDs, HttpSession session) {
@@ -181,7 +200,15 @@ public class AllowApprovalService {
                 salesRepository.save(entity); // 변경 내용 저장
             });
 
-        } return true;
+        }
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("31"));
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        return true;
     }
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
         for (int id : OrderIds) {

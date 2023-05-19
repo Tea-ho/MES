@@ -14,8 +14,6 @@ public interface ProductProcessRepository extends JpaRepository<ProductProcessEn
     @Query(value = "select * from product_process where if(:keyword = '', TRUE, prod_stock LIKE %:keyword%)" , nativeQuery = true)
     Page<ProductProcessEntity> findByPage(String keyword , Pageable pageable);
 
-    ProductProcessEntity findByProductEntity(ProductEntity productEntity);
-
     //제품 삭제 확인용
     @Query(value = "select * from product_process where prod_id = :prodId ", nativeQuery = true)
     List<ProductProcessEntity> findByProductEntity(int prodId);

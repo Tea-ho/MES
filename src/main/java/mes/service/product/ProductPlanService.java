@@ -20,8 +20,10 @@ import mes.domain.entity.product.MaterialProductEntity;
 import mes.domain.entity.product.ProductPlanEntity;
 import mes.service.Material.MaterialInoutService;
 import mes.service.member.MemberSerivce;
+import mes.webSocket.ChattingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
 
 import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
@@ -53,7 +55,7 @@ public class ProductPlanService {
     MaterialInoutService materialInoutService;
 
     @Autowired
-    MemberSerivce memberSerivce;
+    private ChattingHandler chattingHandler; //소켓
 
     //생산 지시 목록 가져오기
     public List<ProductPlanDto> getPlanProductList(){
@@ -217,6 +219,13 @@ public class ProductPlanService {
                 }
                 returnResultStr.add("[성공]생산지시가 완료되었습니다.");
             }
+        }
+
+        try{
+            chattingHandler.handleMessage(null , new TextMessage("20"));
+
+        }catch (Exception e){
+            System.out.println(e);
         }
 
         return returnResultStr;

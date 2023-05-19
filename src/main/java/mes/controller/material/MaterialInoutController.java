@@ -8,6 +8,7 @@ import mes.service.Material.MaterialInoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,7 @@ public class MaterialInoutController {
     }
 
     @GetMapping("/MaterialInOutList")
-    public InOutPageDto MaterialInOutList(InOutPageDto dto){
+    public InOutPageDto MaterialInOutList(InOutPageDto dto) throws ParseException {
 
 
         return materialInoutService.MaterialInOutList(dto);

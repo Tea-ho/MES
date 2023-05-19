@@ -93,10 +93,6 @@ public class MaterialInoutService {
             System.out.println(e);
         }
 
-
-
-
-
         if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
         return false;
 
@@ -104,7 +100,7 @@ public class MaterialInoutService {
 
     // 내역 리스트 출력
     @Transactional
-    public InOutPageDto MaterialInOutList(InOutPageDto dto){
+    public InOutPageDto MaterialInOutList(InOutPageDto dto) throws ParseException {
 
        List<MaterialInOutDto> list = new ArrayList<>();
         Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "udate"));
@@ -117,6 +113,8 @@ public class MaterialInoutService {
         dto.setMaterialInOutDtoList(list);
         dto.setTotalPage(entityPage.getTotalPages());
         dto.setTotalCount(entityPage.getTotalElements());
+
+        dto.setApexCharts(charts(dto.getMatID()));
 
         return dto;
     }
@@ -168,21 +166,16 @@ public class MaterialInoutService {
 
     @Transactional
     public List<ApexChart> charts(int MatID) throws ParseException {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+
         List<ApexChart> chartList = new ArrayList();
 
-        MaterialInOutEntity FirstEntity = materialInOutEntityRepository.findByFirstDate(MatID);
-        String FirstDate_str = FirstEntity.toDto().getUdate();
-        Date FirstDate = transFormat.parse(FirstDate_str);
+        List<MaterialInOutEntityRepository.ApexChart> ByChart = materialInOutEntityRepository.findByChart(MatID);
+        System.out.println(ByChart);
+        ByChart.forEach((e)->{
+            chartList.add(new ApexChart(e.getUdate() , e.getStock()));
+        });
 
-        MaterialInOutEntity LastEntity = materialInOutEntityRepository.findByLastDate(MatID);
-        String LastDate_str = LastEntity.toDto().getUdate();
-        Date LastDate = transFormat.parse(LastDate_str);
-
-
-
-
-        return null;
+        return chartList;
     }
 
 

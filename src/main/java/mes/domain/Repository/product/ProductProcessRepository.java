@@ -1,6 +1,6 @@
 package mes.domain.Repository.product;
 
-import mes.domain.dto.product.AutoProduceDto;
+import mes.domain.dto.product.AutoProdctDto;
 import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductProcessEntity;
 import org.springframework.data.domain.Page;
@@ -31,24 +31,25 @@ public interface ProductProcessRepository extends JpaRepository<ProductProcessEn
             "JOIN sales s ON pp.prod_id = s.prod_id " +
             "JOIN product p ON p.prod_id = pp.prod_id " +
             "GROUP BY pp.prod_id, pp.prod_stock", nativeQuery = true)
-    List<AutoProduceDto> getAverageSalesAndCurrentStock();
+    List<AutoProdctDto> getAverageSalesAndCurrentStock();
 
     // 제품별 조회: 제품명, 평균 판매량, 평균 생산량
-    @Query(value = "SELECT p.prod_id AS prodID, AVG(s.order_count) AS avgOrderCount, AVG(pp.prod_plan_count) AS avgProdPlanCount " +
-            "FROM product p " +
-            "JOIN sales s ON p.prod_id = s.productEntity.prodId " +
-            "JOIN product_plan pp ON p.prod_id = pp.productEntity.prodId " +
+    @Query(value = "SELECT p.prod_id AS prodID, AVG(s.order_count) AS avgOrderCount, AVG(ppp.prod_plan_count) AS avgProdPlanCount " +
+            "FROM product_process pp " +
+            "JOIN product_plan ppp ON pp.prod_id = ppp.prod_id " +
+            "JOIN sales s ON pp.prod_id = s.prod_id " +
+            "JOIN product p ON p.prod_id = pp.prod_id " +
             "GROUP BY p.prod_id", nativeQuery = true)
-    List<AutoProduceDto> getProductSalesAndProduction();
+    List<AutoProdctDto> getProductSalesAndProduction();
 
 
     // 제품별 조회: 제품명, 제품 현재 재고, 제품 평균 판매량, 제품 평균 생산량
-    @Query(value = "SELECT p.prod_id AS prodID, pp.prod_stock AS prodCurrentStock, AVG(s.order_count) AS avgOrderCount, AVG(pp.prod_plan_count) AS avgProdPlanCount " +
-            "FROM product p " +
-            "JOIN product_plan ppp ON p.prod)id = ppp.productEntity.prodId " +
-            "JOIN product_process pp ON p.prod_id = pp.productEntity.prodId " +
-            "JOIN sales s ON pp.productEntity.prodId = s.productEntity.prodId " +
-            "GROUP BY pp.prod_id, pp.prod_stock", nativeQuery = true)
-    List<AutoProduceDto> getCurrentStockAndAverageSales();
+    @Query(value = "SELECT p.prod_id AS prodID, pp.prod_stock AS prodCurrentStock, AVG(s.order_count) AS avgOrderCount, AVG(ppp.prod_plan_count) AS avgProdPlanCount " +
+            "FROM product_process pp " +
+            "JOIN product_plan ppp ON pp.prod_id = ppp.prod_id " +
+            "JOIN product p ON pp.prod_id = p.prod_id " +
+            "JOIN sales s ON pp.prod_id = s.prod_id " +
+            "GROUP BY p.prod_id, pp.prod_stock", nativeQuery = true)
+    List<AutoProdctDto> getCurrentStockAndAverageSales();
 
 }

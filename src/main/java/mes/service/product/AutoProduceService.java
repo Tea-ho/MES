@@ -5,6 +5,7 @@ import mes.domain.Repository.product.MaterialProductRepository;
 import mes.domain.Repository.product.ProductPlanRepository;
 import mes.domain.Repository.product.ProductProcessRepository;
 import mes.domain.Repository.product.ProductRepository;
+import mes.domain.dto.product.AutoProdctDto;
 import mes.domain.dto.product.AutoProduceDto;
 import mes.domain.dto.product.ProductPlanDto;
 import mes.domain.entity.material.MaterialEntityRepository;
@@ -15,6 +16,7 @@ import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductPlanEntity;
 import mes.webSocket.ChattingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
@@ -38,13 +40,13 @@ public class AutoProduceService {
     @Transactional
     public void addAutoProduceService(){
         //1) 제품별 조회: 제품명, 평균 판매량, 안전재고량(현재고*1.2)
-        List<AutoProduceDto> produceInfo1 = productProcessRepository.getAverageSalesAndCurrentStock();
+        List<AutoProdctDto> produceInfo1 = productProcessRepository.getAverageSalesAndCurrentStock();
 
         //2) 제품별 조회: 제품명, 평균 판매량, 평균 생산량
-        List<AutoProduceDto> produceInfo2 = productProcessRepository.getProductSalesAndProduction();
+        List<AutoProdctDto> produceInfo2 = productProcessRepository.getProductSalesAndProduction();
 
         //3) 실질적으로 처리할 데이터 ; 제품명, 제품 현재 재고, 제품 평균 판매량
-        List<AutoProduceDto> inputProductInfo = productProcessRepository.getCurrentStockAndAverageSales();
+        List<AutoProdctDto> inputProductInfo = productProcessRepository.getCurrentStockAndAverageSales();
 
         //승인권자는 무조건 mno = 1이라고 가정한다.
         Optional<MemberEntity> memberEntity = memberRepository.findById(1);

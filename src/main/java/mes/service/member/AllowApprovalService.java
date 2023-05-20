@@ -125,6 +125,9 @@ public class AllowApprovalService {
     // 메소드 역할: 1)type에 맞게 연결된 repository에서 승인/반려 처리, 2)updateAllowApproval 메소드에 내용 전달
     // 특이사항-1: repository에서 승인/반려 처리 기능 추가 ('2.승인/반려 처리 메소드 변경 이유와 동일)
     // 특이사항-2: @Transactional 어노테이션 사용하지 않았기 때문에 set으로 데이터 초기화 후 save하여 db에 저장
+    
+    // 승인 후 소켓 처리 하는 부분 메소드르 빼기
+    
     public boolean approveMaterialInOut(List<Integer> MatInOutIDs, HttpSession session) {
         for (int id : MatInOutIDs) {
             Optional<MaterialInOutEntity> materialInOutEntity = meterialRepository.findById(id);
@@ -207,7 +210,6 @@ public class AllowApprovalService {
         }catch (Exception e){
             System.out.println(e);
         }
-
         return true;
     }
     public boolean rejectSales(List<Integer> OrderIds, HttpSession session) {
@@ -221,4 +223,7 @@ public class AllowApprovalService {
             });
         } return true;
     }
+    
+    // 소켓 사용 메소드 생성
+    
 }

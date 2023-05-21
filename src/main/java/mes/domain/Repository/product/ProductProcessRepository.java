@@ -44,7 +44,7 @@ public interface ProductProcessRepository extends JpaRepository<ProductProcessEn
 
 
     // 제품별 조회: 제품명, 제품 현재 재고, 제품 평균 판매량, 제품 평균 생산량
-    @Query(value = "SELECT p.prod_id AS prodID, pp.prod_stock AS prodCurrentStock, AVG(s.order_count) AS avgOrderCount, AVG(ppp.prod_plan_count) AS avgProdPlanCount " +
+    @Query(value = "SELECT p.prod_id AS prodID, pp.prod_stock AS prodCurrentStock, AVG(s.order_count) AS avgOrderCount, AVG(ppp.prod_plan_count) AS avgProdPlanCount, pp.prod_stock * 1.2 AS prodSafeStock " +
             "FROM product_process pp " +
             "JOIN product_plan ppp ON pp.prod_id = ppp.prod_id " +
             "JOIN product p ON pp.prod_id = p.prod_id " +

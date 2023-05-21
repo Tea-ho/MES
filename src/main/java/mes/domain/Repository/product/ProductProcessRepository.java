@@ -34,5 +34,10 @@ public interface ProductProcessRepository extends JpaRepository<ProductProcessEn
             "JOIN sales s ON pp.prod_id = s.prod_id " +
             "GROUP BY p.prod_id, pp.prod_stock", nativeQuery = true)
     List<AutoProdctDto> getCurrentStockAndAverageSales();
-
+    // 자동 생산 유무 판단 근거
+    // (1) 평균 판매량 > 현재 재고*1.2(안전율 적용) : true 자동생산 / false 대상 X
+    // (2) 평균 판매량 / 평균 생산량 > 1 : true 자동생산 / false 대상 X
+    // 자동 생산량 결정 (제품 유효기한 없기에 반영 X)
+    // 계산식: (현재 재고 + 추가 생산 재고) / 평균 판매량 = 1.2 (안전율 20% 적용)
+    // 추가 생산량 = 1.2*평균판매량 – 현재재고/평균생산량
 }

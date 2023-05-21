@@ -23,18 +23,20 @@ import Modal from '@mui/material/Modal';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 
-import { getcompany, getproduct } from './salescreate.js';
+import Chart from 'chart.js/auto';
 
 import SalesHeader from './SalesHeader'
+import SalesChart from './SalesChart'
+
 
 export default function SalesView( props ){
     const [list, setList] = useState([]); // sales 모든 정보 담긴 변수
-    const [ CompanyList , setCompanyList ] = useState([])     // 저장된 회사 리스트
-    const [ ProductList , setProductList ] = useState([])     // 저장된 물품 리스트
+    const [CompanyList , setCompanyList ] = useState([])     // 저장된 회사 리스트
+    const [ProductList , setProductList ] = useState([])     // 저장된 물품 리스트
     const [orderCount, setOrderCount] = useState('');         // 개수
     const [salesPrice, setSalesPrice] = useState('');         // 가격
 
-    let [ pageInfo2 , setPageInfo2 ] = useState( { 'page' : 1 , 'keyword' : '' , 'order_id' : 0 } )
+    let [pageInfo2 , setPageInfo2 ] = useState( { 'page' : 1 , 'keyword' : '' , 'order_id' : 0 } )
     let[totalPage2, setTotalPage2] = useState(1);   //총 페이지수
     let[totalCount2, setTotalCount2] = useState(0); //총 판매 등록 개수
 
@@ -66,6 +68,11 @@ export default function SalesView( props ){
 
     // 판매 삭제
     const SalesDelete = (e) => {
+
+        if(sessionStorage.getItem('member') == null){ // 로그인 유효성 검사
+        alert('로그인 후 가능한 기능입니다.'); return false;
+        }
+
         const order_id = e.target.value
         axios.delete('/sales/delete' , {params : { order_id : order_id}})
             .then ( r => {
@@ -95,6 +102,11 @@ export default function SalesView( props ){
 
     // 판매 확정
     const SalesResult = (e) => {
+
+        if(sessionStorage.getItem('member') == null){ // 로그인 유효성 검사
+        alert('로그인 후 가능한 기능입니다.'); return false;
+        }
+
          console.log(e.target.value)
          const [order_id, al_app_no , prodId] = e.target.value.split(","); // 값 전달 split , 로 분류
          let info = { al_app_no : al_app_no , order_id : order_id , prodId : prodId }
@@ -136,7 +148,10 @@ export default function SalesView( props ){
         if ( salesPrice == '' ){ alert('판매할 물품 가격을 입력해주세요.'); return false; }
 
         // 유효성검사2 [ 아이디 로그인 ]
-        if(sessionStorage.getItem('member') == null){return false}
+        // 로그인해야 판매등록 가능!
+        if(sessionStorage.getItem('member') == null){
+        alert('로그인 후 가능한 기능입니다.'); return false;
+        }
 
         let info = {
           order_id : order_id ,
@@ -300,6 +315,12 @@ export default function SalesView( props ){
                             <div style={{display : 'flex' , justifyContent : 'center' , padding : '10px'  }}>
                                 <input type="text" className="keyword" />
                                 <button type="button" onClick={onSearch2}> 검색 </button>
+                            </div>
+                        </Container>
+
+                        <Container>
+                            <div style={{display : 'flex' , justifyContent : 'center'}}>
+                              <SalesChart list={list} />
                             </div>
                         </Container>
         </div>

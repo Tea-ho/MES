@@ -18,7 +18,7 @@ export default function Login(props) {
         let data = { mname: mname, mpassword: password };
         axios.post('/home/login', data)
             .then( (response) => {
-                   // console.log(response.data); // --- 확인 완료
+                   console.log(response.data); // --- 확인 완료
                 if(response.data){
                     setLoggedIn(true);
                     handleUserInfo(); // 로그인 정보 업로드

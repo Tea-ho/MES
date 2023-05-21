@@ -40,14 +40,14 @@ const SalesChart = ({ list }) => {
         labels: Object.values(processedData).map(item => item.prodName),
         datasets: [
           {
-            label: '판매개수(백 개)',
+            label: '총합판매개수(백 개)',
             data: Object.values(processedData).map(item => item.orderCount / 100) ,
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1,
           },
           {
-            label: '판매가격(천 원)',
+            label: '평균판매가격(천 원)',
             data: Object.values(processedData).map(item => {
               const avgSalesPrice = item.salesPriceSum / item.salesPriceCount / 1000;
               return avgSalesPrice;
@@ -77,8 +77,8 @@ const SalesChart = ({ list }) => {
   }, [list]);
 
   return (
-    <div>
-      <canvas ref={chartRef} width={400} height={400} />
+    <div style={{display : 'flex' , justifyContent : 'center' , width: '500px' , height : '500px' , margin : '0 auto'  }}>
+      <canvas ref={chartRef} width={500} height={500} />
     </div>
   );
 };

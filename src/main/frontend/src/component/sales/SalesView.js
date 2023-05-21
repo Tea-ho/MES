@@ -319,7 +319,7 @@ export default function SalesView( props ){
                         </Container>
 
                         <Container>
-                            <div style={{display : 'flex' , justifyContent : 'center'}}>
+                            <div>
                               <SalesChart list={list} />
                             </div>
                         </Container>

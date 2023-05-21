@@ -126,9 +126,6 @@ public class SalesService {
         }
 
         if ( salesEntity.getOrder_id() >= 1 ) {
-            //판매처리가 되면 제품별 자동 생성 (재고 안정성을 위해)
-            autoProduceService.addAutoProduceService();
-
             return true;
         }
 
@@ -257,6 +254,8 @@ public class SalesService {
         salesRepository.save(AllowId);
         productProcessRepository.save(productProcessEntities);
 
+        //판매처리가 되면 제품별 자동 생성 (재고 안정성을 위해)
+        autoProduceService.AutoProduce(salesDto.getProdId());
         return true;
     }
 }

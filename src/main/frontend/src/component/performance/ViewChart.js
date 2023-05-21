@@ -1,7 +1,7 @@
 import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
-import { Bar } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 
 //판매/생산 실적 차트
 export default function ViewChart(props) {
@@ -20,12 +20,35 @@ export default function ViewChart(props) {
         {
           label: props.type == 1 ? '생산실적' : '판매 실적', // 데이터셋 레이블
           data: showData, // 데이터 값
-          backgroundColor: 'rgba(0, 0, 255, 0.5)', // 데이터셋 배경색
-          borderColor: 'blue', // 데이터셋 테두리 색
+          backgroundColor: generateBackgroundColors(showLabel.length), // 데이터셋 배경색
+          borderColor: 'black', // 데이터셋 테두리 색
           borderWidth: 1, // 데이터셋 테두리 너비
         },
       ],
     };
+
+    //실질적인 색상 지정 함수
+    function selectColor(){
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        const color = `rgba(${r}, ${g}, ${b}, 0.5)`;
+
+        return color;
+    }
+    //자동 색상 지정
+    function generateBackgroundColors(count) {
+      const colors = [];
+      for (let i = 0; i < count; i++) {
+        const color = selectColor();
+        if(colors.find(f => f === color)){
+            i--;
+            continue;
+        }
+        colors.push(color);
+      }
+      return colors;
+    }
 
     useEffect(() => {
         console.log(props.chartData);
@@ -66,7 +89,7 @@ export default function ViewChart(props) {
     //데이터가 들어왔을 때
      return (
         <>
-            <Bar data={chartInfo} />
+            <Doughnut data={chartInfo} />
         </>
     )
 

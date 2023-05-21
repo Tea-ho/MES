@@ -86,7 +86,7 @@ export default function PerformanceForm(props) {
     }
 
     return(<>
-        <div style={{ height: 400, width: '100%', display:'flex', justifyContent : 'center'}}>
+        <div style={{ height: 400, width: '100%', display:'flex', justifyContent : 'center', marginBottom : '20px'}}>
             <ViewChart chartData={rows} type={type}/>
         </div>
         <div style={{ height: 400, width: '100%' }}>

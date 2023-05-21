@@ -98,6 +98,61 @@ public class AutoProduceService {
                 }
             }
         }
+    }
+
+    @Transactional
+    public void AutoProduce(int prodID){
+
+        //제품별 조회: 제품명, 제품 현재 재고, 제품 평균 판매량, 제품 평균 생산량,안전재고량(현재고*1.2) 리스트
+        List<AutoProdctDto> autoProdctDtoList = productProcessRepository.getCurrentStockAndAverageSales();
+
+        System.out.println(autoProdctDtoList);
+
+        //유효성 검사 변수
+        boolean produceOk = false;
+
+        //승인권자는 무조건 mno = 1이라고 가정한다.
+        Optional<MemberEntity> memberEntity = memberRepository.findById(1);
+
+        for(int i = 0; i < autoProdctDtoList.size(); i++){
+            System.out.println("-----------------------------------------------");
+            System.out.println(i + " : "+ autoProdctDtoList.get(i).toString());
+
+            if(prodID == autoProdctDtoList.get(i).getProdID()){
+
+                //(1) 평균 판매량 > 현재 재고*1.2(안전율 적용) : true 자동생산 / false 대상 X
+                if(autoProdctDtoList.get(i).getAvgOrderCount() > autoProdctDtoList.get(i).getProdSafeStock()){
+                    produceOk = true;
+                }
+
+                //(2) 평균 판매량 / 평균 생산량 > 1 : true 자동생산 / false 대상 X
+                if(autoProdctDtoList.get(i).getAvgOrderCount()/autoProdctDtoList.get(i).getAvgProdPlanCount() > 1){
+                    produceOk = true;
+                }
+
+                //만약 (1), (2) 유효성 검사 중 하나라도 걸리면
+                if(produceOk){
+                    //생산 지시를 넘기기 위한 dto를 만든다.
+                    ProductPlanDto productPlanDto = new ProductPlanDto();
+                    productPlanDto.setMemberDto(memberEntity.get().toDto());
+
+                    //productEntity를 찾는다.
+                    Optional<ProductEntity> productEntity = productRepository.findById(autoProdctDtoList.get(i).getProdID());
+
+                    if(productEntity.isPresent()){ //productEntity가 존재하면
+                        //필요한 데이터를 담는다; productDto, 제품 생산 수량
+                        productPlanDto.setProductDto(productEntity.get().toDto());
+                        String prodPlanCount = String.valueOf(Math.round((1.2*autoProdctDtoList.get(i).getAvgOrderCount()) - (autoProdctDtoList.get(i).getProdCurrentStock()/autoProdctDtoList.get(i).getAvgProdPlanCount())));
+                        productPlanDto.setProdPlanCount(prodPlanCount);
+                        System.out.println("자동 생산 지시 : " + productPlanDto);
+
+                        productPlanService.postProduct(productPlanDto);
+
+                    }
+                }
+            }
+
+        }
 
     }
 }

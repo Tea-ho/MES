@@ -13,6 +13,11 @@ export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭
   const [value, setValue] = useState(0);
   const [screen, setScreen] = useState(<CreateProduct/>); //화면을 바꿔주는
 
+  if(sessionStorage.getItem('member') == null){
+      alert('로그인 먼저 해주세요.')
+      window.location.href = '/component/member/Login';
+  }
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     //바뀔때마다 아래 화면을 바꿔주는 화면

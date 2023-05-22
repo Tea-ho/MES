@@ -113,8 +113,19 @@ export default function AllowForm(props) {
             { field: 'salesPrice', headerName: '판매금액', width: 220, align: 'center', headerAlign: 'center' },
             { field: 'orderDate', headerName: '요청일자', width: 140, align: 'center', headerAlign: 'center' },
             { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 150, align: 'center', headerAlign: 'center',
-              valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
-            },
+                valueGetter: (params) => {
+                    if (params.row.allowApprovalDto.al_app_whether === true) {
+                        return '승인완료';
+                    } else if (
+                        params.row.allowApprovalDto.al_app_whether === false &&
+                        params.row.allowApprovalDto.mno === null
+                    ) {
+                        return '승인대기';
+                    } else {
+                        return '승인반려';
+                    }
+                },
+            }
             { field: 'memberDto.mname', headerName: '요청자', width: 90, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                 const { mname, memberDto } = params.row;
@@ -160,7 +171,18 @@ export default function AllowForm(props) {
                     },
                 }}
             pageSizeOptions={[5, 10]}
-            isRowSelectable={(params)=>params.row.allowApprovalDto.al_app_whether===false}
+            isRowSelectable: (params) => {
+                if (params.row.allowApprovalDto.al_app_whether === true) {
+                    return false;
+                } else if (
+                    params.row.allowApprovalDto.al_app_whether === false &&
+                    params.row.allowApprovalDto.mno !== null
+                ) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
                 setRowSelectionModel(newRowSelectionModel);

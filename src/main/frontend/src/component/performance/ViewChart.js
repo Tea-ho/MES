@@ -13,6 +13,9 @@ export default function ViewChart(props) {
     //chartData걊만 저장
     const[showData, setShowData] = useState([]);
 
+    //생산량 막대그래프
+    const[barData, setBarData] = useState([]);
+
     //chartInfo 정보 설정
     const chartInfo = {
       labels: showLabel, // X 축 레이블
@@ -27,6 +30,9 @@ export default function ViewChart(props) {
       ],
     };
 
+    //chartInfo2 정보 설정 => 막대 그래프
+    const chartInfo2;
+
     //실질적인 색상 지정 함수
     function selectColor(){
         const r = Math.floor(Math.random() * 256);
@@ -36,6 +42,7 @@ export default function ViewChart(props) {
 
         return color;
     }
+
     //자동 색상 지정
     function generateBackgroundColors(count) {
       const colors = [];
@@ -63,10 +70,28 @@ export default function ViewChart(props) {
           setShowLabel(labelInfo);
           console.log("라벨 값 : " + labelInfo)
 
-          //실질적으로 chart data 값(막대의 길이를 결정하는)
+          //실질적으로 chart data 값(도넛 그래프)
           const dataInfo = showInfo.map(item => item.productionPercentage); //생산비율
           setShowData(dataInfo);
           console.log("데이터 값 : " + dataInfo)
+
+          //실질적으로 chart data 값(막대의 길이를 결정하는)
+          const dataInfo = showInfo.map(item => item.totalProductionAmount); //생산비율
+          setBarData(dataInfo);
+          console.log("데이터 값 : " + dataInfo)
+
+           chartInfo2 = {
+                labels: showLabel, // X 축 레이블
+                datasets: [
+                  {
+                    label: '생산량' // 데이터셋 레이블
+                    data: showData, // 데이터 값
+                    backgroundColor: 'blue', // 데이터셋 배경색
+                    borderColor: 'black', // 데이터셋 테두리 색
+                    borderWidth: 1, // 데이터셋 테두리 너비
+                  },
+                ],
+              };
 
       }else if(props.type == 2){ //판매 실적일 경우
           //라벨 값

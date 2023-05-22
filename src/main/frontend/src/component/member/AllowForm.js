@@ -123,6 +123,13 @@ export default function AllowForm(props) {
         ]
     }
 
+    // row값 승인대기 상태 우선 출력되도록 filtering 진행
+    const filteredRows = [
+      ...rows.filter((row) => row.allowApprovalDto.al_app_whether === false),
+      ...rows.filter((row) => row.allowApprovalDto.al_app_whether === true),
+    ];
+
+
     // --------------------------------- 출력부 ---------------------------------
     return(<>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -144,7 +151,7 @@ export default function AllowForm(props) {
         </Box>
         <div style={{ height: 400, width: '100%' }}>
             <DataGrid
-                rows={rows}
+                rows={filteredRows}
                 columns={columns}
                 getRowId={type === 1 ? ((row) => row.mat_in_outid) : type === 3 ? ((row) => row.order_id) : ((row) => row.prodPlanNo)}
                 initialState={{
@@ -153,7 +160,7 @@ export default function AllowForm(props) {
                     },
                 }}
             pageSizeOptions={[5, 10]}
-            isRowSelectable={(params)=>params.row.allowApprovalDto.al_app_whether==false}
+            isRowSelectable={(params)=>params.row.allowApprovalDto.al_app_whether===false}
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
                 setRowSelectionModel(newRowSelectionModel);

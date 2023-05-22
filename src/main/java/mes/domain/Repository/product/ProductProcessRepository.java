@@ -42,14 +42,20 @@ public interface ProductProcessRepository extends JpaRepository<ProductProcessEn
             "GROUP BY p.prod_id", nativeQuery = true)
     List<AutoProdctDto> getProductSalesAndProduction();
 
-
-    // 제품별 조회: 제품명, 제품 현재 재고, 제품 평균 판매량, 제품 평균 생산량,안전재고량(현재고*1.2)
-    @Query(value = "SELECT p.prod_id AS prodID, pp.prod_stock AS prodCurrentStock, AVG(s.order_count) AS avgOrderCount, AVG(ppp.prod_plan_count) AS avgProdPlanCount, pp.prod_stock * 1.2 AS prodSafeStock " +
+    // 제품별 조회: 제품명, 제품 현재 재고, 제품 평균 판매량, 제품 평균 생산량, 안전재고량(현재고*1.2)
+    // 용도: 제품 자동 생산에 사용
+    @Query(value = "SELECT p.prod_id AS prodID, pp.prod_stock AS prodCurrentStock, " +
+            "AVG(s.order_count) AS avgOrderCount, AVG(ppp.prod_plan_count) AS avgProdPlanCount, pp.prod_stock * 1.2 AS prodSafeStock " +
             "FROM product_process pp " +
             "JOIN product_plan ppp ON pp.prod_id = ppp.prod_id " +
             "JOIN product p ON pp.prod_id = p.prod_id " +
             "JOIN sales s ON pp.prod_id = s.prod_id " +
             "GROUP BY p.prod_id, pp.prod_stock", nativeQuery = true)
     List<AutoProdctDto> getCurrentStockAndAverageSales();
-
+    // 1. 자동 생산 유무 판단 근거
+    // 1) 평균 판매량 > 현재 재고*1.2(안전율 적용) : true 자동생산 / false 대상 X
+    // 2) 평균 판매량 / 평균 생산량 > 1 : true 자동생산 / false 대상 X
+    // 2. 자동 생산량 결정 (제품 유효기한 없기에 반영 X)
+    // 계산식: (현재 재고 + 추가 생산 재고) / 평균 판매량 = 1.2 (안전율 20% 적용)
+    // 추가 생산량 = 1.2*평균판매량 – 현재재고/평균생산량
 }

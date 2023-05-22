@@ -2,7 +2,7 @@ import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
-import { Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';//
 
 //판매/생산 실적 차트
 export default function ViewChart(props) {

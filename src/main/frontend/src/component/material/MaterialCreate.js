@@ -35,7 +35,7 @@ export default function MaterialCreate() {
 
 
     const MaterialCreate=()=>{
-
+    const pattern_num = /[0-9]/;	// 숫자
     if(company == 0){
         alert('회사를 선택해주세요')
         return false;
@@ -44,7 +44,10 @@ export default function MaterialCreate() {
         alert('코드를 선택해주세요')
         return false;
     }
-
+    if(!(pattern_num.test(document.getElementById('MatPrice').value))){
+        alert('단가는 숫자만 입력가능합니다.')
+        return false;
+    }
 
 
 

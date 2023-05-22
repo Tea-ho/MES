@@ -1,12 +1,10 @@
 package mes.service.Material;
 
 import lombok.extern.slf4j.Slf4j;
-import mes.controller.member.MemberController;
 import mes.domain.dto.material.ApexChart;
 import mes.domain.dto.material.InOutPageDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
-import mes.domain.dto.member.MemberDto;
 import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.material.MaterialEntityRepository;
 import mes.domain.entity.material.MaterialInOutEntity;
@@ -15,7 +13,6 @@ import mes.domain.entity.member.AllowApprovalEntity;
 import mes.domain.entity.member.AllowApprovalRepository;
 import mes.domain.entity.member.MemberEntity;
 import mes.domain.entity.member.MemberRepository;
-import mes.service.member.MemberSerivce;
 import mes.webSocket.ChattingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,16 +20,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.socket.TextMessage;
-
-
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,7 +104,6 @@ public class MaterialInoutService {
         dto.setMaterialInOutDtoList(list);
         dto.setTotalPage(entityPage.getTotalPages());
         dto.setTotalCount(entityPage.getTotalElements());
-
         dto.setApexCharts(charts(dto.getMatID()));
 
         return dto;
@@ -157,8 +147,6 @@ public class MaterialInoutService {
             materialInOutEntityRepository.delete(materialInOutEntity);
             return true;
         }
-
-
         return false;
     }
 

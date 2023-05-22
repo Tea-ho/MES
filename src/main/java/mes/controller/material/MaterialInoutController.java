@@ -2,14 +2,11 @@ package mes.controller.material;
 
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.dto.material.InOutPageDto;
-import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.service.Material.MaterialInoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.text.ParseException;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -34,14 +31,14 @@ public class MaterialInoutController {
 
         return materialInoutService.MaterialInOutList(dto);
     }
-
+    // 재고 최종승인
     @PutMapping("/MaterialStock")
     public boolean MaterialInStock(@RequestBody MaterialInOutDto dto){
 
 
         return materialInoutService.MaterialInStock(dto);
     }
-
+    // 재고 증가 취소
     @DeleteMapping("/MaterialDelete")
     public boolean MaterialDelete(@RequestParam int mat_in_outid){
 

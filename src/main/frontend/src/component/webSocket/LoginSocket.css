@@ -1,3 +1,4 @@
+/* 스크롤바 안보이게 */
 .socketWrap {
   overflow: auto;
   scrollbar-width: thin;

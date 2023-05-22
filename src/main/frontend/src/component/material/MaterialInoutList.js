@@ -27,17 +27,17 @@ export default function MaterialInoutList(props){
 
 
     const params = useParams(); // 매개변수가 객체형태로 들어옴.
-
-    console.log(params.matID);
+    console.log(params.matID); // params값 확인
 
     const [list, setList] = useState([]);
     const [inOutList , setInOutList] = useState([]);
-    let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'matID' : params.matID } )
-    let [totalPage , setTotalPage ] = useState(1);
-    let [totalCount , setTotalCount ] = useState(1);
-    let [categories , setCategories ] = useState([]);
-    let [data , setData] = useState([]);
+    const [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'matID' : params.matID } )
+    const [totalPage , setTotalPage ] = useState(1);
+    const [totalCount , setTotalCount ] = useState(1);
+    const [categories , setCategories ] = useState([]);
+    const [data , setData] = useState([]);
 
+        // 선택한 자재 정보 불러오기
          useEffect( ()=>{
                 axios.get('/materials/materialList' , { params : {matID : params.matID} })
                   .then( r => {
@@ -66,15 +66,22 @@ export default function MaterialInoutList(props){
 
 
 
-
+    // 자재 재고 생성
     const MaterialIn = () =>{
-        if(sessionStorage.getItem('member') == null){return false}
+        //유효성 검사
+        if(sessionStorage.getItem('member') == null){
+            alert('로그인 후 생성 가능합니다.')
+            return false
+        }
+
+        // 전달할 객체 생성
         let info = {
             mat_in_type : document.getElementById('mat_in_type').value,
             matID : params.matID,
             memberdto :  JSON.parse(sessionStorage.getItem('member'))
         }
-        console.log(info)
+
+        console.log(info) // 확인
         axios.post('/materialInout/materialIn', info)
                         .then( r => { console.log(r);
                         if(r.data == true){
@@ -85,7 +92,7 @@ export default function MaterialInoutList(props){
                         })
         }
 
-
+    // 자재 재고 생성 리스트 출력
     const MaterialInOut = () =>{
             axios.get('/materialInout/MaterialInOutList' , { params : pageInfo })
                      .then( r => {
@@ -99,13 +106,14 @@ export default function MaterialInoutList(props){
 
     }
 
+    // 페이지네이션
     const selectPage = (event , value) => {
-
             console.log(value); //
             pageInfo.page = value;
             setPageInfo({...pageInfo});
         }
 
+    // 자재 재고 생성 최종확인
     const MaterialStock = (e) => {
         const al_app_no = e.target.value;
         let info = {
@@ -124,6 +132,7 @@ export default function MaterialInoutList(props){
 
     }
 
+    // 자재 등록 취소
     const MaterialDelete = (e) => {
         const mat_in_outid = e.target.value;
         axios.delete('/materialInout/MaterialDelete' , { params : {mat_in_outid : mat_in_outid} })
@@ -139,6 +148,7 @@ export default function MaterialInoutList(props){
 
     }
 
+    // 뒤로가기 버튼
     const backSpace = ()=>{
         window.location.href = `/component/material/Material`;
     }

@@ -27,38 +27,33 @@ export default function Material(props) {
                console.log('count : '+count);
     } , [count] )
 
+    // 자재 수정을 위한 핸들러
     const countHandler =(e)=>{
         console.log(e);
         setCount(e.count);
         setInfo(e);
     }
-
+    // 자재 수정을 위한 핸들러
     const returnHandler =(e)=>{
             console.log(e);
             setCount(e);
 
     }
 
+    return (<>
+
+            <div>
+              <h2>자재</h2>
+            </div>
+            <div>
+                <h3>자재 현황</h3>
+                <MaterialView countHandler={countHandler}/>
+            </div>
 
 
+            <div>
+               {count === 0 ? <MaterialCreate /> : <MaterialUpdate returnHandler={returnHandler} getInfo={info}/>}
+            </div>
 
-
-
-
-  return (<>
-
-    <div>
-      <h2>자재</h2>
-    </div>
-    <div>
-        <h3>자재 현황</h3>
-        <MaterialView countHandler={countHandler}/>
-    </div>
-
-
-    <div>
-       {count === 0 ? <MaterialCreate /> : <MaterialUpdate returnHandler={returnHandler} getInfo={info}/>}
-    </div>
-
-  </>);
+      </>);
 }

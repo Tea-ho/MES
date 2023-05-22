@@ -18,9 +18,6 @@ public interface MaterialInOutEntityRepository extends JpaRepository<MaterialInO
     @Query(value = "select * from material_in_out where matid=:matID" , nativeQuery = true)
     Page<MaterialInOutEntity> findByMatid(int matID, Pageable pageable);
 
-    @Query(value = "select * from material_in_out where matid=:matID" , nativeQuery = true)
-    List<MaterialInOutEntity> findByMid(int matID);
-
     @Query(value = "select * from material_in_out where matid=:matID and mat_in_code = 1" , nativeQuery = true)
     List<MaterialInOutEntity> findByMaterial(int matID);
 

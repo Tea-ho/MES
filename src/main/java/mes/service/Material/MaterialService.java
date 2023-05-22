@@ -1,6 +1,5 @@
 package mes.service.Material;
 
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.material.MaterialPageDto;
@@ -11,15 +10,12 @@ import mes.domain.entity.material.MaterialInOutEntity;
 import mes.domain.entity.material.MaterialInOutEntityRepository;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.member.CompanyRepository;
-import mes.domain.entity.product.MaterialProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +59,7 @@ public class MaterialService {
     public MaterialPageDto materialList(MaterialPageDto dto){
         List<MaterialDto> list = new ArrayList<>();
 
-
+        // 전체출력
         if(dto.getMatID() == 0){
             Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "matID"));
             System.out.println("Servicedto : " + dto);
@@ -90,6 +86,7 @@ public class MaterialService {
            dto.setTotalPage(entityPage.getTotalPages());
            dto.setTotalCount(entityPage.getTotalElements());
         }
+        // 선택한 자재 상세보기 출력
         else if(dto.getMatID() > 0){
             MaterialEntity entity = materialEntityRepository.findById(dto.getMatID()).get();
             list.add(entity.toDto());
@@ -97,8 +94,6 @@ public class MaterialService {
             dto.setMaterialList(list);
         }
         System.out.println("Servicedto : " + dto);
-
-
 
         return dto;
     }

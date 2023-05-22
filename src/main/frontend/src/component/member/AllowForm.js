@@ -125,7 +125,7 @@ export default function AllowForm(props) {
                         return '승인반려';
                     }
                 },
-            }
+            },
             { field: 'memberDto.mname', headerName: '요청자', width: 90, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                 const { mname, memberDto } = params.row;

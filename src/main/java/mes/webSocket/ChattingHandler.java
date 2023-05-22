@@ -21,7 +21,6 @@ public class ChattingHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Establishedsession : " + session);
-        System.out.println(session.getPrincipal());
         online.add(session);
     }
 

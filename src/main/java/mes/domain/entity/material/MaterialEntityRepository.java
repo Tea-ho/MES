@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MaterialEntityRepository extends JpaRepository<MaterialEntity , Integer> {
 
-
-
     @Query(value = "SELECT * FROM material WHERE IF(:keyword = '', TRUE, mat_name LIKE %:keyword%)", nativeQuery = true)
     Page<MaterialEntity> findByPage(String keyword , Pageable pageable);
 }

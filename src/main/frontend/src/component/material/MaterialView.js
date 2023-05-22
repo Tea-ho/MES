@@ -25,12 +25,13 @@ import Material from './Material';
 export default function MaterialView(props) {
 
     console.log(props.countHandler)
+
     const [list, setList] = useState([]);
-    let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'keyword' : '' , 'matID' : 0 } )
-    let [totalPage , setTotalPage ] = useState(1);
-    let [totalCount , setTotalCount ] = useState(1);
+    const [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'keyword' : '' , 'matID' : 0 } )
+    const [totalPage , setTotalPage ] = useState(1);
+    const [totalCount , setTotalCount ] = useState(1);
 
-
+     // 자재 리스트 불러오기
      useEffect( ()=>{
             axios.get('/materials/materialList',{ params : pageInfo } )
               .then( r => {
@@ -45,28 +46,26 @@ export default function MaterialView(props) {
 
 
 
-
+     // 선택한 자재 상세보기
      const MaterialInoutList=(e)=>{
             console.log(e.target.value)
-                const matID = e.target.value;
-                window.location.href = `/component/material/MaterialInoutList/${matID}`;
-
-
-        }
-
+            const matID = e.target.value;
+            window.location.href = `/component/material/MaterialInoutList/${matID}`;
+     }
+    // 페이지네이션
     const selectPage = (event , value) => {
         console.log(value); //
         pageInfo.page = value;
         setPageInfo({...pageInfo});
     }
-
+    // 검색창
     const onSearch =()=>{
         pageInfo.keyword = document.getElementById("keyword").value;
         pageInfo.page = 1
         document.getElementById("keyword").value = '';
         setPageInfo({...pageInfo});
     }
-
+    // 페이지네이션
     const onChangecountHandler=(e)=>{
         let info ={
             matid : e.target.value,

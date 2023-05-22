@@ -5,8 +5,6 @@ import mes.domain.BaseTime;
 import mes.domain.dto.material.MaterialDto;
 import mes.domain.entity.member.CompanyEntity;
 import mes.domain.entity.product.MaterialProductEntity;
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

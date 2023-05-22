@@ -25,6 +25,7 @@ import MaterialView from "./MaterialView"
 
 export default function MaterialUpdate(props) {
 
+    // props 값 확인
     console.log(props.getInfo)
     console.log(props.returnHandler)
 
@@ -32,7 +33,7 @@ export default function MaterialUpdate(props) {
     let [selectMatID , setSelectMatID] = useState();
 
 
-
+    // 선택된 자재의 정보 불러오기
     const materialSelect = (e) =>{
      axios.get('/materials/materialList' , { params : {MatID : e } })
                .then( r => {
@@ -41,7 +42,7 @@ export default function MaterialUpdate(props) {
             } )
 
     }
-
+    // input창에 불러온 정보 넣어주기
     const setUp =(e)=> {
         setSelectMatID(e.matID);
         document.getElementById('MatName').value = e.mat_name
@@ -53,7 +54,7 @@ export default function MaterialUpdate(props) {
     }
 
 
-
+    // 회사정보 불러오기
     useEffect( ()=>{
             axios.get('/materials/getcompany')
               .then( r => {
@@ -65,9 +66,9 @@ export default function MaterialUpdate(props) {
 
         }, [props] )
 
-
-        const MaterialUpdate=()=>{
-
+    // 자재정보 수정
+    const MaterialUpdate=()=>{
+        // 유효성검사
         if(company == 0){
             alert('회사를 선택해주세요')
             return false;
@@ -76,8 +77,10 @@ export default function MaterialUpdate(props) {
             alert('코드를 선택해주세요')
             return false;
         }
-
-
+        if(!(pattern_num.test(document.getElementById('MatPrice').value))){
+            alert('단가는 숫자만 입력가능합니다.')
+            return false;
+        }
 
 
         let info={
@@ -99,19 +102,17 @@ export default function MaterialUpdate(props) {
                     window.location.href="/component/material/Material"
                     }
 
-                    } )
+        } )
+    }
 
-
-         }
-
-
+        // 회사 선택창
         const [company, setCompany] = useState(0);
             const handleChange = (event) => {
                 console.log(event.target.value)
                 setCompany(event.target.value);
 
             };
-
+        // 코드 선택창
         const [code, setCode] = useState(0);
                 const handleChange2 = (event) => {
                     console.log(event.target.value)
@@ -119,7 +120,7 @@ export default function MaterialUpdate(props) {
 
                 };
 
-
+    // 수정 취소 핸들러
     const updateReturnHandler=()=>{
         props.returnHandler(0)
 

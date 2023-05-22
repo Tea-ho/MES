@@ -21,6 +21,7 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import LoginSocket from '../webSocket/LoginSocket'
+import ApexChart from './ApexChart'
 
 export default function MaterialInoutList(props){
 
@@ -34,6 +35,8 @@ export default function MaterialInoutList(props){
     let [ pageInfo , setPageInfo ] = useState( { 'page' : 1 , 'matID' : params.matID } )
     let [totalPage , setTotalPage ] = useState(1);
     let [totalCount , setTotalCount ] = useState(1);
+    let [categories , setCategories ] = useState([]);
+    let [data , setData] = useState([]);
 
          useEffect( ()=>{
                 axios.get('/materials/materialList' , { params : {matID : params.matID} })
@@ -41,11 +44,27 @@ export default function MaterialInoutList(props){
                         console.log(r)
                         setList(r.data.materialList)
                         MaterialInOut();
-                    } )
+
+                    })
 
 
 
             }, [pageInfo] )
+
+    // 차트용도
+    const setChart=(apexCharts)=>{
+        const categories = [];
+        const data = [];
+        apexCharts.forEach((e)=>{
+            categories.push(e.date)
+            data.push(e.stock)
+        })
+        setCategories(categories)
+        setData(data)
+    }
+
+
+
 
 
     const MaterialIn = () =>{
@@ -74,7 +93,7 @@ export default function MaterialInoutList(props){
                     setInOutList(r.data.materialInOutDtoList)
                     setTotalPage(r.data.totalPage);
                     setTotalCount(r.data.totalCount);
-
+                    setChart(r.data.apexCharts);
             } )
 
 
@@ -125,6 +144,8 @@ export default function MaterialInoutList(props){
     }
 
 
+
+
     return (<>
 
         <div>
@@ -163,7 +184,10 @@ export default function MaterialInoutList(props){
                           </TableContainer>
 
             </div>
-
+        <div>
+            <h3>총 재고량</h3>
+            <ApexChart categories={categories} data={data}/>
+        </div>
         <div>
          <h3>자재 현황</h3>
                         <TableContainer component={Paper}>
@@ -199,8 +223,8 @@ export default function MaterialInoutList(props){
                                                             ? <Button variant="contained" type="button" value={e.allowApprovalDto.al_app_no} onClick={MaterialStock}>결제확인</Button>
                                                             : "결제완료"}
                                                             </TableCell>
-                                   <TableCell align="center" >{e.allowApprovalDto.al_app_date == null ? "" : e.allowApprovalDto.al_app_date}</TableCell>
-                                   <TableCell align="center" >{e.allowApprovalDto.memberdto == null ? "" : "결제승인인원"}</TableCell>
+                                   <TableCell align="center" >{e.allowApprovalDto.al_app_date == null ? "" : e.allowApprovalDto.al_app_date.substr(0,10)}</TableCell>
+                                   <TableCell align="center" >{e.allowApprovalDto.memberdto == null ? "" : e.allowApprovalDto.memberdto}</TableCell>
                                    <TableCell align="center" >{e.allowApprovalDto.al_app_whether == true
                                                             && e.mat_in_code == 0
                                                             ? <Button variant="contained" type="button" value={e.mat_in_outid} onClick={MaterialDelete}>등록취소</Button>

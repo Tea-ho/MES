@@ -47,8 +47,8 @@ public class MaterialInOutEntity extends BaseTime {
                 .allowApprovalDto(this.allowApprovalEntity.toInDto())
                 .mat_in_type(this.mat_in_type)
                 .mat_st_stock(this.mat_st_stock)
-                .cdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .udate(this.udate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .cdate(this.cdate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .udate(this.udate.minusMinutes(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .mat_in_code(this.mat_in_code)
                 .memberdto(this.memberEntity.toDto())
                 .build();

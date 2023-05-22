@@ -2,6 +2,7 @@ package mes.service.Material;
 
 import lombok.extern.slf4j.Slf4j;
 import mes.controller.member.MemberController;
+import mes.domain.dto.material.ApexChart;
 import mes.domain.dto.material.InOutPageDto;
 import mes.domain.dto.material.MaterialInOutDto;
 import mes.domain.dto.member.AllowApprovalDto;
@@ -28,7 +29,10 @@ import org.springframework.web.socket.TextMessage;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,8 +93,6 @@ public class MaterialInoutService {
             System.out.println(e);
         }
 
-
-
         if( result.getMat_in_outid() >= 1 ){ return true; }  // 2. 만약에 생성된 엔티티의 pk가 1보다 크면 save 성공
         return false;
 
@@ -98,7 +100,7 @@ public class MaterialInoutService {
 
     // 내역 리스트 출력
     @Transactional
-    public InOutPageDto MaterialInOutList(InOutPageDto dto){
+    public InOutPageDto MaterialInOutList(InOutPageDto dto) throws ParseException {
 
        List<MaterialInOutDto> list = new ArrayList<>();
         Pageable pageable = PageRequest.of(dto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "udate"));
@@ -111,6 +113,8 @@ public class MaterialInoutService {
         dto.setMaterialInOutDtoList(list);
         dto.setTotalPage(entityPage.getTotalPages());
         dto.setTotalCount(entityPage.getTotalElements());
+
+        dto.setApexCharts(charts(dto.getMatID()));
 
         return dto;
     }
@@ -157,6 +161,23 @@ public class MaterialInoutService {
 
         return false;
     }
+
+    // 차트용 데이터 검색
+
+    @Transactional
+    public List<ApexChart> charts(int MatID) throws ParseException {
+
+        List<ApexChart> chartList = new ArrayList();
+
+        List<MaterialInOutEntityRepository.ApexChart> ByChart = materialInOutEntityRepository.findByChart(MatID);
+        System.out.println(ByChart);
+        ByChart.forEach((e)->{
+            chartList.add(new ApexChart(e.getUdate() , e.getStock()));
+        });
+
+        return chartList;
+    }
+
 
     @Transactional
     public AllowApprovalEntity materialOut(MaterialInOutDto dto){
@@ -223,4 +244,7 @@ public class MaterialInoutService {
         }
         return checking;
     }
+
+
+
 }

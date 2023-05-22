@@ -19,6 +19,7 @@ public class InOutPageDto {
     private int page;
     private int matID;
     private List<MaterialInOutDto> materialInOutDtoList;
+    private List<ApexChart> apexCharts;
 
 
 }

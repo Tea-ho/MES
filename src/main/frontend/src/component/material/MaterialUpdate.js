@@ -68,6 +68,7 @@ export default function MaterialUpdate(props) {
 
     // 자재정보 수정
     const MaterialUpdate=()=>{
+        const pattern_num = /[0-9]/;
         // 유효성검사
         if(company == 0){
             alert('회사를 선택해주세요')

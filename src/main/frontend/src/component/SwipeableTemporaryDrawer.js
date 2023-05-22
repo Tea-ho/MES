@@ -24,7 +24,7 @@ import Logo from './member/img/MESInfo.png';
 export default function SwipeableTemporaryDrawer() {
   const [state, setState] = React.useState({
         left: false
-    );
+    });
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -39,12 +39,24 @@ export default function SwipeableTemporaryDrawer() {
   };
 
 const list = (anchor: Anchor) => (
+
+
     <Box
       sx={{ width: 175  }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+    <div style={{ borderBottom : '1px solid silver' , margin : '5px'  }}>
+        <img src={Logo} width="80"/>
+        <div style={{ marginBottom : '15px' }}>
+            {JSON.parse(sessionStorage.getItem('member')) == null
+            ? <Button style={{padding : '10px', margin : '10px 20px' }}variant="contained" type="button" href="/component/member/Login" >로그인</Button>
+            : <div>{JSON.parse(sessionStorage.getItem('member')).mname}
+                    {JSON.parse(sessionStorage.getItem('member')).position}님
+            </div>}
+        </div>
+    </div>
       <nav aria-label="main mailbox folders">
                                 <List>
                                   <ListItem disablePadding>

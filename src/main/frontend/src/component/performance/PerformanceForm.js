@@ -6,6 +6,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
  FormControl, Select, Stack, TextField } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
+import ViewChart from './ViewChart';
+
 export default function PerformanceForm(props) {
 
     // 1. 상태변수
@@ -84,6 +86,9 @@ export default function PerformanceForm(props) {
     }
 
     return(<>
+        <div style={{ height: 400, width: '100%', display:'flex', justifyContent : 'center', marginBottom : '20px'}}>
+            <ViewChart chartData={rows} type={type}/>
+        </div>
         <div style={{ height: 400, width: '100%' }}>
             <DataGrid
                 rows={rows}

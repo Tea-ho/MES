@@ -30,6 +30,7 @@ public class ChattingHandler extends TextWebSocketHandler {
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         System.out.println(message);
+        System.out.println("메시지 사이즈 : " + message.getPayloadLength());
         super.handleMessage(session, message);
 
 

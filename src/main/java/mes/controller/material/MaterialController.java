@@ -44,7 +44,7 @@ public class MaterialController {
         System.out.println(list);
         return list;
     }
-
+    // 자재 수정
     @PutMapping("/materialUpdate")
     public boolean materialUpdate(@RequestBody MaterialDto dto){
         return materialService.materialUpdate(dto);

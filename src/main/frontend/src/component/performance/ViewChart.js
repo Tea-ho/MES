@@ -2,6 +2,7 @@ import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
 //판매/생산 실적 차트
 export default function ViewChart(props) {
@@ -31,7 +32,18 @@ export default function ViewChart(props) {
     };
 
     //chartInfo2 정보 설정 => 막대 그래프
-    const chartInfo2;
+    const chartInfo2 = {
+       labels: showLabel, // X 축 레이블
+       datasets: [
+         {
+           label: '생산량', // 데이터셋 레이블
+           data: barData, // 데이터 값
+           backgroundColor: '#5F84A2', // 데이터셋 배경색
+           borderColor: 'white', // 데이터셋 테두리 색
+           borderWidth: 1, // 데이터셋 테두리 너비
+         },
+       ],
+     };
 
     //실질적인 색상 지정 함수
     function selectColor(){
@@ -76,22 +88,9 @@ export default function ViewChart(props) {
           console.log("데이터 값 : " + dataInfo)
 
           //실질적으로 chart data 값(막대의 길이를 결정하는)
-          const dataInfo = showInfo.map(item => item.totalProductionAmount); //생산비율
-          setBarData(dataInfo);
-          console.log("데이터 값 : " + dataInfo)
-
-           chartInfo2 = {
-                labels: showLabel, // X 축 레이블
-                datasets: [
-                  {
-                    label: '생산량' // 데이터셋 레이블
-                    data: showData, // 데이터 값
-                    backgroundColor: 'blue', // 데이터셋 배경색
-                    borderColor: 'black', // 데이터셋 테두리 색
-                    borderWidth: 1, // 데이터셋 테두리 너비
-                  },
-                ],
-              };
+          const barInfo = showInfo.map(item => item.totalProductionAmount); //생산비율
+          setBarData(barInfo);
+          console.log("데이터 값 : " + barInfo)
 
       }else if(props.type == 2){ //판매 실적일 경우
           //라벨 값
@@ -114,7 +113,10 @@ export default function ViewChart(props) {
     //데이터가 들어왔을 때
      return (
         <>
-            <Doughnut data={chartInfo} />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                {props.type == 1 ? <Bar style={{marginRight : '30px'}} data={chartInfo2} /> : null}
+                <Doughnut data={chartInfo} />
+            </div>
         </>
     )
 

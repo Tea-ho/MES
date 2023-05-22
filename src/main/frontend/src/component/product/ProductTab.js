@@ -33,9 +33,9 @@ export default function ProductTab(){ /*제품 부분의 화면을 바꿔줄 탭
     return(<>
         <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
           <Tabs value={value} onChange={handleChange} centered>
-            <Tab label="제품 생산" />
-            <Tab label="제품 관리" />
-            <Tab label="제품 지시" />
+            <Tab label="제품 등록" />
+            <Tab label="제품 정보" />
+            <Tab label="생산 지시" />
           </Tabs>
           {screen}
         </Box>

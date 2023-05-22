@@ -77,8 +77,8 @@ const SalesChart = ({ list }) => {
   }, [list]);
 
   return (
-    <div style={{display : 'flex' , justifyContent : 'center' , width: '500px' , height : '500px' , margin : '0 auto'  }}>
-      <canvas ref={chartRef} width={500} height={500} />
+    <div style={{display : 'flex' , justifyContent : 'center' , width: '850px' , height : '500px' , margin : '0 auto'  }}>
+      <canvas ref={chartRef} width={850} height={500} />
     </div>
   );
 };

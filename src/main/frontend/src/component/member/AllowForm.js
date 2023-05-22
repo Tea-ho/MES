@@ -125,7 +125,7 @@ export default function AllowForm(props) {
                         return '승인반려';
                     }
                 },
-            }
+            } ,
             { field: 'memberDto.mname', headerName: '요청자', width: 90, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                 const { mname, memberDto } = params.row;
@@ -171,7 +171,7 @@ export default function AllowForm(props) {
                     },
                 }}
             pageSizeOptions={[5, 10]}
-            isRowSelectable: (params) => {
+            isRowSelectable = { (params) => {
                 if (params.row.allowApprovalDto.al_app_whether === true) {
                     return false;
                 } else if (
@@ -182,7 +182,7 @@ export default function AllowForm(props) {
                 } else {
                     return true;
                 }
-            }
+            }}
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
                 setRowSelectionModel(newRowSelectionModel);

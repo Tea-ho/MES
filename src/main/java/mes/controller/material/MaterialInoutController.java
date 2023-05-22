@@ -19,6 +19,7 @@ public class MaterialInoutController {
     @Autowired
     private MaterialInoutService materialInoutService;
 
+    // 재고 생성
     @PostMapping("/materialIn")
     public boolean materialIn(@RequestBody MaterialInOutDto dto){
         System.out.println("materialIn : " + dto);
@@ -26,7 +27,7 @@ public class MaterialInoutController {
 
         return materialInoutService.materialIn(dto);
     }
-
+    // 재고 생성 리스트 불러오기
     @GetMapping("/MaterialInOutList")
     public InOutPageDto MaterialInOutList(InOutPageDto dto) throws ParseException {
 

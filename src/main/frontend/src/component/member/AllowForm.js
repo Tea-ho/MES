@@ -78,7 +78,18 @@ export default function AllowForm(props) {
              },
             { field: 'udate', headerName: '요청일자', width: 290, align: 'center', headerAlign: 'center' },
             { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 290, align: 'center', headerAlign: 'center',
-              valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
+                valueGetter: (params) => {
+                    if (params.row.allowApprovalDto.al_app_whether === true) {
+                        return '승인완료';
+                    } else if (
+                        params.row.allowApprovalDto.al_app_whether === false &&
+                        (params.row.allowApprovalDto.al_app_date === null || !/^(\d{4})-(\d{2})-(\d{2})$/.test(params.row.allowApprovalDto.al_app_date))
+                    ) {
+                        return '승인대기';
+                    } else  {
+                        return '승인반려';
+                    }
+                }
             },
             { field: 'memberdto.mname', headerName: '요청자', width: 240, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
@@ -98,7 +109,18 @@ export default function AllowForm(props) {
             { field: 'prodPlanCount', headerName: '생산수량', width: 290, align: 'center', headerAlign: 'center' },
             { field: 'prodPlanDate', headerName: '생산일자', width: 290, align: 'center', headerAlign: 'center' },
             { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 240, align: 'center', headerAlign: 'center',
-              valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
+                valueGetter: (params) => {
+                    if (params.row.allowApprovalDto.al_app_whether === true) {
+                        return '승인완료';
+                    } else if (
+                        params.row.allowApprovalDto.al_app_whether === false &&
+                        (params.row.allowApprovalDto.al_app_date === null || !/^(\d{4})-(\d{2})-(\d{2})$/.test(params.row.allowApprovalDto.al_app_date))
+                    ) {
+                        return '승인대기';
+                    } else  {
+                        return '승인반려';
+                    }
+                }
             },
         ]
     } else if( type === 3){ // --- 판매 (columns 없으면 오류 뜸)
@@ -118,14 +140,14 @@ export default function AllowForm(props) {
                         return '승인완료';
                     } else if (
                         params.row.allowApprovalDto.al_app_whether === false &&
-                        params.row.allowApprovalDto.mno === null
+                        (params.row.allowApprovalDto.al_app_date === null || !/^(\d{4})-(\d{2})-(\d{2})$/.test(params.row.allowApprovalDto.al_app_date))
                     ) {
                         return '승인대기';
-                    } else {
+                    } else  {
                         return '승인반려';
                     }
-                },
-            }
+                }
+            },
             { field: 'memberDto.mname', headerName: '요청자', width: 90, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {
                 const { mname, memberDto } = params.row;
@@ -171,18 +193,17 @@ export default function AllowForm(props) {
                     },
                 }}
             pageSizeOptions={[5, 10]}
-            isRowSelectable: (params) => {
+            isRowSelectable = {(params) => {
                 if (params.row.allowApprovalDto.al_app_whether === true) {
                     return false;
-                } else if (
-                    params.row.allowApprovalDto.al_app_whether === false &&
-                    params.row.allowApprovalDto.mno !== null
-                ) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
+                } else if ( params.row.allowApprovalDto.al_app_whether === false &&
+                    /^(\d{4})-(\d{2})-(\d{2})$/.test(params.row.allowApprovalDto.al_app_date)
+                    ) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+            }}
             checkboxSelection
             onRowSelectionModelChange={(newRowSelectionModel) => {
                 setRowSelectionModel(newRowSelectionModel);

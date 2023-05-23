@@ -142,7 +142,10 @@ public class AutoProduceService {
                     if(productEntity.isPresent()){ //productEntity가 존재하면
                         //필요한 데이터를 담는다; productDto, 제품 생산 수량
                         productPlanDto.setProductDto(productEntity.get().toDto());
-                        String prodPlanCount = String.valueOf(Math.round((1.2*autoProdctDtoList.get(i).getAvgOrderCount()) - (autoProdctDtoList.get(i).getProdCurrentStock()/autoProdctDtoList.get(i).getAvgProdPlanCount())));
+                        String prodPlanCount =
+                                String.valueOf(
+                                        Math.round(
+                                                (1.2*autoProdctDtoList.get(i).getAvgOrderCount()) - (autoProdctDtoList.get(i).getProdCurrentStock()/autoProdctDtoList.get(i).getAvgProdPlanCount())));
                         productPlanDto.setProdPlanCount(prodPlanCount);
                         System.out.println("자동 생산 지시 : " + productPlanDto);
 

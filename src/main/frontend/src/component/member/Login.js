@@ -22,7 +22,7 @@ export default function Login(props) {
                 if(response.data){
                     setLoggedIn(true);
                     handleUserInfo(); // 로그인 정보 업로드
-                    window.location.href = '/component/member/AllowApproval';
+                    // window.location.href = '/component/member/AllowApproval';
                 } else{
                     window.location.href = '/component/member/Login';
                 }
@@ -39,6 +39,14 @@ export default function Login(props) {
                 console.log(response);
                 setMember(response.data);
                 sessionStorage.setItem('member', JSON.stringify(response.data));
+
+                const { position } = response.data;
+                if (position === "임원") {
+                    window.location.href = '/component/member/AllowApproval';
+                } else {
+                    window.location.href = '/component/member/Login';
+                }
+
                 {<LoginSocket />}
             })
             .catch(error => {

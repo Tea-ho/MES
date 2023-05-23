@@ -20,12 +20,12 @@ import java.time.format.DateTimeFormatter;
 public class SalesEntity extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int order_id;// -- 주문 D
+    private int order_id;// -- 주문 ID
 
 
-    @Column private int orderCount;     // -- 주문 수량
+    @Column private int orderCount;      // -- 주문 수량
     @Column private int order_status;    // -- 주문 상태
-    @Column private int salesPrice;     // 판매가
+    @Column private int salesPrice;      // 판매가
 
     @ManyToOne
     @JoinColumn(name = "alAppNo")

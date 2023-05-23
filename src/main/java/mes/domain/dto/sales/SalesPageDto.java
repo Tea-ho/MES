@@ -18,7 +18,6 @@ public class SalesPageDto {
     private int totalPage;
 
     private int page;
-    private int orderStatus;
     private int order_id;
     private String keyword;
 

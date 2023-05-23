@@ -3,7 +3,6 @@ package mes.service.sales;
 import lombok.extern.slf4j.Slf4j;
 import mes.domain.Repository.product.ProductProcessRepository;
 import mes.domain.Repository.product.ProductRepository;
-import mes.domain.dto.material.MaterialDto;
 import mes.domain.dto.member.AllowApprovalDto;
 import mes.domain.dto.member.CompanyDto;
 import mes.domain.dto.product.ProductDto;
@@ -11,25 +10,19 @@ import mes.domain.dto.product.ProductProcessDto;
 import mes.domain.dto.sales.ProductProcessPageDto;
 import mes.domain.dto.sales.SalesDto;
 import mes.domain.dto.sales.SalesPageDto;
-import mes.domain.entity.material.MaterialEntity;
 import mes.domain.entity.member.*;
 import mes.domain.entity.product.ProductEntity;
 import mes.domain.entity.product.ProductProcessEntity;
 import mes.domain.entity.sales.SalesEntity;
 import mes.domain.entity.sales.SalesRepository;
 import mes.service.product.AutoProduceService;
-import mes.service.product.ProductProcessService;
 import mes.webSocket.ChattingHandler;
-import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.socket.TextMessage;
 
 import javax.transaction.Transactional;
@@ -67,10 +60,9 @@ public class SalesService {
     @Autowired
     private ChattingHandler chattingHandler;
 
-    // 0. 판매 공정 product_process 출력
+    // 0. 판매 공정 [ 목적 : 판매 등록할 시 product_process stock 를 확인하기 위함 ]
     public ProductProcessPageDto getProductProcess(ProductProcessPageDto productProcessPageDto){
         List<ProductProcessDto> list = new ArrayList<>();
-
 
             Pageable pageable = PageRequest.of(productProcessPageDto.getPage()-1 , 5 , Sort.by(Sort.Direction.DESC , "prod_stock"));
 
@@ -83,11 +75,8 @@ public class SalesService {
             productProcessPageDto.setTotalPage(productProcessEntityPage.getTotalPages());
             productProcessPageDto.setTotalCount(productProcessEntityPage.getTotalElements());
 
-
         System.out.println("productProcessPageDto : " + productProcessPageDto);
-
         return productProcessPageDto;
-
     }
 
     // 1. 판매 등록
@@ -96,13 +85,10 @@ public class SalesService {
 
         // 회사 cno
         CompanyEntity companyEntity = companyRepository.findById( salesDto.getCno()).get();
-
         // 물건 id
         ProductEntity productEntity = productRepository.findById( salesDto.getProdId()).get();
-        System.out.println("productEntity : " + productEntity);
-
+        // 회원
         MemberEntity member = memberRepository.findByMnameAndMpassword(salesDto.getMemberDto().getMname() , salesDto.getMemberDto().getMpassword() );
-
         // 승인정보
         AllowApprovalEntity approvalEntity = allowApprovalRepository.save(new AllowApprovalDto().toInEntity());
 
@@ -110,9 +96,7 @@ public class SalesService {
         salesEntity.setAllowApprovalEntity(approvalEntity);         // 승인 정보 저장
         salesEntity.setCompanyEntity(companyEntity);                // 회사 저장
         salesEntity.setProductEntity( productEntity );              // 물품 저장
-
-        salesEntity.setOrder_status(0);                             // 기본 등록 order_status = 0
-
+        salesEntity.setOrder_status(0);                             // 기본 판매 상태 -> order_status = 0
         salesEntity.setMemberEntity(member);                        // 멤버 저장
 
         log.info("salesEntity : " + salesEntity);
@@ -124,16 +108,11 @@ public class SalesService {
         }catch (Exception e){
             System.out.println(e);
         }
-
         if ( salesEntity.getOrder_id() >= 1 ) {
             return true;
         }
-
         return false;
-
     }
-
-
 
     // [등록 조건1] ctype 2인 회사불러오기
     @Transactional
@@ -144,6 +123,7 @@ public class SalesService {
         entityList.stream()
                 .filter(e -> e.getCtype() == 2)
                 .forEach(e -> companyDtoList.add(e.toDto()));
+
         return companyDtoList;
     }
 
@@ -156,6 +136,7 @@ public class SalesService {
         entityList.forEach((e) -> {
             productDtoList.add(e.toDto());
         });
+
         return productDtoList;
     }
 
@@ -184,10 +165,9 @@ public class SalesService {
             list.add(entity.toDto());
             salesPageDto.setSalesDtoList(list);
         }
-        System.out.println("salesPageDto : " + salesPageDto);
+       log.info("salesPageDto : " + salesPageDto);
 
         return salesPageDto;
-
     }
 
     // 3. 판매 수정
@@ -198,16 +178,11 @@ public class SalesService {
         CompanyEntity companyEntity = companyRepository.findById(salesDto.getCno()).get();
         salesEntity.setCompanyEntity(companyEntity);            // 회사 수정
 
-
         ProductEntity productEntity = productRepository.findById( salesDto.getProdId()).get();
-        salesEntity.setProductEntity( productEntity );          // 물품 저장
-
-        log.info("productEntity 수정된 prodid번호 : " + productEntity.getProdId());
+        salesEntity.setProductEntity( productEntity );          // 물품 수정
 
         salesEntity.setOrderCount(salesDto.getOrderCount());    // 개수 수정
         salesEntity.setSalesPrice(salesDto.getSalesPrice());    // 가격 수정
-
-        log.info("수정 처리 salesEntity : " + salesEntity);
 
         salesRepository.save(salesEntity);
 
@@ -239,16 +214,18 @@ public class SalesService {
         ProductProcessEntity productProcessEntities  = productProcessRepository.findByProdId(productEntity.getProdId());
 
 
-
-        int baseStock = productProcessEntities.getProdStock();
+        int baseStock = productProcessEntities.getProdStock();  // 재고량
             log.info("baseStock : " + baseStock);
-        int salesStock = salesEntity.get().getOrderCount();
+
+        int salesStock = salesEntity.get().getOrderCount();     // 판매량
             log.info("salesStock : " + salesStock);
-        if ( baseStock - salesStock < 0){
+
+        if ( baseStock - salesStock < 0){                       // 재고량 - 판매량이 0보다 작을 시 false
             return false;
         }
-        int updateStock = baseStock - salesStock;
-        productProcessEntities.setProdStock(updateStock);
+
+        int updateStock = baseStock - salesStock;               // 재고량 > 판매량 인 경우 updateStock 생성
+        productProcessEntities.setProdStock(updateStock);       // 판매된 재고량 저장
 
         AllowId.setOrder_status(2);
         salesRepository.save(AllowId);

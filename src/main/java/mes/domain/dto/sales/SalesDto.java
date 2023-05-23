@@ -34,7 +34,7 @@ public class SalesDto extends BaseTime {
 
     private String orderDate;   // 주문 일자
     private int orderCount;     // 주문 수량
-    private int order_status;    // 주문 상태
+    private int order_status;   // 주문 상태
     private int salesPrice;     // 판매가
     private AllowApprovalDto allowApprovalDto; // 결제 승인여부
     private int al_app_no;
@@ -42,14 +42,14 @@ public class SalesDto extends BaseTime {
     private CompanyDto companyDto; // 판매회사
     private int cno;
 
-    private ProductDto productDto; // 주문 제품 ( 이름 )    * ProductEntity -> ProductDto로 변경
-    private String prodName;    // 완재품 이름
-    private int prodId;         // 완제품 id
+    private ProductDto productDto;  // 주문 제품 ( 이름 )    * ProductEntity -> ProductDto로 변경
+    private String prodName;        // 완재품 이름
+    private int prodId;             // 완제품 id
     // private ProductProcessEntity productProcessEntity; // 주문 제품 ( 상태, 개수 )
-    private int prodProcStatus; // 완재품 상태
-    private int prodStock;      // 완재품 개수
+    private int prodProcStatus;     // 완재품 상태
+    private int prodStock;          // 완재품 개수
 
-    private MemberDto memberDto;   // 판매등록자(판매원) * MemberEntity -> MemberDto로 변경
+    private MemberDto memberDto;    // 판매등록자(판매원) * MemberEntity -> MemberDto로 변경
     private int mname;
     private String cdate;
     private String udate;
@@ -60,7 +60,6 @@ public class SalesDto extends BaseTime {
                 .order_status(this.order_status)
                 .salesPrice(this.salesPrice)
                 .memberEntity(this.memberDto.toEntity())
-
                 .build();
     }
 

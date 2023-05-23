@@ -10,6 +10,18 @@ export default function AllowForm(props) {
 // 생성이유: 폼 유지보수가 필요한 경우, 1회 수정으로 작업 완료 칠 수 있음
 // (동일 폼 100개 있다고 생각하자) // data checking
 
+    // member 정보 확인
+    let member = JSON.parse(sessionStorage.getItem('member'));
+
+    if(member == null){
+        alert('로그인 먼저 해주세요.');
+        window.location.href = '/component/member/Login';
+    }
+    if(member.position != '임원'){
+        alert('권한이 없습니다.');
+        window.location.href = '/component/member/Login';
+    }
+
     // 1-1. 상태변수 선언[ 결재 리스트 관리 Controller get으로 받아서 초기화 예정 / DataGrid 적용 ]
     const [ rows, setRows ] = useState([]);
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);

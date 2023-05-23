@@ -21,7 +21,6 @@ import TextField from '@mui/material/TextField';
 
 export default function SalesCreate() {
 
-
     const [ list , setList ] = useState([])                 // ctype 2(판매처)인 회사
     const [ listProduct , setListProduct ] = useState([])   // 공정 완료된 물품
 
@@ -65,7 +64,6 @@ export default function SalesCreate() {
           cno : company ,
           prodId : prodName
         }
-
         console.log(info)
 
         axios.post('/sales/salesCreate', info)
@@ -124,14 +122,14 @@ export default function SalesCreate() {
                                    </FormControl>
                                  </Box>
                          </div>
-                 <div>
-                           <TextField style={{padding : '10px', margin : '10px'}} className="orderCount" id="orderCount" label="판매개수" variant="outlined" />
-                           <TextField style={{padding : '10px', margin : '10px'}} className="salesPrice" id="salesPrice" label="판매가격" variant="outlined" />
+                    <div>
+                         <TextField style={{padding : '10px', margin : '10px'}} className="orderCount" id="orderCount" label="판매개수" variant="outlined" />
+                         <TextField style={{padding : '10px', margin : '10px'}} className="salesPrice" id="salesPrice" label="판매가격" variant="outlined" />
 
-                     <Stack spacing={2} direction="row">
+                       <Stack spacing={2} direction="row">
                          <Button style={{padding : '10px', margin : '10px 20px'}}variant="contained" type="button" onClick={salesCreate}>판매 등록</Button>
-                     </Stack>
-                  </div>
-                 </div>
-               );
+                       </Stack>
+                   </div>
+                </div>
+            );
 }

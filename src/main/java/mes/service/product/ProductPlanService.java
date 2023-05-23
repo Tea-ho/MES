@@ -124,11 +124,9 @@ public class ProductPlanService {
                 for(int j = 0; j < materialInOutEntityList.size(); j++){
                     existMatStock += materialInOutEntityList.get(j).getMat_in_type(); // 자재 재고 누적 더하기(존재하는 총 재고)
                 }
-                System.out.println(materialEntity.get().getMat_name() + "자재 총 재고 : " + existMatStock);
 
                 //제품을 만들기 위해 각각의 자재 필요한 재고
                 needMatStock = Integer.parseInt(productPlanDto.getProdPlanCount()) * (materialProductEntities.get(i).getReferencesValue());
-                System.out.println(materialEntity.get().getMat_name() + "자재 필요한 재고 : " + needMatStock);
 
                 if(existMatStock < needMatStock){ //재고가 부족하면.
                     okSign = false; //한개라도 부족하면 제품을 만들 수 없음.
@@ -146,13 +144,16 @@ public class ProductPlanService {
             }
         }
 
-        boolean mat_okOut = true; //자재 재고가 모두 감소되었는지 확인용
+        boolean mat_okOut = true; //자재 재고가 모두 감소되었는지 확인용 => 유효성 검사 변수
+
+        //승인 리스트를 저장하는 변수(추후에 제품 생산 취소시 찾을 수 있겠끔 date에 /제품승인 pk를 넣은 것을 처리할 수 있게끔 따로 빼놓은 상태
         ArrayList<AllowApprovalEntity> allowApprovalEntityArrayList = new ArrayList<>();
 
         if(okSign){ //자재의 재고가 모두 충분한게 확인이 되었음
 
             //자재 재고를 이제 빼준다.
             //material_product row의 개수 = material row 개수
+            //자재 하나씩 처리한다.(승인 정보 하나 = 자재 정보 하나)
             for(int i = 0; i < materialProductEntities.size(); i++){
                 Optional<MaterialEntity> materialEntity = materialEntityRepository.findById(materialProductEntities.get(i).getMaterialEntity().getMatID());
 
@@ -162,31 +163,39 @@ public class ProductPlanService {
 
                     AllowApprovalDto allowApprovalDto = new AllowApprovalDto();
 
-                    allowApprovalDto.setAl_app_whether(true); //제품은 승인X
+                    allowApprovalDto.setAl_app_whether(true); //자재는 승인X
 
+                    //필요한 값을 넣는다. MaterialDto(자재 DTO), AllowApprovalDto(승인 DTO)
                     dto.setMaterialDto(materialEntity.get().toDto());
                     dto.setAllowApprovalDto(allowApprovalDto);
 
+                    //필요한 자재의 재고 값
                     int needMatStock = Integer.parseInt(productPlanDto.getProdPlanCount()) * (materialProductEntities.get(i).getReferencesValue());
-                    int existMatStock = 0; //존재하는 자재 재고 누적해서 구하기
+                    int existMatStock = 0; //현재 존재하는 자재 재고 누적해서 구하기
 
+                    //자재별로 입출고 리스트를 가져온다.
                     materialInOutEntityList = materialInOutEntityRepository.findByMaterial(materialEntity.get().getMatID()); //자재 하나당 가지고 있는 inout
 
+                    //현재 존재하는 자재의 입출고 리스트의 값을 모두 계산해서 해당 자재의 현재 존재하는 재고를 가져온다.
                     for(int j = 0; j < materialInOutEntityList.size(); j++){
                         existMatStock += materialInOutEntityList.get(j).getMat_in_type(); // 자재 재고 누적 더하기(존재하는 총 재고)
                     }
 
+                    //해당 자재의 재고를 맞춰야하기 때문에 [존재하는 재고 - 필요한 재고]로 차감해준다.
                     dto.setMat_st_stock(existMatStock - needMatStock); //재고처리
                     dto.setMat_in_type(-needMatStock); // 차감되는 재고
-                    dto.setMat_in_code(1);
-                    dto.setMemberdto(productPlanDto.getMemberDto());
+                    dto.setMat_in_code(1); //이미 승인 받았음으로 바로 1로 (제품 생산지시에서는 자재의 승인을 따로 받지 않는다.)
+                    dto.setMemberdto(productPlanDto.getMemberDto()); //제품 생산 지시를 내렸을 때의 회원의 정보를 넣어준다.
 
+                    //자재 하나별로 승인정보테이블에 추가한다. => materialInoutService에 출고만 처리하는 함수르 만들어 놓았고, 거기서 승인 정보도 추가하고 있다.
                     AllowApprovalEntity allowApprovalEntity = materialInoutService.materialOut(dto);
 
-                    if(allowApprovalEntity!= null){
-                        allowApprovalEntityArrayList.add(allowApprovalEntity);
-                    }else{
-                        mat_okOut = false;
+                    //=> 실질적으로 자재 재고가 빠지는 것은 생산 지시를 승인받았을 때만 가능
+                    //materialInoutService의 materialOut() 메소드의 반환 값이 null인 경우는 출고를 하지 못해서 반환되는 경우이다.
+                    if(allowApprovalEntity!= null){ //null이 아닌 경우는 무사히 자재 출고가 되었다는 뜻이므로
+                        allowApprovalEntityArrayList.add(allowApprovalEntity); // 승인 정보리스트에 승인엔티티를 추가해준다.
+                    }else{ //출고를 하지 못했다면
+                        mat_okOut = false; //유효성 검사 변수에 false값을 준다.
                     }
                     log.info("materialOut service에 전달 : " + dto + "출고 결과 : " + mat_okOut);
 
@@ -196,7 +205,7 @@ public class ProductPlanService {
 
         //재고가 무사히 다 적용이 되었다면
         if(mat_okOut && okSign){
-            //제품 생산 지시
+            //제품 생산 지시관련 승인 dto
             AllowApprovalEntity inAllowapproval = AllowApprovalEntity.builder()
                     .al_app_date(simpleDateFormat.format(new Date()))
                     .al_app_whether(false)
@@ -204,6 +213,7 @@ public class ProductPlanService {
 
             AllowApprovalEntity allowApprovalEntity = allowApprovalRepository.save(inAllowapproval);
 
+            //생산 지시 dto에 필요한 정보를 모두 넣는다.
             productPlanDto.setAllowApprovalDto(allowApprovalEntity.toPlanDto());
             ProductPlanEntity productPlanEntity = productPlanDto.toEntity();
             productPlanEntity.setProdPlanDate(simpleDateFormat.format(new Date()));
@@ -216,7 +226,6 @@ public class ProductPlanService {
 
             if(entity.getProdPlanNo() > 0){ //생산 지시가 들어갔으면
                 for(int i = 0; i < allowApprovalEntityArrayList.size(); i++){
-                    System.out.println(allowApprovalEntityArrayList.get(i));
                     allowApprovalEntityArrayList.get(i).setAl_app_date(date);
                 }
                 returnResultStr.add("성공>> 생산지시가 완료되었습니다.");
@@ -249,6 +258,7 @@ public class ProductPlanService {
                return "[성공]"+ prodPlanNo+ "번 생산 지시가 삭제 완료되었습니다.";
            }
         }
+
         return "[에러] 알 수 없는 에러가 발생하여 해당 " + prodPlanNo +"번째 생산 지시를 삭제할 수 없습니다.";
     }
 }

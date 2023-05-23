@@ -90,18 +90,7 @@ export default function AllowForm(props) {
              },
             { field: 'udate', headerName: '요청일자', width: 290, align: 'center', headerAlign: 'center' },
             { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 290, align: 'center', headerAlign: 'center',
-                valueGetter: (params) => {
-                    if (params.row.allowApprovalDto.al_app_whether === true) {
-                        return '승인완료';
-                    } else if (
-                        params.row.allowApprovalDto.al_app_whether === false &&
-                        (params.row.allowApprovalDto.al_app_date === null || !/^(\d{4})-(\d{2})-(\d{2})$/.test(params.row.allowApprovalDto.al_app_date))
-                    ) {
-                        return '승인대기';
-                    } else  {
-                        return '승인반려';
-                    }
-                }
+              valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
             },
             { field: 'memberdto.mname', headerName: '요청자', width: 240, align: 'center', headerAlign: 'center',
               valueGetter: (params) => {

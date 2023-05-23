@@ -30,9 +30,8 @@ public class MaterialInOutDto {
     private String cdate;
     private String udate;
 
-
-
-    public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock, LocalDate cdate, LocalDate udate, AllowApprovalDto allowApprovalDto, MaterialDto materialDto, MemberDto memberdto) {
+    public MaterialInOutDto(int mat_in_outid, int mat_in_type, int mat_st_stock,
+                            LocalDate cdate, LocalDate udate, AllowApprovalDto allowApprovalDto, MaterialDto materialDto, MemberDto memberdto) {
         this.mat_in_outid = mat_in_outid;
         this.mat_in_type = mat_in_type;
         this.mat_st_stock = mat_st_stock;

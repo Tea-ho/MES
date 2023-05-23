@@ -41,12 +41,12 @@ public class SalesService {
     SalesRepository salesRepository;
 
     @Autowired
-    ProductProcessRepository productProcessRepository;
-    // 재고량, status 빼오기 위함(공정 상태)
-
-    @Autowired
     ProductRepository productRepository;
     // prod_Id or prod_name 빼오기 위함
+
+    @Autowired
+    ProductProcessRepository productProcessRepository;
+    // 재고량, status 빼오기 위함(공정 상태)
 
     @Autowired
     MemberRepository memberRepository;

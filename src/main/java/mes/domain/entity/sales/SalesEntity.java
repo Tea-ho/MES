@@ -64,3 +64,4 @@ public class SalesEntity extends BaseTime {
     }
 
 }
+

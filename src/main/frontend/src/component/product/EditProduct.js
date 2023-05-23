@@ -42,12 +42,22 @@ export default function EditProduct(props){ //제품 추가 부분
 
 
 
-    //제품 등록
+    //제품 수정
     const updateProduct = () => {
 
         // 유효성검사
         if(company == 0){
             alert('회사를 선택해주세요.');
+            return false;
+        }
+
+        if(document.getElementById('prodName').value == ''){
+            alert('제품 이름을 입력해주세요.');
+            return false;
+        }
+
+        if(document.getElementById('prodPrice').value == ''){
+            alert('제품 가격을 입력해주세요.');
             return false;
         }
 

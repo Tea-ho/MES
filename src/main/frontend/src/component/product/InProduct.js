@@ -50,6 +50,7 @@ export default function InProduct(props){ //제품 추가 부분
 
     //제품 등록
     const createProduct = () => {
+
         // 유효성검사
         if(company == 0){
             alert('회사를 선택해주세요.');
@@ -59,6 +60,16 @@ export default function InProduct(props){ //제품 추가 부분
         if(matIDList.length <= 0){
           alert('자재 조합을 해주세요.')
           return false;
+        }
+
+        if(document.getElementById('prodName').value == ''){
+            alert('제품 이름을 입력해주세요.')
+            return false;
+        }
+
+        if(document.getElementById('prodPrice').value == ''){
+            alert('제품 가격을 입력해주세요.')
+            return false;
         }
 
         //유효성 통과시 전달할 객체 보내기

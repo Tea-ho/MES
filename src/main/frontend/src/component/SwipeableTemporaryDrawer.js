@@ -19,6 +19,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import PercentIcon from '@mui/icons-material/Percent';
 import Logo from './member/img/MESInfo.png';
+import Clock from './Clock';
 
 // 사이드바 생성 API
 export default function SwipeableTemporaryDrawer() {
@@ -37,21 +38,20 @@ export default function SwipeableTemporaryDrawer() {
 
     setState({ ...state, [anchor]: open });
   };
-
+// <Button style={{padding : '5px', margin : '5px' }}variant="contained" type="button" href="/component/member/Login" >로그인</Button>
 const list = (anchor: Anchor) => (
-
-
     <Box
       sx={{ width: 175  }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-    <div style={{ borderBottom : '1px solid silver' , margin : '5px'  }}>
+    <div style={{ borderBottom : '1px solid silver' , height : '145px'}}>
         <img src={Logo} width="80"/>
-        <div style={{ marginBottom : '15px' }}>
+        <Clock />
+        <div style={{ marginBottom : '10px' , marginLeft : '10px' }}>
             {JSON.parse(sessionStorage.getItem('member')) == null
-            ? <Button style={{padding : '10px', margin : '10px 20px' }}variant="contained" type="button" href="/component/member/Login" >로그인</Button>
+            ? ""
             : <div>{JSON.parse(sessionStorage.getItem('member')).mname}
                     {JSON.parse(sessionStorage.getItem('member')).position}님
             </div>}

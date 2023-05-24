@@ -26,7 +26,7 @@ public class PerformanceController {
     public List<?> printPerformance(@RequestParam int type, HttpSession session){
             log.info("printProduction type (1: production, 2: sales):"+type);
 
-        checkLogin(session);
+        //checkLogin(session);
 
         try{
             return performanceService.getPerformanceDto(type);

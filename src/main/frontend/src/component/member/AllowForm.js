@@ -13,11 +13,7 @@ export default function AllowForm(props) {
     // member 정보 확인
     let member = JSON.parse(sessionStorage.getItem('member'));
 
-    if(member == null){
-        alert('로그인 먼저 해주세요.');
-        window.location.href = '/component/member/Login';
-    }
-    if(member.position != '임원'){
+    if(member == null || member.position != '임원'){ // 직급 및 로그인 동시 체킹가능함
         alert('권한이 없습니다.');
         window.location.href = '/component/member/Login';
     }

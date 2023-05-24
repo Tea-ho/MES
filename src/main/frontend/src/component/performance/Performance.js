@@ -8,6 +8,11 @@ import PerformanceSales from './PerformanceSales';
 
 export default function Performance() {
 
+    if(sessionStorage.getItem('member') == null){ // 로그인 여부 체킹
+        alert('로그인 먼저 해주세요.')
+        window.location.href = '/component/member/Login';
+    }
+
     const[ value, setValue ] = useState(0);
     const[ screen, setScreen ] = useState(<PerformanceProduction/>)
 

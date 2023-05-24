@@ -69,9 +69,14 @@ export default function MaterialInoutList(props){
     // 자재 재고 생성
     const MaterialIn = () =>{
         //유효성 검사
+        const pattern_num = /[0-9]/;
         if(sessionStorage.getItem('member') == null){
             alert('로그인 후 생성 가능합니다.')
             return false
+        }
+        if(!(pattern_num.test(document.getElementById('mat_in_type').value))){
+              alert('재고량은 숫자만 입력가능합니다.')
+              return false;
         }
 
         // 전달할 객체 생성

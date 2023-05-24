@@ -78,10 +78,7 @@ export default function MaterialUpdate(props) {
             alert('코드를 선택해주세요')
             return false;
         }
-        if(!(pattern_num.test(document.getElementById('MatPrice').value))){
-            alert('단가는 숫자만 입력가능합니다.')
-            return false;
-        }
+
 
 
         let info={

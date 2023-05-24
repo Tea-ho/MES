@@ -63,4 +63,5 @@ MES
 #### 13. PT자료
 
 계획서 초안 : [4조 프로젝트 계획서.pptx](https://github.com/Ga0Kwon/MES/files/11364476/4.pptx)
-밮표 PPT : https://www.canva.com/design/DAFjPlYJz-A/JSbcTQ4TtovY8SIZgzsVbQ/view?utm_content=DAFjPlYJz-A&utm_campaign=share_your_design&utm_medium=link&utm_source=shareyourdesignpanel
+
+발표 PPT : https://www.canva.com/design/DAFjPlYJz-A/JSbcTQ4TtovY8SIZgzsVbQ/view?utm_content=DAFjPlYJz-A&utm_campaign=share_your_design&utm_medium=link&utm_source=shareyourdesignpanel

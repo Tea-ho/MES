@@ -26,7 +26,8 @@ public class PerformanceController {
     public List<?> printPerformance(@RequestParam int type, HttpSession session){
             log.info("printProduction type (1: production, 2: sales):"+type);
 
-        checkLogin(session);
+        // checkLogin(session);
+        // React에서 막고 있기 때문에 생략
 
         try{
             return performanceService.getPerformanceDto(type);

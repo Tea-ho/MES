@@ -145,7 +145,8 @@ public class AutoProduceService {
                         String prodPlanCount =
                                 String.valueOf(
                                         Math.round(
-                                                (1.2*autoProdctDtoList.get(i).getAvgOrderCount()) - (autoProdctDtoList.get(i).getProdCurrentStock()/autoProdctDtoList.get(i).getAvgProdPlanCount())));
+                                                (1.2*autoProdctDtoList.get(i).getAvgOrderCount()) -
+                                                (autoProdctDtoList.get(i).getProdCurrentStock()/autoProdctDtoList.get(i).getAvgProdPlanCount())));
                         productPlanDto.setProdPlanCount(prodPlanCount);
                         System.out.println("자동 생산 지시 : " + productPlanDto);
 

@@ -40,46 +40,42 @@ export default function CreateProduct(props){
             } )
     }, [pageInfo] )
 
-    //체크 박스 업데이트
-    const checkboxEventHandler = (event, num) => {
-        let domValue = '.matRate'+num;
-        let rate = document.querySelector(domValue)
+    ///체크 박스 업데이트 (수량을 입력하고 넣어야하는 문제점이 존재함...ㅠ) => 비율 수정도 같이
+     //type [1 : 체크박스 수정] [2 : 비율 수정]
+     const checkboxEventHandler = (event, num, type) => {
+         let domValue = '.matRate'+num;
+         let rate = document.querySelector(domValue)
 
-        let referencesValue = {
-            matId : num,
-            matRate : rate ? Number(rate.value)  : 0
-        }
+         console.log("type " + type)
+         if(type == 1){ //체크박스 업데이트
+             let referencesValue = {
+                 matId : num,
+                 matRate : rate ? Number(rate.value)  : 0
+             }
 
-       console.log(referencesValue)
-       //배열의 요소중 matId가 같은게 하나라도 있으면 삭제한다.
-       if (checked.some((item) => item.matId === referencesValue.matId)) {
-         setChecked(checked.filter((item) => item.matId !== referencesValue.matId));
-       } else {
-         setChecked([...checked, referencesValue]);
-       }
-    }
+            //배열의 요소중 matId가 같은게 하나라도 있으면 삭제한다.
+            if (checked.some((item) => item.matId === referencesValue.matId)) {
+              setChecked(checked.filter((item) => item.matId !== referencesValue.matId));
+            } else {
+              setChecked([...checked, referencesValue]);
+            }
 
-    //비율 설정 바꿀 때 checkbox 바꾸기
-    const rateChangeHandler = (event, num) => {
-        let domValue = '.matRate'+num;
-        let rate = document.querySelector(domValue)
+         }else if(type == 2){
+             let newValue = event.target.value;
 
-        let referencesValue = {
-            matId : num,
-            matRate : rate ? Number(rate.value)  : 0
-        }
-
-        //비율 설정할 때 checked되어있을 경우만 비율 설정(체크되어있지 않으면 추가X)
-        setChecked(checked.map((item) => {
-               if (item.matId === referencesValue.matId) {
-                   return {
-                       ...item,
-                       matRate: referencesValue.matRate //비율값만 변경
-                   };
-               }
-               return item;
-        }));
-    }
+             // 배열의 요소 중 matId가 같은게 하나라도 있으면 해당 요소의 matRate만 업데이트
+             if (checked.some((item) => item.matId === num)) {
+               setChecked((prevState) => {
+                 return prevState.map((item) => {
+                   if (item.matId === num) {
+                     return { ...item, matRate: newValue};
+                   }
+                   return item;
+                 });
+               });
+             }
+         }
+     }
 
     //자재 페이지 변경
     const selectPage = (event , value) => {
@@ -119,17 +115,23 @@ export default function CreateProduct(props){
                         <TableBody>
                           {list.map((e) => (
                             <TableRow>
-                             <TableCell align="center" >{e.matID}</TableCell>
-                             <TableCell align="center" >{e.mat_name}</TableCell>
-                             <TableCell align="center" >{e.mat_price}</TableCell>
-                             <TableCell align="center" >{e.mat_unit}</TableCell>
-                             <TableCell align="center" >{e.mat_st_exp}</TableCell>
-                             <TableCell align="center" >{e.companyDto.cname}</TableCell>
-                             <TableCell align="center" >{e.mdate}</TableCell>
-                             <TableCell align="center" >{e.mat_code}</TableCell>
-                             <TableCell align="center"><Checkbox onChange={(event) => checkboxEventHandler(event, e.matID)}/></TableCell>
-                             <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율" onChange = {(event) => rateChangeHandler(event, e.matID)}/></TableCell>
-                            </TableRow>
+                                 <TableCell align="center" >{e.matID}</TableCell>
+                                 <TableCell align="center" >{e.mat_name}</TableCell>
+                                 <TableCell align="center" >{e.mat_price}</TableCell>
+                                 <TableCell align="center" >{e.mat_unit}</TableCell>
+                                 <TableCell align="center" >{e.mat_st_exp}</TableCell>
+                                 <TableCell align="center" >{e.companyDto.cname}</TableCell>
+                                 <TableCell align="center" >{e.mdate}</TableCell>
+                                 <TableCell align="center" >{e.mat_code}</TableCell>
+                                 <TableCell align="center"><Checkbox
+                                     onChange={(event) => checkboxEventHandler(event, e.matID, 1)}
+                                     checked={checked.some((item) => item.matId === e.matID)}/>
+                                 </TableCell>
+                                 <TableCell align="center" ><input style={{padding : '7px', margin : '3px'}} className={'matRate'+e.matID} id={'matRate'+e.matID} placeholder="비율"
+                                         onChange={(event) => checkboxEventHandler(event, e.matID, 2)}
+                                         value={checked.filter((item) => item.matId === e.matID)[0]?.matRate || ''}/>
+                                 </TableCell>
+                             </TableRow>
                           ))}
                         </TableBody>
                       </Table>
@@ -146,6 +148,6 @@ export default function CreateProduct(props){
                     <div style={{display : 'flex' , justifyContent : 'center', marginTop:'30px'}}>
                         <InProduct material={checked} handleChange={props.handleChange}/> {/*선택한 자재 PK를 제품 입력칸 부분에 전달*/}
                     </div>
-             </div>
+         </div>
     </>);
 }

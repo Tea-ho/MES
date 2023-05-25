@@ -47,9 +47,9 @@ const SalesChart = ({ list }) => {
             borderWidth: 1,
           },
           {
-            label: '평균판매가격(천 원)',
+            label: '평균판매가격(백 만원)',
             data: Object.values(processedData).map(item => {
-              const avgSalesPrice = item.salesPriceSum / item.salesPriceCount / 1000;
+              const avgSalesPrice = item.salesPriceSum / item.salesPriceCount / 1000000;
               return avgSalesPrice; // item 반복문 돌리고, salesPriceSum을 salesPriceCount로 나눠 평균판매가격 구하기
             }),
             backgroundColor: 'rgba(254, 128, 162, 1)',

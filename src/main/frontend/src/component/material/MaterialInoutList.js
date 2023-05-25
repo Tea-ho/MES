@@ -239,7 +239,7 @@ export default function MaterialInoutList(props){
                                                             : "결제완료"}
                                                             </TableCell>
                                    <TableCell align="center" >{e.allowApprovalDto.al_app_date == null ? "" : e.allowApprovalDto.al_app_date.substr(0,10)}</TableCell>
-                                   <TableCell align="center" >{e.allowApprovalDto.memberdto == null ? "" : e.allowApprovalDto.memberdto}</TableCell>
+                                   <TableCell align="center" >{e.allowApprovalDto.memberEntity == null ? "" : e.allowApprovalDto.memberEntity.mname}</TableCell>
                                    <TableCell align="center" >{e.allowApprovalDto.al_app_whether == true
                                                             && e.mat_in_code == 0
                                                             ? <Button variant="contained" type="button" value={e.mat_in_outid} onClick={MaterialDelete}>등록취소</Button>

@@ -100,11 +100,15 @@ public class MaterialInoutService {
         entityPage.forEach((e)->{
             list.add(e.toDto());
         });
+        log.info("entityPage : ****************" + entityPage.getTotalElements());
+        log.info("entityPage : ****************" + entityPage.get().toString());
 
         dto.setMaterialInOutDtoList(list);
         dto.setTotalPage(entityPage.getTotalPages());
         dto.setTotalCount(entityPage.getTotalElements());
         dto.setApexCharts(charts(dto.getMatID()));
+
+        log.info("entityPage : ****************" + dto.toString());
 
         return dto;
     }

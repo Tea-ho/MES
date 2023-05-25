@@ -9,7 +9,6 @@ import "./LoginSocket.css";
 export default function LoginSocket(props) {
     console.log('LoginSocket실행중')
 
-    let [ id , setId ] = useState(''); // 익명채팅에서 사용할 id [ 난수 저장 ]
     let [msg , setMsg ] = useState([]);
 
     let ws = useRef( null ) ;   // 1.모든 함수 사용할 클라이언트소켓 변수

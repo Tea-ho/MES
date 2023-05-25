@@ -1,7 +1,9 @@
 # MES
 MES(project4)
 
-#### 0. 시현 영상 
+#### 0. 시현 영상 및 PPT 자료
+- 시현 영상:
+- PPT 자료: [MES_ppt.pdf](https://github.com/Ga0Kwon/MES/files/11565596/MES_ppt.pdf)
 
 
 #### 1. 주제
@@ -59,7 +61,3 @@ MES
 ![image](https://user-images.githubusercontent.com/121651318/235451547-2b5db1de-747f-4244-bac9-6b37dc51ebcf.png)
 
 : 7가지 굵기 지원하고 깔끔한 느낌이어서 일단 추천
-
-#### 13. PT자료
-
-계획서 초안 : [4조 프로젝트 계획서.pptx](https://github.com/Ga0Kwon/MES/files/11364476/4.pptx)

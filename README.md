@@ -28,9 +28,9 @@ Spring&React Project: HTML5, JS, Java, MySQL(RDS), AXIOS, RESTful API(JSON), mui
 
 
 #### 6. mySQL ER diagram
-초안 : 
-
 ![image](https://github.com/Ga0Kwon/MES/assets/121651318/63a678b5-6752-4e10-8dac-864bc73bd8b5)
+
+
 #### 7. MVC Structure
 ![image](https://user-images.githubusercontent.com/121651318/235430808-ee0fe050-e817-4528-92c6-9a13c909ba62.png)
 
@@ -43,7 +43,6 @@ MES
 
 #### 10. 페이지 로고
 ![MES Logo](https://user-images.githubusercontent.com/121651318/235453331-cf5d71b8-9d41-4f55-b681-b11d002c8539.png)
-
 
 
 #### 11. 테마 색상

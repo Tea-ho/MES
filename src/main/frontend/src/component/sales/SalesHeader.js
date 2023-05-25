@@ -18,6 +18,12 @@ import SalesCreate from "./SalesCreate";
 import SalesView from "./SalesView"
 
 export default function SalesHeader() {
+
+   if(sessionStorage.getItem('member') == null){
+        alert('로그인 먼저 해주세요.')
+        window.location.href = '/component/member/Login';
+    }
+
   return (
     <>
       <div>

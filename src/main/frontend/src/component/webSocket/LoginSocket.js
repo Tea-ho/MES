@@ -19,7 +19,7 @@ export default function LoginSocket(props) {
 
     if( !ws.current ){      // 3.클라이언트소켓이 접속이 안되어있을때. [ * 유효성검사 ]
 
-                ws.current = new WebSocket("ws://localhost:8080/chat") ; // 4. 서버소켓 연결
+                ws.current = new WebSocket("ws://192.168.17.17:8080/chat") ; // 4. 서버소켓 연결
 
                 ws.current.onopen = () => {   console.log('서버 접속했습니다.');}
 

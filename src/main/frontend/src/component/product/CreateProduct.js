@@ -106,7 +106,7 @@ export default function CreateProduct(props){
                             <TableCell align="center" style={{ width:'10%' }}>단위</TableCell>
                             <TableCell align="center" style={{ width:'15%' }}>유통기한(Day)</TableCell>
                             <TableCell align="center" style={{ width:'10%' }}>생산자</TableCell>
-                            <TableCell align="center" style={{ width:'10%' }}>구입일</TableCell>
+                            <TableCell align="center" style={{ width:'10%' }}>등록일</TableCell>
                             <TableCell align="center" style={{ width:'3%' }}>코드</TableCell>
                             <TableCell align="center" style={{ width:'20%' }}>선택</TableCell>
                             <TableCell align="center" style={{ width:'20%' }}>비율설정</TableCell>

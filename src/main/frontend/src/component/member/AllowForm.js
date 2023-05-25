@@ -130,7 +130,7 @@ export default function AllowForm(props) {
                } },
             { field: 'orderCount', headerName: '판매수량', width: 220, align: 'center', headerAlign: 'center' },
             { field: 'salesPrice', headerName: '판매금액', width: 220, align: 'center', headerAlign: 'center' },
-            { field: 'orderDate', headerName: '요청일자', width: 140, align: 'center', headerAlign: 'center' },
+            { field: 'udate', headerName: '요청일자', width: 140, align: 'center', headerAlign: 'center' },
             { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 150, align: 'center', headerAlign: 'center',
                 valueGetter: (params) => {
                     if (params.row.allowApprovalDto.al_app_whether === true) {

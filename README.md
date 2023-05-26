@@ -11,10 +11,10 @@ One-way(원자재 재고관리, 제품 재고관리, 제품 생산관리, 제품
 
 
 #### 2. 주제 선정 이유
-1) SAP ERP 미사용 기업 및 제조 스타트업의 불편함을 공감하고 묶을 수 있는 핵심 기능들을 MES를 통해 관리할 수 있도록 편의성을 제공하기 위해서
-2) 실질적인 업무에 많이 사용하는 관리시스템에 대한 이해(공부)를 위해서
-3) Spring & React를 사용함으로서 개발 패턴 이해 및 개발 능력 향상을 위해서 
-4) AWS(RDS)를 통해 DB 협업을 이해하며 공부하기 위해서
+- SAP ERP 미사용 기업 및 제조 스타트업의 불편함을 공감하고 묶을 수 있는 핵심 기능들을 MES를 통해 관리할 수 있도록 편의성을 제공하기 위해서
+- 실질적인 업무에 많이 사용하는 관리시스템에 대한 이해(공부)를 위해서
+- Spring & React를 사용함으로서 개발 패턴 이해 및 개발 능력 향상을 위해서 
+- AWS(RDS)를 통해 DB 협업을 이해하며 공부하기 위해서
 
 #### 3. 팀원: 권가영, 김태호, 이정준, 최성아
 ![image](https://user-images.githubusercontent.com/121651318/235430629-9468d97a-6d86-4663-a29e-9cbfd7a083b1.png)
@@ -42,11 +42,11 @@ Spring&React Project: HTML5, JS, Java, MySQL(RDS), AXIOS, RESTful API(JSON), mui
 MES 
 
 #### 10. 페이지 로고
-![MES Logo](https://user-images.githubusercontent.com/121651318/235453331-cf5d71b8-9d41-4f55-b681-b11d002c8539.png)
+<img src="https://user-images.githubusercontent.com/121651318/235453331-cf5d71b8-9d41-4f55-b681-b11d002c8539.png" width=50%>
 
 
 #### 11. 테마 색상
-![MES 색상 추천](https://user-images.githubusercontent.com/121651318/235451419-fc3c596b-6b4b-48a5-bbc3-bdc60a9677d2.jpg)
+<img src="https://user-images.githubusercontent.com/121651318/235451419-fc3c596b-6b4b-48a5-bbc3-bdc60a9677d2.jpg" width="60%">
 
 
 #### 12. 메인 폰트

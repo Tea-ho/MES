@@ -2,7 +2,7 @@
 MES(project4)
 
 #### 0. 시현 영상 및 PPT 자료
-- 시현 영상:
+- 시현 영상: https://www.youtube.com/watch?v=HtMemg1fcIM
 - PPT 자료: [MES_ppt.pdf](https://github.com/Ga0Kwon/MES/files/11565596/MES_ppt.pdf)
 
 

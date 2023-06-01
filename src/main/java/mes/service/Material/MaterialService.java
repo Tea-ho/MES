@@ -35,7 +35,7 @@ public class MaterialService {
     CompanyRepository companyRepository;
 
 
-    // 자재 등록
+    // 자재 등록1
     @Transactional
     public boolean materialCreate(MaterialDto dto){
 

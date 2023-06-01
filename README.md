@@ -1,6 +1,10 @@
 # MES
 MES(project4)
 
+#### 0. 시현 영상 및 PPT 자료
+- 시현 영상: https://www.youtube.com/watch?v=HtMemg1fcIM
+- PPT 자료: [MES_ppt.pdf](https://github.com/Ga0Kwon/MES/files/11565596/MES_ppt.pdf)
+
 #### 0. 시현 영상 
 https://www.youtube.com/watch?v=HtMemg1fcIM
 
@@ -9,16 +13,16 @@ One-way(원자재 재고관리, 제품 재고관리, 제품 생산관리, 제품
 
 
 #### 2. 주제 선정 이유
-1) SAP ERP 미사용 기업 및 제조 스타트업의 불편함을 공감하고 묶을 수 있는 핵심 기능들을 MES를 통해 관리할 수 있도록 편의성을 제공하기 위해서
-2) 실질적인 업무에 많이 사용하는 관리시스템에 대한 이해(공부)를 위해서
-3) Spring & React를 사용함으로서 개발 패턴 이해 및 개발 능력 향상을 위해서 
-4) AWS(RDS)를 통해 DB 협업을 이해하며 공부하기 위해서
+- SAP ERP 미사용 기업 및 제조 스타트업의 불편함을 공감하고 묶을 수 있는 핵심 기능들을 MES를 통해 관리할 수 있도록 편의성을 제공하기 위해서
+- 실질적인 업무에 많이 사용하는 관리시스템에 대한 이해(공부)를 위해서
+- Spring & React를 사용함으로서 개발 패턴 이해 및 개발 능력 향상을 위해서 
+- AWS(RDS)를 통해 DB 협업을 이해하며 공부하기 위해서
 
 #### 3. 팀원: 권가영, 김태호, 이정준, 최성아
-![image](https://user-images.githubusercontent.com/121651318/235430629-9468d97a-6d86-4663-a29e-9cbfd7a083b1.png)
+![image](https://github.com/Ga0Kwon/MES/assets/119651889/c91924c2-6539-4802-8276-ffd8072f8979)
 
 #### 4.개발 전체 일정
-![mes_project4_2023-05-01_05 57pm](https://user-images.githubusercontent.com/121651318/235431953-36441320-0793-464f-ba8a-74a5d2db3a18.png)
+![image](https://github.com/Ga0Kwon/MES/assets/119651889/ef091ce1-d7d8-45dc-86a5-fb43f2f66079)
 
 
 #### 5. 사용한 스킬 및 외부라이브러리
@@ -26,9 +30,9 @@ Spring&React Project: HTML5, JS, Java, MySQL(RDS), AXIOS, RESTful API(JSON), mui
 
 
 #### 6. mySQL ER diagram
-초안 : 
-
 ![image](https://github.com/Ga0Kwon/MES/assets/121651318/63a678b5-6752-4e10-8dac-864bc73bd8b5)
+
+
 #### 7. MVC Structure
 ![image](https://user-images.githubusercontent.com/121651318/235430808-ee0fe050-e817-4528-92c6-9a13c909ba62.png)
 
@@ -40,12 +44,11 @@ Spring&React Project: HTML5, JS, Java, MySQL(RDS), AXIOS, RESTful API(JSON), mui
 MES 
 
 #### 10. 페이지 로고
-![MES Logo](https://user-images.githubusercontent.com/121651318/235453331-cf5d71b8-9d41-4f55-b681-b11d002c8539.png)
-
+<img src="https://user-images.githubusercontent.com/121651318/235453331-cf5d71b8-9d41-4f55-b681-b11d002c8539.png" width=50%>
 
 
 #### 11. 테마 색상
-![MES 색상 추천](https://user-images.githubusercontent.com/121651318/235451419-fc3c596b-6b4b-48a5-bbc3-bdc60a9677d2.jpg)
+<img src="https://user-images.githubusercontent.com/121651318/235451419-fc3c596b-6b4b-48a5-bbc3-bdc60a9677d2.jpg" width="60%">
 
 
 #### 12. 메인 폰트
@@ -59,9 +62,3 @@ MES
 ![image](https://user-images.githubusercontent.com/121651318/235451547-2b5db1de-747f-4244-bac9-6b37dc51ebcf.png)
 
 : 7가지 굵기 지원하고 깔끔한 느낌이어서 일단 추천
-
-#### 13. PT자료
-
-계획서 초안 : [4조 프로젝트 계획서.pptx](https://github.com/Ga0Kwon/MES/files/11364476/4.pptx)
-
-발표 PPT : https://www.canva.com/design/DAFjPlYJz-A/JSbcTQ4TtovY8SIZgzsVbQ/view?utm_content=DAFjPlYJz-A&utm_campaign=share_your_design&utm_medium=link&utm_source=shareyourdesignpanel

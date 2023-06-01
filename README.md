@@ -20,7 +20,7 @@ One-way(원자재 재고관리, 제품 재고관리, 제품 생산관리, 제품
 ![image](https://github.com/Ga0Kwon/MES/assets/119651889/c91924c2-6539-4802-8276-ffd8072f8979)
 
 #### 4.개발 전체 일정
-![mes_project4_2023-05-01_05 57pm](https://user-images.githubusercontent.com/121651318/235431953-36441320-0793-464f-ba8a-74a5d2db3a18.png)
+![image](https://github.com/Ga0Kwon/MES/assets/119651889/ef091ce1-d7d8-45dc-86a5-fb43f2f66079)
 
 
 #### 5. 사용한 스킬 및 외부라이브러리

@@ -31,25 +31,21 @@ Spring&React Project: HTML5, JS, Java, MySQL(RDS), AXIOS, RESTful API(JSON), mui
 ![image](https://github.com/Ga0Kwon/MES/assets/121651318/63a678b5-6752-4e10-8dac-864bc73bd8b5)
 
 
-#### 7. MVC Structure
-![image](https://user-images.githubusercontent.com/121651318/235430808-ee0fe050-e817-4528-92c6-9a13c909ba62.png)
-
-
-#### 8. Front-End Structure [ layout ]
+#### 7. MVC & Front-End Structure [ layout ]
 ![image](https://user-images.githubusercontent.com/121651318/235610902-cd9e5f31-9964-4c37-9829-cba06a628f6f.png)
 
-#### 9. 페이지명
+#### 8. 페이지명
 MES 
 
-#### 10. 페이지 로고
+#### 9. 페이지 로고
 <img src="https://user-images.githubusercontent.com/121651318/235453331-cf5d71b8-9d41-4f55-b681-b11d002c8539.png" width=50%>
 
 
-#### 11. 테마 색상
+#### 10. 테마 색상
 <img src="https://user-images.githubusercontent.com/121651318/235451419-fc3c596b-6b4b-48a5-bbc3-bdc60a9677d2.jpg" width="60%">
 
 
-#### 12. 메인 폰트
+#### 11. 메인 폰트
 @font-face {
     font-family: 'SUITE-Regular';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');

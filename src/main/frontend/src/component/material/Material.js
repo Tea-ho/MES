@@ -20,6 +20,11 @@ import MaterialUpdate from "./MaterialUpdate";
 
 export default function Material(props) {
 
+     if(sessionStorage.getItem('member') == null){
+          alert('로그인 먼저 해주세요.')
+          window.location.href = '/component/member/Login';
+      }
+
     let [count , setCount] = useState(0);
     const [info , setInfo] = useState({});
 

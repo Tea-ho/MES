@@ -86,41 +86,41 @@ export default function PlanProductList(props) {
 
     // planProductDto를 담는 공간
     let columns = [
-                { field: 'productDto.prodId', headerName: '제품번호', width: 100,
+                { field: 'productDto.prodId', headerName: '제품번호', width: 150,
                     valueGetter: (params) => {
                          const { prodId, productDto } = params.row;
                          return `${productDto.prodId}`
                     }
                 },
-                { field: 'productDto.prodName', headerName : '제품명', width : 100,
+                { field: 'productDto.prodName', headerName : '제품명', width : 150,
                     valueGetter: (params) => {
                          const { prodName, productDto } = params.row;
                          return `${productDto.prodName}`
                     }
                 },
-                { field: 'productDto.prodCode', headerName : '제품코드', width : 100,
+                { field: 'productDto.prodCode', headerName : '제품코드', width : 150,
                      valueGetter: (params) => {
                          const { prodCode, productDto } = params.row;
                          return `${productDto.prodCode}`
                      }
                 },
-                { field: 'productDto.prodPrice', headerName : '제품가격', width : 100,
+                { field: 'productDto.prodPrice', headerName : '제품가격', width : 150,
                     valueGetter: (params) => {
                          const { prodPrice, productDto } = params.row;
                          return `${productDto.prodPrice}`
                     }
                 },
-                { field: 'productDto.companyDto.cname', headerName : '제조사' , width : 100,
+                { field: 'productDto.companyDto.cname', headerName : '제조사' , width : 150,
                     valueGetter: (params) => {
                          const { companyDto, productDto } = params.row;
                          return `${productDto.companyDto.cname}`
                     }
                 },
-                { field: 'prodPlanDate', headerName: '요청일자', width: 150 },
-                { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 100,
+                { field: 'prodPlanDate', headerName: '요청일자', width: 200 },
+                { field: 'allowApprovalDto.al_app_whether', headerName: '승인여부', width: 150,
                   valueGetter: (params) => params.row.allowApprovalDto.al_app_whether ? '승인완료' : '승인대기'
                 },
-                { field: 'allowApprovalDto.memberEntity.mname', headerName: '승인자', width: 100,
+                { field: 'allowApprovalDto.memberEntity.mname', headerName: '승인자', width: 150,
                     valueGetter: (params) => {
                         const { memberEntity, allowApprovalDto } = params.row;
                         const mname = allowApprovalDto.memberEntity == null? '-' : allowApprovalDto.memberEntity.mname

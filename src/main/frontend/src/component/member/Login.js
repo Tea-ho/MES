@@ -2,6 +2,7 @@ import React,{ useState , useEffect } from 'react';
 import axios from 'axios';
 import { Container, Grid, Typography, TextField, Button, Box } from '@mui/material';
 import LoginSocket from '../webSocket/LoginSocket'
+import MESInfo from './img/MESInfo.png';
 
 export default function Login(props) {
 
@@ -85,7 +86,7 @@ export default function Login(props) {
               </Button>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <img src={'http://localhost:8080/static/media/MESInfo.png'} alt="MES Info" style={{ width: '100%' }} />
+              <img src={MESInfo} alt="MES Info" style={{ width: '100%' }} />
             </Box>
             <Box mt={5} className="copyright">
               <Copyright />

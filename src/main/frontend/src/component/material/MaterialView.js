@@ -88,7 +88,7 @@ export default function MaterialView(props) {
                       <TableCell align="center" style={{ width:'10%' }}>단위</TableCell>
                       <TableCell align="center" style={{ width:'10%' }}>유통기한(Day)</TableCell>
                       <TableCell align="center" style={{ width:'10%' }}>생산자</TableCell>
-                      <TableCell align="center" style={{ width:'15%' }}>구입일</TableCell>
+                      <TableCell align="center" style={{ width:'15%' }}>등록일</TableCell>
                       <TableCell align="center" style={{ width:'5%' }}>재고</TableCell>
                       <TableCell align="center" style={{ width:'5%' }}>코드</TableCell>
                       <TableCell align="center" style={{ width:'15%' }}>비고</TableCell>
